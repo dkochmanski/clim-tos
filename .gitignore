@@ -10,3 +10,5 @@ Clim-sizes.n
 build.out
 concat.out
 *.dylib
+*.lx32fsl
+*.lx64fsl
