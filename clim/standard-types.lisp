@@ -456,7 +456,7 @@
           (fs:complete-pathname default string nil :newest :read)
         (values string success (and success (pathname string)) 1))))
 
-#+CCL-2
+#+(and MCL CCL-2)
 (defun pathname-complete (string action &optional (default *default-pathname-defaults*))
   #-aclpc (declare (ignore default))                        ;--- for now
   ;; Slow but accurate
@@ -469,12 +469,12 @@
     (complete-from-possibilities string completions '(#\space)
                                  :action action :name-key #'namestring :value-key #'identity)))
 
-#-(or Genera CCL-2)
+#-(or Genera (and MCL CCL-2))
 (defun pathname-complete (string action &optional (default *default-pathname-defaults*))
   (pathname-complete-1 string action default))
 
 
-#-CCL-2
+#-(and MCL CCL-2)
 (defun pathname-complete-1 (string action &optional (default *default-pathname-defaults*))
   ;; Slow but accurate
   (let* ((original-pathname (pathname string))

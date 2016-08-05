@@ -354,7 +354,7 @@
   #-(or (not ansi-90) aclpc)
   `(with-standard-io-syntax ,@body))
 
-#+(and (or (not ansi-90) aclpc) (not Genera))
+#+(and (or (not ansi-90) aclpc) (not Clozure) (not Genera))
 (defmacro with-standard-io-syntax (&body body)
   `(with-standard-io-environment ,@body))
 
@@ -362,8 +362,8 @@
 ;; the iteration variable being used, or not used, or what not
 (defmacro repeat (n &body body)
   (let ((i '#:i))
-    `(dotimes (,i ,n)
-       #-(or Minima Genera allegro) (declare (ignore i))
+    `(dotimes (,i ,n) i
+;       #-(or Minima Genera allegro) (declare (ignore i))
        ,@body)))
 
 
@@ -382,7 +382,8 @@
 
 #+(or (not clim-uses-lisp-stream-functions)	;Do this if we provide CLOSE function
       Genera					; Sigh.  CLOSE also shadowed for Genera.
-      CCL-2)					; Sigh.  CLOSE also shadowed for CCL-2.
+      (and MCL CCL-2)				; Sigh.  CLOSE also shadowed for CCL-2.
+      )
 (defmacro with-open-stream ((stream-variable construction-form) &body body &environment env)
   (let ((aborted-variable (gensymbol 'aborted-p))
 	(temporary-stream-variable (gensymbol 'stream)))
@@ -431,15 +432,11 @@
   (intern (let ((pkg *package*))
 	    (with-standard-io-environment
 		(let ((*package* pkg))
-		  (apply #'cl-user::format () format-string
+		  (apply #'cl:format () format-string
 			 (mapcar #'(lambda (x)
-				     (#+allegro
-				      excl::if*
-				      #-allegro
-				      if*
-				      (symbolp x)
-					then (symbol-name x)
-					else x))
+                                     (if (symbolp x)
+                                         (symbol-name x)
+                                       x))
 				 format-args)))))
 	  package))
 
@@ -454,7 +451,7 @@
 (defun gensymbol (&rest parts)
   (declare (dynamic-extent parts))
   (when (null parts) (setf parts '(gensymbol)))
-  (make-symbol (cl-user::format nil "~{~A-~}~D" parts (incf *gensymbol*))))
+  (make-symbol (cl:format nil "~{~A-~}~D" parts (incf *gensymbol*))))
 )	;eval-when
 
 ;;; For macro writers; you can have your GENSYMBOLs start at 1.  Use
@@ -566,13 +563,16 @@
   (proclaim '(declaration non-dynamic-extent ignorable)))
 
 #+(and ansi-90 (not allegro) (not aclpc) (not Symbolics))
-(define-declaration non-dynamic-extent (spec env)
+(#+Clozure ccl:define-declaration #-Clozure define-declaration
+           non-dynamic-extent (spec env)
   (let ((vars (rest spec))
         (result nil))
     (dolist (v vars)
       (block process-var
         (multiple-value-bind (type local info)
-                             (variable-information v env)
+                             (#+Clozure ccl:variable-information
+                              #-Clozure variable-information
+                              v env)
           (declare (ignore local))
           (case type
             (:lexical
@@ -631,8 +631,8 @@
 (defun-inline evacuate-list (list)
   (if (and (sys:%pointerp list)
 	   (not (or (sys:%pointer-lessp list sys:%control-stack-low)
-		    (sys:%pointer-lessp (progn #+3600  sys:%control-stack-limit
-					       #+imach (sys:%read-internal-register
+		    (sys:%pointer-lessp (progn #+(and Genera 3600)  sys:%control-stack-limit
+					       #+(and Genera imach) (sys:%read-internal-register
 							 sys:%register-control-stack-limit))
 					list))))
       (copy-list list)
@@ -654,7 +654,7 @@
       list))
 )	;#+Cloe-Runtime
 
-#+allegro
+#+Allegro
 (progn
 (defmacro with-stack-list ((var &rest elements) &body body)
   `(let ((,var (list ,@elements)))
@@ -674,7 +674,7 @@
 
 )	;#+Allegro
 
-#+CCL-2
+#+(and MCL CCL-2)
 (progn
 (defmacro with-stack-list ((var &rest elements) &body body)
   `(let ((,var (list ,@elements)))
@@ -693,9 +693,9 @@
               (listp list))
          (copy-list list))
         (t list)))
-)	;#+CCL-2
+)	;#+(and MCL CCL-2)
 
-#-(or Genera Cloe-Runtime allegro CCL-2)
+#-(or Genera Cloe-Runtime allegro (and MCL CCL-2))
 (progn
 (defmacro with-stack-list ((var &rest elements) &body body)
   `(let ((,var (list ,@elements)))
@@ -709,7 +709,7 @@
 ;; When stack-consing works for non-Genera/Cloe, make this do something.
 (defmacro evacuate-list (list)
   `,list)
-)	;#-(or Genera Cloe-Runtime allegro)
+)	;#-(or Genera Cloe-Runtime allegro (and MCL CCL-2))
 
 #+Genera
 (defmacro with-stack-array ((name size &rest options) &body body)
@@ -970,7 +970,7 @@
 #-Genera
 (defmacro defun-property ((symbol indicator) lambda-list &body body)
   (let ((function-name
-	  (make-symbol (cl-user::format nil "~A-~A-~A" symbol indicator 'property))))
+	  (make-symbol (cl:format nil "~A-~A-~A" symbol indicator 'property))))
     `(progn (defun ,function-name ,lambda-list ,@body)
 	    (eval-when (load eval) (setf (get ',symbol ',indicator) #',function-name)))))
 
@@ -1125,10 +1125,10 @@
 					     ,arglist)))))))))
 
 
-#-(or Genera (and ansi-90 (not (and allegro (not (version>= 4 1))))))
+#-(or Genera Clozure (and ansi-90 (not (and allegro (not (version>= 4 1))))))
 (defmacro define-compiler-macro (name lambda-list &body body &environment env)
   env
-  #+allegro `(excl::defcmacro ,name ,lambda-list ,@body)
+  #+Allegro `(excl::defcmacro ,name ,lambda-list ,@body)
   #-(or Genera allegro) (progn name lambda-list body env nil))	;Suppress compiler warnings.
 
 #+aclpc
@@ -1159,7 +1159,7 @@
 					 &optional (extra-space-required t))
   (write-string "#<" stream)
   ;; wish TYPE-OF worked in PCL
-  (when type (lisp:format stream "~S " (class-name (class-of object))))
+  (when type (cl:format stream "~S " (class-name (class-of object))))
   (funcall continuation)
   (when identity
     (when extra-space-required (write-char #\space stream))
@@ -1171,13 +1171,13 @@
 #-(or PCL Genera ansi-90)
 (defun print-unreadable-object-identity (object stream)
   #+Genera (format stream "~O" (sys:%pointer object))
-  #+allegro (format stream "@~X" (excl::pointer-to-address object))
+  #+Allegro (format stream "@~X" (excl::pointer-to-address object))
   ;; Lucid prints its addresses out in Hex.
   #+Lucid (format stream "~X" (sys:%pointer object))
   ;; Probably aren't any #+(and (not Genera) (not allegro) (not PCL) (not ansi-90))
   ;; implementations (actually, this is false: Lispworks).
   #-(or Genera allegro Lucid) (declare (ignore object))
-  #-(or Genera allegro Lucid) (format stream "???"))
+  #-(or Genera allegro Lucid) (cl:format stream "???"))
 
 #-(or Genera ansi-90 Lucid)
 (defvar *print-readably* nil)
@@ -1349,8 +1349,10 @@
 ;;; to FIND-CLASS.  There is no run-time error, it really does accept three arguments.
 (defun find-class-that-works (name &optional (errorp t) environment)
   #+Genera (declare (inline compile-file-environment-p))
-  #+ccl-2 (when (eq environment 'compile-file)
-            (setq environment ccl::*fcomp-compilation-environment*))
+  #+(and MCL CCL-2) (when (eq environment 'compile-file)
+                      (setq environment ccl::*fcomp-compilation-environment*))
+  #+Clozure (when (eql environment 'compile-file)
+              (setq environment (ccl::augment-environment nil)))
   #+allegro (let ((environment (compile-file-environment-p environment)))
 	      (if environment
 	          (or (find-class name nil environment)
@@ -1464,12 +1466,10 @@
 ;;; on the <Abort> key.  Note that in Allegro, this choice ends up as an ordinary
 ;;; proceed option, but in Lucid it ends up on ":A".
 (defmacro with-simple-abort-restart ((format-string &rest format-args) &body body)
-  #{
-    Genera `(scl:catch-error-restart ((sys:abort) ,format-string ,@format-args)
-	      ,@body)
-    otherwise `(with-simple-restart (abort ,format-string ,@format-args)
-		 ,@body)
-   }
+  #+Genera `(scl:catch-error-restart ((sys:abort) ,format-string ,@format-args)
+             ,@body)
+  #-Genera `(with-simple-restart (abort ,format-string ,@format-args)
+             ,@body)
   )
 
 (defmacro with-simple-abort-restart-if (condition (format-string &rest format-args) &body body)
@@ -1646,13 +1646,12 @@
 ;;;
 
 ;;; This is here to limit need for FF package to compile time.
-(defun system-free (x)
-  #+allegro(excl:free x)
-  #+ccl(ccl::free x))
+#+Allegro
+(defun system-free (x) (excl:free x))
 
 ;;; ALLOCATE-CSTRUCT was adapted from ff:make-cstruct.
 ;;; We aren't using ff:make-cstruct because it uses excl:aclmalloc.
-#-mswindows
+#+(and Allegro (not mswindows))
 (defun allocate-cstruct (name &key
 			      (number 1)
 			      (initialize
@@ -1665,6 +1664,7 @@
     (when initialize (setq initialize 0))
     (allocate-memory size initialize)))
 
+#+Allegro
 (defun allocate-memory (size init)
   ;; Used only by ALLOCATE-CSTRUCT.
   (let ((pointer #+allegro(excl:malloc size)
@@ -1693,6 +1693,7 @@
 ;;; aclmalloc.
 ;; This now uses the slightly slower (locale-correct) way of
 ;; converting to octets first, then copying to foreign space.
+#+Allegro
 (defun string-to-foreign (string &optional address)
   "Convert a Lisp string to a C string, by copying."
   (declare (optimize (speed 3))

@@ -195,7 +195,7 @@
   (if (and (slot-boundp object 'label)
 	   (stringp (slot-value object 'label)))
       (print-unreadable-object (object stream :type t :identity t)
-	(format stream "~A" (slot-value object 'label)))
+	(cl:format stream "~A" (slot-value object 'label)))
       (call-next-method)))
 
 
@@ -343,7 +343,7 @@
 (defmethod print-object ((gadget scroll-bar) stream)
   ;; Added this method for easier debugging (alemmens, 2004-12-24).
   (print-unreadable-object (gadget stream :type t :identity t)
-    (format stream "from ~A to ~A (size ~A, line ~A, value ~A)"
+    (cl:format stream "from ~A to ~A (size ~A, line ~A, value ~A)"
             (gadget-min-value gadget)
             (gadget-max-value gadget)
             (if (slot-boundp gadget 'size)

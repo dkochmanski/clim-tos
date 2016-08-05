@@ -185,7 +185,7 @@
                                    (dotimes (i nvalues)
                                      (collect 
                                        (make-symbol 
-                                         (format nil "~A-~D" 'new-value i)))))))
+                                         (cl:format nil "~A-~D" 'new-value i)))))))
                            `((,(if (= nvalues 1) 'defmethod 'defmethod*)
                               (setf ,writer) (,@values-vars (,role-player ,role-player))
                               (let ((,outer-self (or ,outer-self ,role-player)))

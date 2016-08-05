@@ -203,7 +203,7 @@
 ;;--- These are here 'cause the Lucid Sun 4 compiler can't find
 ;;--- the MACROLETted versions in the functions below.
 ;;--- The MCL compiler gets it even worse!
-#+(or Lucid CCL-2)
+#+(or Lucid (and MCL CCL-2))
 (progn
 (defmacro row-max-height (row-number)
   `(svref row-array ,row-number))
@@ -278,10 +278,10 @@
           (declare (type coordinate total-width total-height))
 	  ;; We always want the table to start at its START-X and START-Y positions.
           (multiple-value-setq (x-pos y-pos) (output-record-position table))
-          (macrolet (#-CCL-2 (row-max-height (row-number)
-                               `(svref row-array ,row-number))
-			     #-CCL-2 (column-max-width (column-number)
-				       `(svref column-array ,column-number)))
+          (macrolet (#-(and MCL CCL-2) (row-max-height (row-number)
+                                         `(svref row-array ,row-number))
+		     #-(and MCL CCL-2) (column-max-width (column-number)
+                                         `(svref column-array ,column-number)))
 	    ;; Figure out max height for each row,
 	    ;;            max width for each column.
 	    ;; Collect row heights and column widths into temp arrays.
@@ -682,10 +682,10 @@
         (let ((row-count 0)
               (column-count 0))
           (declare (type fixnum row-count column-count))
-          (macrolet (#-CCL-2 (row-height (row-number)
-                               `(svref row-array ,row-number))
-                     #-CCL-2 (column-width (column-number)
-                               `(svref column-array ,column-number)))
+          (macrolet (#-(and MCL CCL-2) (row-height (row-number)
+                                         `(svref row-array ,row-number))
+                     #-(and MCL CCL-2) (column-width (column-number)
+                                         `(svref column-array ,column-number)))
             ;; Collect row heights and column widths into temp arrays.
             ;; We need to remember for each row its total height and
             ;; the difference between the smallest top and the largest top.

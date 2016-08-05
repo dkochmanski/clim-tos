@@ -296,6 +296,11 @@
            ((class presentation-type-class) (meta standard-class))
   t)
 
+#+Clozure
+(defmethod ccl:validate-superclass
+           ((class presentation-type-class) (meta standard-class))
+  t)
+
 ;;;#+(or aclpc acl86win32)
 ;;;(eval-when (compile load eval)
 ;;;   ;;mm: 11Jan95 - this is defined later in  ???
@@ -349,7 +354,7 @@
 ;;; This hash table is keyed by the presentation type name and yields the class.
 (defvar *presentation-type-class-table* (make-hash-table))
 
-#+(or CCL-2 aclpc)
+#+(or (and MCL CCL-2) aclpc Clozure)
 (defvar *presentation-class-type-table* (make-hash-table))
 
 #+aclpc
@@ -361,7 +366,8 @@
 ;;; Find the class corresponding to the presentation type named NAME
 (defun find-presentation-type-class (name &optional (errorp t) environment)
   #+Genera (declare (inline compile-file-environment-p))
-  #+allegro (setq environment (compile-file-environment-p environment))
+  #+(or allegro Clozure)
+  (setq environment (compile-file-environment-p environment))
   (macrolet ((not-found (name)
                `(if (gethash name *presentation-type-abbreviation-table*)
                     (error "~S is a presentation type abbreviation, not the name of a presentation type" ,name)
@@ -392,8 +398,9 @@
 ;;; Return the presentation type name corresponding to a class
 ;;; This is essentially the inverse of find-presentation-type-class
 (defmethod class-presentation-type-name ((class presentation-type-class) &optional environment)
-  #-aclpc (declare (ignore environment))
-  #-aclpc (second (class-name class))
+  #-(or aclpc) (declare (ignore environment))
+  #-(or aclpc Clozure) (second (class-name class))
+  #+Clozure (class-name class)
   #+aclpc (gethash class *presentation-class-name-table*)
 )
 
@@ -409,10 +416,14 @@
          *class-prototype-for-t*)
         (t
          ;; Finalization is necessary according to AMOP. -smh 18may93
-         (unless (#-aclpc clos:class-finalized-p
-                  #+aclpc acl:class-finalized-p class)
-           (#-aclpc clos:finalize-inheritance
-            #+aclpc acl:finalize-inheritance class))
+         (unless (#+aclpc acl:class-finalized-p
+                  #+Clozure ccl:class-finalized-p
+                  #-(or aclpc Clozure) clos:class-finalized-p
+                  class)
+           (#+aclpc acl:finalize-inheritance
+            #+Clozure ccl:finalize-inheritance
+            #-(or aclpc Clozure) clos:finalize-inheritance
+            class))
          (class-prototype class))))
 
 (defun-inline find-class-precedence-list (class)
@@ -421,10 +432,14 @@
   ;; can come up with structure classes
   #+Symbolics (find-class-prototype class)
   ;; Finalization is necessary according to AMOP. -smh 18may93
-  (unless (#-aclpc clos:class-finalized-p
-           #+aclpc acl:class-finalized-p class)
-    (#-aclpc clos:finalize-inheritance
-     #+aclpc acl:finalize-inheritance class))
+  (unless (#+aclpc acl:class-finalized-p
+           #+Clozure ccl:class-finalized-p
+           #-(or aclpc Clozure) clos:class-finalized-p
+           class)
+    (#+aclpc acl:finalize-inheritance
+     #+Clozure ccl:finalize-inheritance
+     #-(or aclpc Clozure) clos:finalize-inheritance
+     class))
   (class-precedence-list class))
 
 ;;; Hide the long name when printing these
@@ -462,7 +477,7 @@
 ;;; COMPILE-TIME-CLASSes, while the right place to hang all this information,
 ;;; unfortunately do NOT have CLASS-PRECEDENCE-LISTS, or any information of
 ;;; value other than name.
-#+CCL-2
+#+(and MCL CCL-2)
 (defmethod acceptable-presentation-type-class ((class ccl::compile-time-class))
   nil)
 
@@ -563,7 +578,7 @@
     ;; Generate the expander function and pass it to load-presentation-type-abbreviation
     `(define-group ,name define-presentation-type-abbreviation
        (eval-when (compile)
-         #+(or Genera Cloe-Runtime Minima CCL-2)
+         #+(or Genera Cloe-Runtime Minima (and MCL CCL-2))
            (setf (compile-time-property ',name 'presentation-type-abbreviation)
                  ,function)
          #+(or Lucid allegro aclpc)
@@ -786,12 +801,15 @@
         #+allegro
         (structure-class
           (setq direct-supertypes 'common-lisp:structure-object))
-        #+CCL-2
+        #+(and MCL CCL-2)
         (structure-class
           (setq direct-supertypes 'structure-object))
         #+aclpc
         (cl:structure-class
           (setq direct-supertypes 'cl:structure-object))
+        #+Clozure 
+        (cl:structure-class
+         (setq direct-supertypes 'cl:structure-object))
         (t
           (setq direct-supertypes 'standard-object)))))
   (with-warnings-for-definition name define-presentation-type
@@ -808,11 +826,11 @@
            (old-direct-superclasses (if class
                                         (class-direct-superclasses class)
                                         direct-superclasses))
-           #+(or CCL-2 aclpc)
+           #+(or (and MCL CCL-2) aclpc Clozure)
            (registered-class-name
              (let ((keyword-package (find-package :keyword))
-                   (*package* (find-package :lisp)))
-               (intern (lisp:format nil "~A ~S" 'ptype name) keyword-package)))
+                   (*package* (find-package :cl)))
+               (intern (concatenate 'string "PTYPE " (symbol-name name)) keyword-package)))
            #+aclntignore
            (registered-class-name
              (let ((ptype-package (find-package :registered-presentation-classes))
@@ -847,15 +865,20 @@
                         name (class-proper-name superclass environment)
                         'define-presentation-type
                         (typecase superclass
-                          (funcallable-standard-class 'defgeneric)
+                          #-Clozure (funcallable-standard-class 'defgeneric)
+                          #+Clozure (ccl:funcallable-standard-class 'defgeneric)
                           (standard-class 'defclass)
                           #+Symbolics                ;Symbolics CLOS, that is
                           (clos:structure-class 'defstruct)
-                          #+CCL-2 (structure-class 'defstruct)
+                          #+(and MCL CCL-2) (structure-class 'defstruct)
                           #+aclpc (cl:structure-class 'defstruct)
-                          #+allegro (structure-class 'defstruct))
+                          #+allegro (structure-class 'defstruct)
+                          #+Clozure (cl:structure-class 'defstruct)
+                          )
                         name)))
-             (let ((class-name `(presentation-type ,name)))
+             (let (#+(or Genera Cloe-Runtime (and MCL CCL-2))
+                   (class-name `(presentation-type ,name))
+                   )
                (setq class
                      #-Lucid
                      (make-instance 'presentation-type-class
@@ -863,20 +886,22 @@
                         ;; Symbolics CLOS, that is
                         #+(or Genera Cloe-Runtime) 'clos-internals::name
                         #+(or Genera Cloe-Runtime) class-name
-                        #+(or aclpc CCL-2) :name
-                        #+CCL-2 class-name
-                        #+aclpc registered-class-name
-                        #-(or PCL aclpc CCL-2 allegro) :slots
-                        #+(or PCL aclpc CCL-2 allegro) :direct-slots
+                        #+(or aclpc (and MCL CCL-2) Clozure) :name
+                        #+(and MCL CCL-2) class-name
+                        #+(or aclpc Clozure) registered-class-name
+                        #-(or PCL aclpc (and MCL CCL-2) allegro Clozure) :slots
+                        #+(or PCL aclpc (and MCL CCL-2) allegro Clozure) :direct-slots
                         nil)
                      #+Lucid (make-instance 'presentation-type-class
                                      :direct-superclasses direct-superclasses
                                      :name class-name))
                ;; Workaround for apparent MCL bug that otherwise causes
                ;; very bad things to happen
-               #+CCL-2 (setf (slot-value class 'ccl::slots) (cons nil (vector)))
+               #+(and MCL CCL-2) (setf (slot-value class 'ccl::slots) (cons nil (vector)))
                ;; If the class name couldn't be set while making the class, set it now
-               #-(or Genera Cloe-Runtime Lucid aclpc CCL-2) (setf (class-name class) class-name)))
+               #-(or Genera Cloe-Runtime Lucid aclpc (and MCL CCL-2) Clozure)
+               (setf (class-name class) class-name)
+               ))
             ((not (or (equal (class-direct-superclasses class) direct-superclasses)
                       ;; The above equal would suffice if it were not for the fact that when
                       ;; a CLOS class in the compile-file environment has a superclass in the
@@ -903,9 +928,11 @@
       ;; presentation class on this "registered" name instead of on the
       ;; official class name.  The following line hooks up the class and the
       ;; registered name at load time.  -- rsl & York, 4 June 1991
-      #+(or CCL-2 aclpc) (setf (gethash class *presentation-class-type-table*) registered-class-name
-                    ;;--- Should the following be done at compile time?  It's unclear.
-                    (find-class registered-class-name) class)
+      #+(or (and MCL CCL-2) aclpc Clozure)
+      (setf (gethash class *presentation-class-type-table*)
+            registered-class-name
+            ;;--- Should the following be done at compile time?  It's unclear.
+            (find-class registered-class-name) class)
       #+aclpc (setf (gethash class *presentation-class-name-table*)
                     name)
 
@@ -1489,7 +1516,7 @@
      (setf (gethash ',presentation-function-name *presentation-generic-function-table*)
            `(,',generic-function-name ,@',lambda-list))
      (defgeneric ,generic-function-name ,lambda-list
-       #-CCL-2
+       #-(and MCL CCL-2)
        (:generic-function-class presentation-generic-function)
        #+CLIM-extends-CLOS
        (:method-combination presentation-method-combination)
@@ -1534,12 +1561,13 @@
 
 ;;; Presentation generic functions have their own class just so we can define
 ;;; one method that aids in implementing presentation-method-combination
-#-CCL-2
+#-(and MCL CCL-2)
 (eval-when (eval load compile)
 (defclass presentation-generic-function
           (standard-generic-function #+Minima-Developer standard-object)
   ()
-  (:metaclass funcallable-standard-class))
+  (:metaclass #-Clozure funcallable-standard-class
+              #+Clozure ccl:funcallable-standard-class))
 )        ;end of (eval-when (eval load compile)
 
 #+CLIM-extends-CLOS
@@ -1551,7 +1579,9 @@
             methods argument-function)
   (declare (ignore methods))
   (let ((*presentation-method-argument-class*
-          (ecase (first (clos:generic-function-lambda-list generic-function))
+          (ecase (first (#-Clozure clos:generic-function-lambda-list
+                         #+Clozure ccl:generic-function-lambda-list
+                         generic-function))
             (type-key (funcall argument-function
                                #-Minima-Developer 'class
                                #+Minima-Developer 'zl:::clos-internals::class
@@ -1589,9 +1619,13 @@
     (:generic-function generic-function)
   (setq after (reverse after))
   (labels ((method-class (method)
-             (let ((class (first (clos:method-specializers method))))
+             (let ((class (first (#-Clozure clos:method-specializers
+                                  #+Clozure ccl:method-specializers
+                                  method))))
                (if (consp class) (second class) class))))
-    (let* ((generic-function-name (clos:generic-function-name generic-function))
+    (let* ((generic-function-name (#-Clozure clos:generic-function-name
+                                   #+Clozure ccl:generic-function-name
+                                   generic-function))
            (generic-lambda-list (block nil
                                   (maphash #'(lambda (key value)
                                                (declare (ignore key))
@@ -1659,7 +1693,7 @@
             ;; &key &allow-other-keys allows methods to receive only the keyword arguments
             ;; that they are interested in.  We know the caller will never supply
             ;; misspelled keywords since only the CLIM system calls this.
-  #-(or aclpc acl86win32 CCL-2)
+  #-(or aclpc acl86win32 (and MCL CCL-2))
   (declare (arglist type-key parameters options object type stream view
                     &key acceptably for-context-type)))
 
@@ -1670,7 +1704,7 @@
             ;; &key &allow-other-keys allows methods to receive only the keyword arguments
             ;; that they are interested in.  We know the caller will never supply
             ;; misspelled keywords since only the CLIM system calls this.
-  #-(or aclpc acl86win32 CCL-2)
+  #-(or aclpc acl86win32 (and MCL CCL-2))
   (declare (arglist type-key parameters options type stream view
                     &key default default-type)
            (values object type)))
@@ -1686,7 +1720,7 @@
 (define-presentation-generic-function presentation-subtypep-method
                                       presentation-subtypep
   (type-key type putative-supertype)
-  #-(or aclpc CCL-2)
+  #-(or aclpc (and MCL CCL-2))
   (declare (values subtype-p known-p)))
 
 (define-presentation-generic-function presentation-type-history-method
@@ -1699,7 +1733,7 @@
             ;; &key &allow-other-keys allows methods to receive only the keyword arguments
             ;; that they are interested in.  We know the caller will never supply
             ;; misspelled keywords since only the CLIM system calls this.
-  #-(or aclpc acl86win32 CCL-2)
+  #-(or aclpc acl86win32 (and MCL CCL-2))
   (declare (arglist type-key default type &key default-type)
            (values default default-type)))
 
@@ -1713,7 +1747,7 @@
             stream view default default-supplied-p
             present-p query-identifier
             &key &allow-other-keys)
-  #-(or aclpc acl86win32 CCL-2)
+  #-(or aclpc acl86win32 (and MCL CCL-2))
   (declare (arglist type-key parameters options type
                     stream view default default-supplied-p
                     present-p query-identifier
@@ -1722,13 +1756,13 @@
 (define-presentation-generic-function gadget-includes-prompt-p-method
                                       gadget-includes-prompt-p
   (type-key parameters options type stream view)
-  #-(or aclpc acl86win32 CCL-2)
+  #-(or aclpc acl86win32 (and MCL CCL-2))
   (declare (arglist type-key parameters options type stream view)))
 
 (define-presentation-generic-function decode-indirect-view-method
                                       decode-indirect-view
   (type-key parameters options type view frame-manager &key &allow-other-keys)
-  #-(or aclpc acl86win32 CCL-2)
+  #-(or aclpc acl86win32 (and MCL CCL-2))
   (declare (arglist type-key parameters options type
                     view frame-manager
                     &key query-identifier read-only)))
@@ -1865,8 +1899,8 @@
                                    ((eq (class-name class) presentation-type-name)
                                     presentation-type-name)
                                    (t
-                                    #+(or CCL-2 aclpc) (gethash class *presentation-class-type-table*)
-                                    #-(or CCL-2 aclpc) class))))
+                                    #+(or (and MCL CCL-2) aclpc) (gethash class *presentation-class-type-table*)
+                                    #-(or (and MCL CCL-2) aclpc) class))))
                 (type-class `(,type-class-var
                               ,(cond ((eq kind ':default) `t)
                                      ((symbolp presentation-type-name)
@@ -1907,7 +1941,7 @@
   (remhash name *presentation-type-options-table*)
   (let ((class (find-presentation-type-class name nil)))
     (when class
-      #+(or CCL-2 aclpc) (remhash class *presentation-class-type-table*)
+      #+(or (and MCL CCL-2) aclpc) (remhash class *presentation-class-type-table*)
       (remhash class *presentation-type-parameters-table*)
       (remhash class *presentation-type-options-table*)
       (remhash class *presentation-type-inheritance-table*)

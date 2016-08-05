@@ -51,11 +51,11 @@
   (print-unreadable-object (color stream :type t :identity t)
     (with-slots (luminosity) color
       (cond ((= luminosity 0f0)
-	     (format stream "Black"))
+	     (cl:format stream "Black"))
 	    ((= luminosity 1f0)
-	     (format stream "White"))
+	     (cl:format stream "White"))
 	    (t
-	     (format stream "~D% Gray" (round (* 100 luminosity))))))))
+	     (cl:format stream "~D% Gray" (round (* 100 luminosity))))))))
 
 (defmethod color-rgb ((color gray-color))
   (let ((luminosity (slot-value color 'luminosity)))
@@ -83,7 +83,7 @@
 (defmethod print-object ((color rgb-color) stream)
   (print-unreadable-object (color stream :type t :identity t)
     (with-slots (red green blue) color
-      (format stream "R=~F G=~F B=~F" red green blue))))
+      (cl:format stream "R=~F G=~F B=~F" red green blue))))
 
 (defmethod color-rgb ((color rgb-color))
   (with-slots (red green blue) color
@@ -138,7 +138,7 @@
 (define-condition color-not-found (error)
   ((color :initarg :color :reader color-not-found-color))
   (:report (lambda (condition stream)
-	     (format stream "The color named ~S was not found"
+	     (cl:format stream "The color named ~S was not found"
 	       (color-not-found-color condition)))))
 
 ;; Simplest possible palette returns canned, silly X Windows colors
@@ -288,7 +288,7 @@
 (defmethod print-object ((color ihs-color) stream)
   (print-unreadable-object (color stream :type t :identity t)
     (with-slots (intensity hue saturation) color
-      (format stream "i=~F h=~F s=~F>" intensity hue saturation))))
+      (cl:format stream "i=~F h=~F s=~F>" intensity hue saturation))))
 
 (defun convert-ihs-to-rgb (intensity hue saturation)
   (let* ((hh1 (mod (- hue .5f0) 1.0f0))
@@ -338,8 +338,8 @@ then restart your application.")
   (:report (lambda (condition stream)
 	     (let ((color (palette-full-color condition)))
 	       (if (typep color 'dynamic-color)
-		   (format stream *palette-full-dynamic-error-message*)
-		 (format stream *palette-full-error-message*))))))
+		   (cl:format stream *palette-full-dynamic-error-message*)
+		 (cl:format stream *palette-full-error-message*))))))
 )	;eval-when
 
 (defvar *use-closest-color* :warn)
@@ -497,7 +497,8 @@ then restart your application.")
 	      (make-dynamic-color +black+)))
     set))
 
-#+aclpc (defgeneric layered-color (set &rest layers))
+#+aclpc
+(defgeneric layered-color (set &rest layers))
 
 (defmethod layered-color ((set layered-color-set) &rest layers)
   (declare (dynamic-extent layers))
@@ -534,7 +535,7 @@ then restart your application.")
 (defmethod print-object ((color device-color) stream)
   (print-unreadable-object (color stream :type t :identity t)
     (with-slots (pixel) color
-      (format stream "~D:~A" pixel (device-color-color color)))))
+      (cl:format stream "~D:~A" pixel (device-color-color color)))))
 
 (defmethod color-rgb ((color device-color))
   (color-rgb (device-color-color color)))
@@ -547,11 +548,11 @@ then restart your application.")
 
 (defmethod print-object ((design (eql +foreground-ink+)) stream)
   (print-unreadable-object (design stream)
-    (write-string "CLIM Foreground" stream)))
+    (cl:write-string "CLIM Foreground" stream)))
 
 (defmethod print-object ((design (eql +background-ink+)) stream)
   (print-unreadable-object (design stream)
-    (write-string "CLIM Background" stream)))
+    (cl:write-string "CLIM Background" stream)))
 
 
 ;;; Flipping inks
@@ -559,7 +560,7 @@ then restart your application.")
 (defmethod print-object ((design flipping-ink) stream)
   (print-unreadable-object (design stream :type t :identity t)
     (with-slots (design1 design2) design
-      (format stream "~A and ~A" design1 design2))))
+      (cl:format stream "~A and ~A" design1 design2))))
 
 (defconstant +flipping-ink+ (make-flipping-ink-1 +foreground-ink+ +background-ink+))
 
@@ -598,7 +599,7 @@ then restart your application.")
 (defmethod print-object ((design contrasting-ink) stream)
   (print-unreadable-object (design stream :type t :identity t)
     (with-slots (which-one how-many) design
-      (format stream "~D of ~D" which-one how-many))))
+      (cl:format stream "~D of ~D" which-one how-many))))
 
 (defmethod contrasting-ink-index ((ink contrasting-ink))
   (with-slots (how-many which-one) ink
@@ -657,7 +658,7 @@ then restart your application.")
 (defmethod print-object ((design pattern) stream)
   (print-unreadable-object (design stream :type t :identity t)
     (with-slots (array designs) design
-      (format stream "~Dx~D n=~D"
+      (cl:format stream "~Dx~D n=~D"
 	      (array-dimension array 1) (array-dimension array 0) (length designs)))))
 
 (defmethod bounding-rectangle* ((pattern pattern))
@@ -682,7 +683,7 @@ then restart your application.")
 (defmethod print-object ((design stencil) stream)
   (print-unreadable-object (design stream :type t :identity t)
     (with-slots (array) design
-      (format stream "~Dx~D" (array-dimension array 1) (array-dimension array 0)))))
+      (cl:format stream "~Dx~D" (array-dimension array 1) (array-dimension array 0)))))
 
 
 ;;; Tiles
@@ -690,7 +691,7 @@ then restart your application.")
 (defmethod print-object ((tile rectangular-tile) stream)
   (print-unreadable-object (tile stream :type t :identity t)
     (with-slots (design width height) tile
-      (format stream "~Dx~D of " width height)
+      (cl:format stream "~Dx~D of " width height)
       (write design :stream stream))))
 
 (defmethod transform-region ((transformation transformation) (tile rectangular-tile))
@@ -730,12 +731,12 @@ then restart your application.")
   (multiple-value-bind (pattern width height)
       (decode-rectangular-tile rectangular-tile)
     (declare (ignore width height))
-    ; (format *terminal-io* "~%Pat: ~S, type: ~S" pattern (typep pattern 'pattern))
+    ; (cl:format *terminal-io* "~%Pat: ~S, type: ~S" pattern (typep pattern 'pattern))
     (when (typep pattern 'pattern)
       (multiple-value-bind (array designs)
 	  (decode-pattern pattern)
 	#+ignore
-	(format t "~%~S ~S ~S ~S ~S"
+	(cl:format t "~%~S ~S ~S ~S ~S"
 		(= width (array-dimension array 1))
 		(= height (array-dimension array 0))
 		(= (length designs) 2)
@@ -755,7 +756,7 @@ then restart your application.")
   (print-unreadable-object (design stream :type t :identity t)
     (with-slots (designs) design
       (map nil #'(lambda (design)
-		   (write-char #\space stream)
+		   (cl:write-char #\space stream)
 		   (write design :stream stream))
 	   designs))))
 
@@ -777,7 +778,7 @@ then restart your application.")
   (print-unreadable-object (design stream :type t :identity t)
     (with-slots (designs) design
       (map nil #'(lambda (design)
-		   (write-char #\space stream)
+		   (cl:write-char #\space stream)
 		   (write design :stream stream))
 	   designs))))
 
@@ -797,7 +798,7 @@ then restart your application.")
   (print-unreadable-object (design stream :type t :identity t)
     (with-slots (designs) design
       (map nil #'(lambda (design)
-		   (write-char #\space stream)
+		   (cl:write-char #\space stream)
 		   (write design :stream stream))
 	   designs))))
 

@@ -26,9 +26,9 @@
 
 #+allegro
 (defun-inline compile-file-environment-p (environment)
-  #-(version>= 7 0)
+  #+(and allegro (not (version>= 7 0)))
   (or (eq environment 'compile-file) excl::*compiler-environment*)
-  #+(version>= 7 0)
+  #+(and allegro (version>= 7 0))
   (or (and sys::*compile-file-environment*
 	   (excl::compilation-environment-p environment)
 	   environment)
@@ -38,11 +38,12 @@
 (eval-when (compile)
   (warn "~S hacked for lack of environment support in 4.1" 'compile-file-environment-p))
 
-#+CCL-2
+#+(or (and MCL CCL-2) Clozure)
 (defun-inline compile-file-environment-p (environment)
   (if (eq environment 'compile-file)
-      t
-      (ccl::compile-file-environment-p environment)))
+      #+Clozure (ccl:augment-environment nil)
+      #-Clozure t
+      (ccl:augment-environment environment)))
 
 #+(and allegro (not (version>= 4 1)))
 (defgeneric make-load-form (object))

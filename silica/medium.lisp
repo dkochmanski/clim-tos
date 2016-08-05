@@ -8,7 +8,7 @@
   ((ink :initarg :ink :reader unsupported-ink)
    (message :initarg :message :reader unsupported-ink-message))
   (:report (lambda (c s)
-             (format s "Ink ~A is not supported by the backend: ~A."
+             (cl:format s "Ink ~A is not supported by the backend: ~A."
                      (unsupported-ink c)
                      (unsupported-ink-message c)))))
 
@@ -221,7 +221,7 @@
 (defmethod print-object ((line-style standard-line-style) stream)
   (print-unreadable-object (line-style stream :type t :identity t)
     (with-slots (unit thickness joint-shape cap-shape dashes) line-style
-      (format stream "Units ~(~A~), thickness ~D, joint ~(~A~), cap ~(~A~), dashes ~S"
+      (cl:format stream "Units ~(~A~), thickness ~D, joint ~(~A~), cap ~(~A~), dashes ~S"
               unit thickness joint-shape cap-shape dashes))))
 
 (defvar +default-line-style+ (make-instance 'standard-line-style))

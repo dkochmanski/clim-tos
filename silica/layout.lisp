@@ -15,7 +15,7 @@
   (print-unreadable-object (object stream :type t)
     (multiple-value-bind (width min-width max-width height min-height max-height) 
         (space-requirement-components object)
-      (format stream "~D<w=~D<~D ~D<h=~D<~D"
+      (cl:format stream "~D<w=~D<~D ~D<h=~D<~D"
         min-width width max-width 
         min-height height max-height))))
 
@@ -44,14 +44,14 @@
     (values width width width
             height height height)))
 
-(defmethod space-requirement-width ((sr simple-space-requirement)) 
-  (slot-value sr 'width))
+;(defmethod space-requirement-width ((sr simple-space-requirement)) 
+;  (slot-value sr 'width))
 (defmethod space-requirement-min-width ((sr simple-space-requirement))
   (slot-value sr 'width))
 (defmethod space-requirement-max-width ((sr simple-space-requirement))
   (slot-value sr 'width))
-(defmethod space-requirement-height ((sr simple-space-requirement)) 
-  (slot-value sr 'height))
+;(defmethod space-requirement-height ((sr simple-space-requirement)) 
+;  (slot-value sr 'height))
 (defmethod space-requirement-min-height ((sr simple-space-requirement)) 
   (slot-value sr 'height))
 (defmethod space-requirement-max-height ((sr simple-space-requirement)) 
@@ -243,7 +243,7 @@
   (if (and (slot-boundp object 'name)
            (stringp (slot-value object 'name)))
       (print-unreadable-object (object stream :type t :identity t)
-        (format stream "~A" (slot-value object 'name)))
+        (cl:format stream "~A" (slot-value object 'name)))
       (call-next-method)))
 
 (defmethod handle-repaint ((pane basic-pane) region)

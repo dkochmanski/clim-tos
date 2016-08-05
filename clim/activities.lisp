@@ -43,9 +43,9 @@
     (loop
       (with-simple-restart (nil "~A top level" (frame-pretty-name activity))
         (loop
-          #-CCL-2
+          #-(and MCL CCL-2)
           (return-from run-frame-top-level (call-next-method))
-          #+CCL-2
+          #+(and MCL CCL-2)
           (let ((results (multiple-value-list (call-next-method))))
             (return-from run-frame-top-level (values-list results))))))))
 

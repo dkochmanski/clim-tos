@@ -33,7 +33,7 @@
 (defmethod print-object ((queue queue) stream)
   "Print a queue object"
   (print-unreadable-object (queue stream :type t :identity t)
-    (format stream "element-type: ~A" (queue-contents-type queue))))
+    (cl:format stream "element-type: ~A" (queue-contents-type queue))))
 
 ;;;
 ;;; Utility Macros
