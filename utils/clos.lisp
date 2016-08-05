@@ -87,7 +87,7 @@
 ;; initialize SLOT-2 with value of (1+ OVER) using SLOT-VALUE with 'SLOT-2
 ;; or MAKE-INSTANCE with 'SLOT-2.
 
-#+CCL-2
+#+(and MCL CCL-2)
 (defmacro define-constructor-using-prototype-instance
 	  (name class args &body tuples)
   (let ((proto-var (make-symbol (format nil "*a ~A*" class)))
@@ -106,7 +106,7 @@
 		     tuples)
 	   ,inst)))))
 
-#-CCL-2
+#-(and MCL CCL-2)
 (defmacro define-constructor-using-prototype-instance
 	  (name class args &body tuples)
   `(define-group ,name define-constructor-using-prototype-instance
@@ -247,7 +247,7 @@
     (when writer
       (ignore-errors
 	(multiple-value-bind (vars vals store-vars store-form access-form)
-	    (lisp:get-setf-expansion `(,accessor-name foo))
+	    (cl:get-setf-expansion `(,accessor-name foo))
 	  (declare (ignore vars vals store-vars access-form))
 	  (when (or (equal (first store-form) writer)
 		    (and (eq (first store-form) 'funcall)
@@ -266,7 +266,7 @@
 
 (defun expand-defsetf-for-defmethod*
        (accessor-name accessor-arg real-arglist setf-function-name)
-  `(lisp:define-setf-expander
+  `(cl:define-setf-expander
      ,accessor-name (,accessor-arg)	;Only last one is real.
      (flet ((make-temp (name) (gensymbol name 'temp)))
        (let ((temps (list (make-temp ',accessor-arg)))

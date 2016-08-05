@@ -64,13 +64,13 @@
 ;;; The classes themselves.
 
 (define-class-and-predicate fundamental-stream streamp
-  (#+CCL-2 ccl::stream))
+  (#+(and MCL CCL-2) ccl::stream))
 
 (define-class-and-predicate fundamental-input-stream input-stream-p
-  (fundamental-stream #+CCL-2 ccl:input-stream))
+  (fundamental-stream #+(and MCL CCL-2) ccl:input-stream))
 
 (define-class-and-predicate fundamental-output-stream output-stream-p
-  (fundamental-stream #+CCL-2 ccl:output-stream))
+  (fundamental-stream #+(and MCL CCL-2) ccl:output-stream))
 
 (define-class-and-predicate fundamental-character-stream nil
   (fundamental-stream))

@@ -33,17 +33,19 @@
 
 
 
-#-(or Cloe-Runtime ccl-2) (progn
+#-(or Cloe-Runtime (and MCL CCL-2))
+(progn
 
 ;;; We shadow this (and the other functions that already exist in the
 ;;; Lisp package) and fake the "genericness" of the operation in order
 ;;; to fit into the existing implementation-dependent stream mechanisms.
 
-#-PCL
+#-(or PCL SBCL)
 (defgeneric streamp (stream))
 
 (defmethod STREAMP (stream)
-  (lisp:streamp stream))
+  #+(or Clozure SBCL) (cl:streamp stream)
+  #-(or Clozure SBCL) (lisp:streamp stream))
 
 ;;;
 
@@ -60,7 +62,8 @@
 (defgeneric input-stream-p (stream))
 
 (defmethod INPUT-STREAM-P (stream)
-  (lisp:input-stream-p stream))
+  #+(or Clozure SBCL) (cl:input-stream-p stream)
+  #-(or Clozure SBCL) (lisp:input-stream-p stream))
 
 ;;;
 
@@ -68,7 +71,8 @@
 (defgeneric output-stream-p (stream))
 
 (defmethod OUTPUT-STREAM-P (stream)
-  (lisp:output-stream-p stream))
+  #+(or Clozure SBCL) (cl:output-stream-p stream)
+  #-(or Clozure SBCL) (lisp:output-stream-p stream))
 
 ;;;
 
@@ -76,7 +80,8 @@
 (defgeneric stream-element-type (stream))
 
 (defmethod STREAM-ELEMENT-TYPE (stream)
-  (lisp:stream-element-type stream))
+  #+(or Clozure SBCL) (cl:stream-element-type stream)
+  #-(or Clozure SBCL) (lisp:stream-element-type stream))
 
 ;;;
 
@@ -84,7 +89,8 @@
 (defgeneric close (stream &key abort))
 
 (defmethod CLOSE (stream &key abort)
-  (lisp:close stream :abort abort))
+  #+(or Clozure SBCL) (cl:close stream :abort abort)
+  #-(or Clozure SBCL) (lisp:close stream :abort abort))
 
 ;;;
 
@@ -92,9 +98,12 @@
 (defgeneric pathname (stream))
 
 (defmethod PATHNAME (stream)
-  (lisp:pathname stream))
+  #+(or Clozure SBCL) (cl:pathname stream)
+  #-(or Clozure SBCL) (lisp:pathname stream))
 
-(deftype pathname () 'lisp:pathname)
+(deftype pathname ()
+  #+(or Clozure SBCL) 'cl:pathname
+  #-(or Clozure SBCL) 'lisp:pathname)
 
 ;;;
 
@@ -102,9 +111,10 @@
 (defgeneric truename (stream))
 
 (defmethod TRUENAME (stream)
-  (lisp:truename stream))
+  #+(or Clozure SBCL) (cl:truename stream)
+  #-(or Clozure SBCL) (lisp:truename stream))
 
-) ;; #-(or Cloe-Runtime ccl-2)
+) ;; #-(or Cloe-Runtime (and MCL CCL-2) Clozure)
 
 #-Cloe-Runtime
 (progn
@@ -137,9 +147,9 @@
     `(clim-utils:define-group ,name write-forwarding-cl-output-stream-function
        ;; Shadow the Common Lisp function with one that calls the generic function,
        ;; except in Genera and Cloe where the Common Lisp function will work
-       #-(or Genera ccl-2)
+       #-(or Genera (and MCL CCL-2))
        (eval-when (compile load eval) (proclaim '(inline ,name)))
-       #-(or Genera ccl-2)
+       #-(or Genera (and MCL CCL-2))
        (defun ,name (,@required-args &optional stream ,@optional-args)
 	 (case stream
 	   ((nil) (,method-name *standard-output* ,@pass-args))
@@ -186,8 +196,8 @@
 
 (eval-when (compile load eval)
 (defun order-preserving-set-difference (set-one set-two)
-  #-ccl-2 (set-difference set-one set-two)
-  #+ccl-2 (nreverse (set-difference set-one set-two)))
+  #-(and MCL CCL-2) (set-difference set-one set-two)
+  #+(and MCL CCL-2) (nreverse (set-difference set-one set-two)))
 )	;eval-when
 
 (defmacro write-forwarding-cl-input-stream-function (name lambda-list
@@ -199,7 +209,7 @@
 	 (args (mapcar #'(lambda (var) (if (atom var) var (first var)))
 		       (order-preserving-set-difference lambda-list lambda-list-keywords)))
 	 (stream-args (remove 'stream args))
-	 #-(or Genera ccl-2)
+	 #-(or Genera (and MCL CCL-2))
 	 (call-method `(case stream
 			 ((nil) (,method-name *standard-input* ,@stream-args))
 			 ((t) (,method-name *terminal-io* ,@stream-args))
@@ -207,9 +217,9 @@
     `(clim-utils:define-group ,name write-forwarding-cl-input-stream-function
        ;; Shadow the Common Lisp function with one that calls the generic function,
        ;; except in Genera or Cloe where the Common Lisp function will work
-       #-(or Genera ccl-2)
+       #-(or Genera (and MCL CCL-2))
        (eval-when (compile load eval) (proclaim '(inline ,name)))
-       #-(or Genera ccl-2)
+       #-(or Genera (and MCL CCL-2))
        ,(if eof
 	    (let ((args `(eof-error-p eof-value ,@(and (not (eq eof :no-recursive))
 						       '(recursive-p)))))
@@ -258,7 +268,7 @@
 (write-forwarding-cl-input-stream-function clear-input (&optional stream)
 					   #+Genera :message #+Genera :clear-input)
 
-#-ccl-2
+#-(and MCL CCL-2)
 (defun signal-stream-eof (stream &optional recursive-p)
   (declare (ignore stream recursive-p))
   (error "EOF"))
@@ -266,11 +276,11 @@
 ;;; Make FORMAT do something useful on CLIM windows.  (At least CLIM:FORMAT, that is.)
 ;;; This isn't needed in Genera and Cloe, where the system FORMAT works on CLIM windows.
 
-#-(or Genera ccl-2)
+#-(or Genera (and MCL ccl-2))
 (defun format (stream format-control &rest format-args)
   (when (null stream)
     (return-from format
-      (apply #'lisp:format nil format-control format-args)))
+      (apply #'cl:format nil format-control format-args)))
   (when (eq stream 't)
     (setq stream *standard-output*))
   (cond ((streamp stream)

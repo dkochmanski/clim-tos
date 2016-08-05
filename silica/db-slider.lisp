@@ -372,7 +372,7 @@
               medium
               left (+ top label-height)
               right (+ top margin label-height visible-value-height y-offset))
-            (draw-text* medium (format nil "~A" value)
+            (draw-text* medium (cl:format nil "~A" value)
                         (floor (+ left right) 2) (+ top label-height visible-value-height)
                         :text-style text-style
                         :align-x ':center :align-y ':bottom))
@@ -381,7 +381,7 @@
               medium 
               (+ left margin label-width) top
               (+ left margin label-width visible-value-width x-offset) bottom)
-            (draw-text* medium (format nil "~A" value)
+            (draw-text* medium (cl:format nil "~A" value)
                         (+ left margin label-width) (+ top (floor (- bottom top) 2))
                         :text-style text-style
                         :align-x ':left :align-y ':center)))))))

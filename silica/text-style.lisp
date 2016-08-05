@@ -60,12 +60,12 @@
   #-(or aclpc acl86win32)
   (print-unreadable-object (style stream :type t :identity t)
     (with-slots (family face size) style
-      (format stream "~S ~S ~S" family  (face-code->face face) size)))
+      (cl:format stream "~S ~S ~S" family  (face-code->face face) size)))
   #+(or aclpc acl86win32)
   (with-slots (family face size) style
     (let ((true-face (face-code->face face)))
       (macrolet ((do-it ()
-                   `(format stream "~S.~S.~S" family true-face size)))
+                   `(cl:format stream "~S.~S.~S" family true-face size)))
         (if *print-escape*
             (print-unreadable-object (style stream :type t :identity t)
               (do-it))
@@ -80,7 +80,7 @@
 
 (defmethod print-object ((df device-font) stream)
   (print-unreadable-object (df stream :type t :identity t)
-    (format stream "~A" (slot-value df 'font-name))))
+    (cl:format stream "~A" (slot-value df 'font-name))))
 
 (defconstant +maximum-text-style-index+ 256)
 
@@ -627,6 +627,7 @@
       (load-specs nil nil nil spec))))
 
 (defmethod port-mapping-table ((port basic-port) character-set)
+  #-Allegro (declare (ignore character-set))
   (with-slots (mapping-table) port
      #+allegro
      (excl:ics-target-case
@@ -641,8 +642,9 @@
      mapping-table))
 
 (defmethod port-mapping-cache ((port basic-port) character-set)
+  #-Allegro (declare (ignore character-set))
   (with-slots (mapping-cache) port
-     #+allegro
+     #+Allegro
      (excl:ics-target-case
        (:-ics character-set mapping-cache)
        (:+ics (let ((old-length (length mapping-cache)))
@@ -651,7 +653,7 @@
                   (dotimes (i (- (length mapping-cache) old-length))
                     (setf (aref mapping-cache (+ i old-length)) (cons nil nil))))
                 (aref mapping-cache character-set))))
-     #-allegro
+     #-Allegro
      mapping-cache))
 
 (defmethod (setf text-style-mapping) (mapping (port basic-port) style
@@ -831,7 +833,7 @@
 #-(or aclpc acl86win32)
 (defun-inline char-character-set-and-index (character)
   (declare (values character-set index))
-  (values #+allegro
+  (values #+Allegro
 	  (excl:ics-target-case
            (:-ics *standard-character-set*)
            (:+ics (typecase character
@@ -839,7 +841,7 @@
                     (excl::codeset-1 1)
                     (excl::codeset-2 2)
                     (excl::codeset-3 3))))
-          #-allegro *standard-character-set*
+          #-Allegro *standard-character-set*
           (char-code character)))
 
 #+(or aclpc acl86win32)

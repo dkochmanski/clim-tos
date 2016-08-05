@@ -327,8 +327,8 @@
         (let ((class (if (symbolp type-name) (find-class type-name nil) type-name)))
           (unless (or (null class) (presentation-type-class-p class))
             (unless #+Genera (clos-internals:typep-class object class)
-                    #+CCL-2  (ccl::class-typep object class)
-                    #-(or Genera CCL-2) (typep object class)
+                    #+(and MCL CCL-2)  (ccl::class-typep object class)
+                    #-(or Genera (and MCL CCL-2)) (typep object class)
               (return-from presentation-typep nil))
             (unless parameters
               (return-from presentation-typep t))))

@@ -90,7 +90,7 @@
                  (exit-boxes '(:exit :abort :help))
                  (name title)
                  &allow-other-keys)
-  (declare (ignore style documentation name
+  (declare (ignore documentation name
                    file-search-proc directory-list-label file-list-label))
   (let ((stream associated-window))
     (accepting-values (stream :exit-boxes exit-boxes :label title

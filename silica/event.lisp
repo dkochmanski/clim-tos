@@ -718,16 +718,21 @@
   ;; Gosh, this macro is bad style, and violates the MOP.
   ;; Piling warts upon warts, we have to force finalization at
   ;; macroexpand time... - smh 18may93
-  (#+allegro clos:finalize-inheritance 
+  (#+Allegro clos:finalize-inheritance 
    #+aclpc acl:finalize-inheritance
-   #-(or allegro aclpc) cl:finalize-inheritance
+   #+Clozure ccl:finalize-inheritance
+   #-(or Allegro aclpc Clozure) cl:finalize-inheritance
    (find-class event-class)) ;smh 18may93
   (let* ((slots #+aclpc  (acl:class-slots (find-class event-class))
-                #-(or CCL-2 aclpc) (clos:class-slots (find-class event-class))
-                #+CCL-2 (ccl:class-slots (find-class event-class)))
+                #+(and MCL CCL-2) (ccl:class-slots (find-class event-class))
+                #+Clozure (ccl:class-slots (find-class event-class))
+                #-(or (and MCL CCL-2) aclpc Clozure) (clos:class-slots (find-class event-class))
+                )
          (slot-names #+aclpc (mapcar #'acl:slot-definition-name slots)
-                     #-(or CCL-2 aclpc) (mapcar #'clos:slot-definition-name slots)
-                     #+CCL-2 (mapcar #'ccl:slot-definition-name slots))
+                     #+(and MCL CCL-2) (mapcar #'ccl:slot-definition-name slots)
+                     #+Clozure (mapcar #'ccl:slot-definition-name slots)
+                     #-(or (and MCL CCL-2) aclpc Clozure) (mapcar #'clos:slot-definition-name slots)
+                     )
          (resource-name (fintern "*~A-~A*" event-class 'resource)))
     `(progn
        (defvar ,resource-name nil)
@@ -813,11 +818,11 @@
 
 #+meter-events
 (defun describe-event-resources (&optional reset)
-  (format t "~&Name~32TAlloc    Miss     New   Freed")
+  (cl:format t "~&Name~32TAlloc    Miss     New   Freed")
   (dolist (entry *resourced-events*)
     (destructuring-bind (name first allocates misses new deallocates) entry
       (declare (ignore first))
-      (format t "~&~A~30T~7D ~7D ~7D ~7D" name allocates misses new deallocates)
+      (cl:format t "~&~A~30T~7D ~7D ~7D ~7D" name allocates misses new deallocates)
       (when reset
         (setf (nth 2 entry) 0
               (nth 3 entry) 0
@@ -831,22 +836,25 @@
 (defun-inline copy-event (event)
   (clos-internals::%allocate-instance-copy event))
 
-#+CCL-2
+#+(and MCL CCL-2)
 (defun copy-event (event)
   (without-scheduling
     (ccl::copy-uvector
       (ccl::%maybe-forwarded-instance event))))
 
-#-(or Symbolics CCL-2)
+#-(or Symbolics (and MCL CCL-2))
 (defun copy-event (event)
   (let* ((class (class-of event))
          (copy (allocate-instance class)))
     (dolist (slot (#+aclpc acl:class-slots 
-                   #-aclpc clos:class-slots class))
+                   #+Clozure ccl:class-slots
+                   #-(or aclpc Clozure) clos:class-slots class))
       (let ((name (#+aclpc acl:slot-definition-name 
-                   #-aclpc clos:slot-definition-name slot))
+                   #+Clozure ccl:slot-definition-name
+                   #-(or aclpc Clozure) clos:slot-definition-name slot))
             (allocation (#+aclpc acl:slot-definition-allocation
-                         #-aclpc clos:slot-definition-allocation slot)))
+                         #+Clozure ccl:slot-definition-allocation
+                         #-(or aclpc Clozure) clos:slot-definition-allocation slot)))
         (when (and (eql allocation :instance)
                    (slot-boundp event name))
           (setf (slot-value copy name) (slot-value event name)))))
@@ -861,32 +869,32 @@
     (let ((comma nil))
       (when (slot-boundp event 'sheet)
         (let ((sheet (event-sheet event)))
-          (format stream "~:[~;mirrored ~]sheet ~s"
+          (cl:format stream "~:[~;mirrored ~]sheet ~s"
             (sheet-direct-mirror sheet) sheet))
         (setq comma t))
       (when (slot-boundp event 'kind)
         (if comma
             (write-string ", " stream))
-        (format stream "kind ~s" (pointer-boundary-event-kind event))))))
+        (cl:format stream "kind ~s" (pointer-boundary-event-kind event))))))
 
 (defmethod print-object ((event pointer-motion-event) stream)
   (print-unreadable-object (event stream :type t :identity nil)
     (let ((comma nil))
       (when (slot-boundp event 'sheet)
         (let ((sheet (event-sheet event)))
-          (format stream "~:[~;mirrored ~]sheet ~s"
+          (cl:format stream "~:[~;mirrored ~]sheet ~s"
             (sheet-direct-mirror sheet) sheet))
         (setq comma t))
       (when (slot-boundp event 'x)
         (if comma
             (write-string ", " stream))
-        (format stream "x: ~d, y: ~d"
+        (cl:format stream "x: ~d, y: ~d"
           (pointer-event-x event) (pointer-event-y event))
         (setq comma t))
       (when (slot-boundp event 'native-x)
         (if comma
             (write-string ", " stream))
-        (format stream "nx: ~d, ny: ~d"
+        (cl:format stream "nx: ~d, ny: ~d"
           (pointer-event-native-x event) (pointer-event-native-y event))))))
 
 ||#

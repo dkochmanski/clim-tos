@@ -185,6 +185,7 @@ This may confused the input editor" gestures))
             (:+ics (eq command-mode *kana-input-editor-command-aarray*)))
            #-allegro nil
            (setq last-command-type 'character)
+           #+Allegro
 	   (excl:ics-target-case
             (:+ics (kana-process-gesture istream gesture type))))
           ((eq command-state command-mode)
@@ -1085,10 +1086,11 @@ This may confused the input editor" gestures))
 
 (defun function-arglist (function)
   (declare (values arglist found-p))
-  #+Genera (values (sys:arglist function) T)
+  #+Clozure      (values (ccl:arglist function) t)
+  #+Genera       (values (sys:arglist function) T)
   #+Cloe-Runtime (sys::arglist function)
-  #+allegro (values (excl::arglist function) t)
-  #+Lucid (values (lucid-common-lisp:arglist function) t))
+  #+allegro      (values (excl::arglist function) t)
+  #+Lucid        (values (lucid-common-lisp:arglist function) t))
 
 (defun word-start-and-end (string start-chars &optional (start 0))
   (declare (values word-start word-end colon))

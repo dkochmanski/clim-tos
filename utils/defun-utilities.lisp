@@ -25,7 +25,8 @@
 
 ;;; Useful proclamations, very early on
 
-#+(or CCL-2 allegro Minima)	;not part of ANSI CL, but they're nice to have around
+;; not part of ANSI CL, but they're nice to have around
+#+(or (and MCL CCL-2) allegro Minima Clozure SBCL)
 (eval-when (compile load eval)
   (proclaim '(declaration values))
   (proclaim '(declaration arglist)))
@@ -42,7 +43,7 @@
 
 (defparameter *declarations-may-be-exposed-by-macro-expansion* nil)
 
-(lisp:defun extract-declarations (body &optional environment)
+(cl:defun extract-declarations (body &optional environment)
   (declare (values documentation declarations body))
   (let ((declarations nil)
 	(documentation nil))
@@ -123,23 +124,19 @@
 ;;
 #+allegro
 (in-package :excl)
-#+allegro
+#+(and allegro (not (version>= 5 (0 1) :pre-beta2 7)))
 (progn
-  #-(version>= 5 (0 1) :pre-beta2 7)
   (defmacro with-native-string ((native-string-var string-exp)
 				&body body)
     `(let ((,native-string-var ,string-exp))
        ,@body))
 
-  #-(version>= 5 (0 1) :pre-beta2 7)
   (eval-when (compile load eval) (export 'with-native-string))
 
-  #-(version>= 5 (0 1) :pre-beta2 7)
   (defun mb-to-string (mb-vector)
     (let* ((lgth (length mb-vector))
 	   (string (make-string lgth)))
       (dotimes (i lgth string)
 	(setf (schar string i) (code-char (aref mb-vector i))))))
 
-  #-(version>= 5 (0 1) :pre-beta2 7)
   (eval-when (compile load eval) (export 'mb-to-string)))

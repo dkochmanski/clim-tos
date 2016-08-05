@@ -1037,7 +1037,7 @@
 			    (frame-pointer-documentation-output frame)))
 		      ;; We must return the values from CALL-NEXT-METHOD,
 		      ;; or else ACCEPTING-VALUES will return NIL
-                      #-CCL-2
+                      #-(and MCL CCL-2)
 		      (return-from run-frame-top-level (call-next-method))
                       ;; The (RETURN-FROM FOO (CALL-NEXT-METHOD)) form above
                       ;; doesn't work in Coral.  If the "top level" restart
@@ -1046,7 +1046,7 @@
 		      ;; can't find the next method.  Hoisting the
                       ;; CALL-NEXT-METHOD out of the RETURN-FROM form seems
                       ;; to fix it...  So it conses, big deal.
-                      #+CCL-2
+                      #+(and MCL CCL-2)
                       (let ((results (multiple-value-list (call-next-method))))
                         (return-from run-frame-top-level (values-list results)))))))))
 	(when top-level-sheet

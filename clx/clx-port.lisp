@@ -77,7 +77,9 @@
       (setq host #+Genera  (scl:send neti:*local-host* :name)
 		 #+Minima  (machine-instance)
 		 #+Allegro (or (system:getenv "DISPLAY") (short-site-name))
-		 #+Lucid   (or (lcl:environment-variable "DISPLAY") (machine-instance))))
+		 #+Lucid   (or (lcl:environment-variable "DISPLAY") (machine-instance))
+                 #+CCL     (or (ccl:getenv "DISPLAY") (machine-instance))
+                 ))
     (multiple-value-bind (host display-number nscreen)
 	(disassemble-display-spec host (or display-number 0) (or screen 0))
       (with-slots (display screen window height-pixels width-pixels

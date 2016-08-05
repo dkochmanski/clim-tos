@@ -96,7 +96,7 @@
   (print-unreadable-object (transform stream :type t :identity t)
     (with-slots (tx ty) transform
       (declare (type single-float tx ty))
-      (format stream "(~D,~D)" tx ty))))
+      (cl:format stream "(~D,~D)" tx ty))))
 
 (defmethod make-load-form ((transform translation-transformation)
                              #-aclpc &optional #-aclpc environment)
@@ -133,8 +133,8 @@
     (with-slots (mxx mxy myx myy tx ty) transform
       (declare (single-float mxx mxy myx myy tx ty))
       (if (and (zerop mxy) (zerop myx))
-          (format stream "scale (~D,~D) translate (~D,~D)" mxx myy tx ty)
-          (format stream "[~D ~D ~D ~D] ~D ~D)" mxx mxy myx myy tx ty)))))
+          (cl:format stream "scale (~D,~D) translate (~D,~D)" mxx myy tx ty)
+          (cl:format stream "[~D ~D ~D ~D] ~D ~D)" mxx mxy myx myy tx ty)))))
 
 
 ;;; Conditions
@@ -145,7 +145,7 @@
   ((points :reader transformation-underspecified-points :initarg :points))
   (:report
     (lambda (condition stream)
-      (format stream "You can't make a transformation from the three collinear points ~@
+      (cl:format stream "You can't make a transformation from the three collinear points ~@
                      (~D,~D), (~D,~D), and (~D,~D)"
         (nth 0 (transformation-underspecified-points condition))
         (nth 1 (transformation-underspecified-points condition))
@@ -157,7 +157,7 @@
 (define-condition reflection-underspecified (transformation-underspecified) ()
   (:report
     (lambda (condition stream)
-      (format stream "You can't make a reflection from the two coincident points ~@
+      (cl:format stream "You can't make a reflection from the two coincident points ~@
                      (~D,~D) and (~D,~D)"
         (nth 0 (transformation-underspecified-points condition))
         (nth 1 (transformation-underspecified-points condition))
@@ -168,7 +168,7 @@
   ((transformation :reader singular-transformation-transformation :initarg :transformation))
   (:report
     (lambda (condition stream)
-      (format stream "The transformation ~S is singular"
+      (cl:format stream "The transformation ~S is singular"
 	(singular-transformation-transformation condition)))))
 
 

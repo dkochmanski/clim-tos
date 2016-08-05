@@ -113,7 +113,7 @@
 
 (defmethod print-object ((design opacity) stream)
   (print-unreadable-object (design stream :type t :identity t)
-    (format stream "~D" (opacity-value design))))
+    (cl:format stream "~D" (opacity-value design))))
 
 ;; Opacities are unbounded and uniform, so transformations are a no-op
 (defmethod transform-region ((transformation transformation) (opacity opacity)) opacity)
@@ -204,7 +204,7 @@
 
 (defmethod print-object ((point point) stream)
   (print-unreadable-object (point stream :type t :identity t)
-    (format stream "(~D,~D)" (point-x point) (point-y point))))
+    (cl:format stream "(~D,~D)" (point-x point) (point-y point))))
 
 
 (defclass standard-point (point)
@@ -297,7 +297,7 @@
   (print-unreadable-object (line stream :type t :identity t)
     (multiple-value-bind (start-x start-y) (line-start-point* line)
       (multiple-value-bind (end-x end-y) (line-end-point* line)
-	(format stream "(~D,~D)->(~D,~D)" start-x start-y end-x end-y)))))
+	(cl:format stream "(~D,~D)->(~D,~D)" start-x start-y end-x end-y)))))
 
 
 ;;; Areas
@@ -312,7 +312,7 @@
   (print-unreadable-object (rectangle stream :type t :identity t)
     (multiple-value-bind (left top right bottom)
 	(rectangle-edges* rectangle)
-      (format stream "/x ~D:~D y ~D:~D/" left right top bottom))))
+      (cl:format stream "/x ~D:~D y ~D:~D/" left right top bottom))))
 
 
 ;;; Rectangles
@@ -478,7 +478,7 @@
 
 (defmethod print-object ((object standard-bounding-rectangle) stream)
   (print-unreadable-object (object stream :type t :identity t)
-    (format stream "/x ~A:~A y ~A:~A/"
+    (cl:format stream "/x ~A:~A y ~A:~A/"
 	    (safe-slot-value object 'left)
 	    (safe-slot-value object 'right)
 	    (safe-slot-value object 'top)

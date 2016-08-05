@@ -827,9 +827,9 @@
             (when label
               (with-text-style (stream (merge-text-styles text-style *default-menu-text-style*))
                 (with-output-as-presentation (stream value 'accept-values-exit-box)
-                  #-CCL-2
+                  #-(and MCL CCL-2)
                   (write-string label stream)
-                  #+CCL-2
+                  #+(and MCL CCL-2)
                   (if (eq value ':abort)
                       ;; Kludge to print the cloverleaf char in MCL.
                       ;; Needs an accompanying kludge in STREAM-WRITE-CHAR so that

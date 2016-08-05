@@ -69,12 +69,13 @@
   #+Cloe-Runtime nil			;--- this can't be right --Hornig
   #+aclpc t  ; +++pr just for now, we will need to define something
   #+acl86win32 t  ; +++pr just for now, we will need to define something
-  #-(or aclpc acl86win32 Genera Lucid Cloe-Runtime) (lisp:interactive-stream-p stream))
+  #-(or aclpc acl86win32 Genera Lucid Cloe-Runtime) (cl:interactive-stream-p stream))
 
 (defmethod interactive-stream-p ((stream standard-encapsulating-stream))
   (interactive-stream-p (encapsulating-stream-stream stream)))
 
 ;;; defined for spr24046
+#+Allegro
 (defmethod excl:stream-read-sequence ((encapsulator standard-encapsulating-stream)
 				      seq &optional start end)
   (let ((encapsulated-stream (encapsulating-stream-stream encapsulator)))
@@ -82,6 +83,7 @@
 	   (error "Encapsulated stream is not of type fundamental-input-stream: ~A" encapsulated-stream))
 	  (t 
 	   (excl:stream-read-sequence encapsulated-stream seq start end)))))
+#+Allegro
 (defmethod excl:stream-write-sequence ((encapsulator standard-encapsulating-stream)
 					string &optional start end)
   (let ((encapsulated-stream (encapsulating-stream-stream encapsulator)))

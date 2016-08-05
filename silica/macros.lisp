@@ -84,3 +84,19 @@
   (declare (ignore pane-options))
   (warn "~S not inside a call to ~S"
         'make-clim-stream-pane 'with-look-and-feel-realization))
+
+;;;
+;;; Temporary set of Generic Function defs
+;;;
+
+;;
+;; Slot accessors
+;;
+
+(defgeneric stream-output-history (stream))
+;(defgeneric replay (history sheet &optional region))
+(defgeneric output-recording-stream-p (stream))
+(defgeneric window-shift-visible-region (sheet left top right bottom nleft ntop nright nbotton))
+(defgeneric clim-internals::maybe-redraw-input-editor-stream (contents region))
+(defgeneric viewport-region-changed (sheet viewport))
+(defgeneric native-gadget-range* (gadget))

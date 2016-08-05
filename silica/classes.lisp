@@ -81,7 +81,7 @@
 ;;;; NOTE: ics-target-case used in defclass forms causes source file
 ;;;; recording warnings.
 
-#-(or aclpc acl86win32) 
+#+(and Allegro (not (or aclpc acl86win32)))
 (defun mapping-table-initform ()
   (excl:ics-target-case
    (:+ics (let ((v (make-array 4 :adjustable t)))
@@ -91,7 +91,7 @@
 	    v))
    (:-ics (make-hash-table :test #'equal))))
 
-#-(or aclpc acl86win32) 
+#+(and Allegro (not (or aclpc acl86win32)))
 (defun mapping-cache-initform ()
   (excl:ics-target-case
    (:+ics (let ((v (make-array 4 :adjustable t)))
@@ -229,7 +229,7 @@
   (print-unreadable-object (event stream :type t)
     (when (slot-boundp event 'region)
       (with-bounding-rectangle* (left top right bottom) (window-event-region event)
-         (format stream "/x ~D:~D y ~D:~D/" left right top bottom)))))
+         (cl:format stream "/x ~D:~D y ~D:~D/" left right top bottom)))))
 
 (define-event-class window-configuration-event (window-event) ())
 (define-event-class window-repaint-event (window-event) ())

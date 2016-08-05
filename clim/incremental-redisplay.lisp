@@ -997,7 +997,7 @@
                                unique-id id-test cache-value cache-test
                                copy-cache-value parent-cache old-output-record
                                &rest args &key all-new &allow-other-keys)
-  #-aclpc (declare (non-dynamic-extent args))
+  #+(and Allegro (not aclpc)) (declare (non-dynamic-extent args))
   (let* ((current-output-record 
            (or (stream-current-output-record stream)
                (stream-output-history stream)))

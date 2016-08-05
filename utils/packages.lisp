@@ -30,9 +30,12 @@
   #+allegro (:implementation-packages :clim-lisp :clim-utils)
   ;; 28Jan97 added allegro package for aclpc since mop stuff was moved
   ;; there in 3.0.1 -tjm
-  (:use common-lisp #+allegro clos
-	#+(and (version>= 9 0) allegro) excl
-	#-(and (version>= 9 0) allegro) stream
+  (:use common-lisp
+        #+allegro clos
+	#+(and allegro (version>= 9 0)) excl
+        #+(or (and MCL CCL-2) Clozure) gray
+        #+SBCL sb-gray
+;	#-(and allegro (version>= 9 0)) stream
 	#+aclpc allegro)
 
  ;; Import these symbols so that we can define methods for them.
@@ -43,6 +46,10 @@
 
  #+allegro
  (:import-from :excl #:non-dynamic-extent)
+
+ #+Clozure
+ (:import-from :ccl #:atomic-incf #:atomic-decf #:class-prototype
+               #:class-direct-superclasses #:class-precedence-list)
 
  (:export
    &allow-other-keys
@@ -3309,12 +3316,13 @@
 
 (in-package :clim)
 
+#+Allegro
 (cl:defparameter *clim-version* excl::*common-lisp-version-number*)
 
-#+(version>= 5 0)
+#+(and Allegro (version>= 5 0))
 (cl:locally (cl:declare (cl:special excl::*version-info*))
   (cl:when (cl:boundp 'excl::*version-info*)
     (cl:push (cl:cons "CLIM" *clim-version*) excl::*version-info*)))
 
-#+(version>= 6 0 pre-final 0)
+#+(and allegro (version>= 6 0 pre-final 0))
 (excl::lb1215005) ;; rfe4046

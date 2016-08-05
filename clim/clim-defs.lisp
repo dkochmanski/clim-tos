@@ -364,7 +364,7 @@
 (defmacro accepting-values ((&optional stream &rest args) &body body)
   (declare (arglist (&optional stream
                      &key frame-class command-table own-window
-                             background foreground text-style
+                          background foreground text-style
                           exit-boxes resize-frame align-prompts
                           initially-select-query-identifier modify-initial-query
                           resynchronize-every-pass (check-overlapping t)

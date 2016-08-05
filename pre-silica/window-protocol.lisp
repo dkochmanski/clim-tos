@@ -436,7 +436,7 @@
 
 (defmethod window-beep ((stream t))
   #+Genera (scl:beep)
-  #+CCL-2 (ccl::ed-beep)
+  #+(and MCL CCL-2) (ccl::ed-beep)
   nil)
 
 (defun beep (&optional (stream *standard-output*))

@@ -377,7 +377,7 @@
                  (diacritic-char-p character)
                  ;; Special case so that we don't lozenge this.  It is up to
                  ;; the caller to have established the correct text style.
-                 #+CCL-2 (eql character #\CommandMark))
+                 #+(and MCL CCL-2) (eql character #\CommandMark))
              (let ((medium (sheet-medium stream)))
                (dotimes (i 2)
                  (multiple-value-bind (no-wrap new-cursor-x new-baseline new-height

@@ -65,7 +65,7 @@
 (defclass sheet-single-child-mixin (sheet-parent-mixin)
     ((children :initform nil :accessor sheet-children)))
 
-#-(or aclpc acl86win32)
+#+(and Allegro (not (or aclpc acl86win32)))
 (define-dynamic-extent-args map-over-sheets (function sheet)
   function)
 

@@ -131,7 +131,7 @@
     (setf (port-process port)
       (make-process 
        #'(lambda () (port-event-loop port))
-       :name (format nil "CLIM Event Dispatcher for ~A" 
+       :name (cl:format nil "CLIM Event Dispatcher for ~A" 
 		     (port-server-path port))))))
 
 
@@ -301,6 +301,7 @@
 ;;; ics kanji server support - we put this here for convenience
 ;;;--- consider putting in separate file (cim 2/26/96)
 
+#+Allegro
 (excl:ics-target-case
 (:+ics
 
