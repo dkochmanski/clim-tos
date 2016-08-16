@@ -491,7 +491,7 @@ Something is wrong if this warning appears!"))
   #+xerox (pathname *standard-input*)
   #+Genera sys:fdefine-file-pathname
   #+Minima *load-pathname*
-  #+ansi-cl *load-pathanme*
+  #+ansi-cl *load-pathname*
   #-(or Lucid Allegro xerox Genera Minima ansi-cl) nil)
 
 (defvar *current-system* nil
