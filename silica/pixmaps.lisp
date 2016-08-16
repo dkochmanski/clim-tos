@@ -49,7 +49,7 @@
 
 (defgeneric medium-copy-area (from-medium from-x from-y width height
                               to-medium to-x to-y
-                              &optional function))
+                              #|&optional function|#))
 
 (defmethod copy-area ((medium basic-medium) from-x from-y width height to-x to-y
                       &optional (function boole-1))
