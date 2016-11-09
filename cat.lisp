@@ -2,6 +2,7 @@
 
 (pushnew :ansi-90 *features*)
 
+#+allegro
 (setq comp:declared-fixnums-remain-fixnums-switch
       (named-function |(> speed 2)|
 		      (lambda (safety size speed debug compilation-speed)
@@ -38,8 +39,10 @@
 ;; (eval-when (compile load eval)
 ;;   (load "sys/sysdcl.lisp"))
 
+#+allegro
 (setf (sys:gsgc-switch :print) t)
 
+#+allegro
 (defvar sys::*clim-library-search-path*
   '("/usr/X11/lib/"
     "/usr/X11R6/lib/"
@@ -47,7 +50,7 @@
     "/opt/local/lib/"
     "/sw/lib/"))
 
-(cl:in-package #:user)
+(cl:in-package #:cl-user)
 
 (unless (ff:get-entry-point (ff:convert-foreign-name "XmCreateMyDrawingArea"))
   (load "./liblib_motif_wrapper.so"))
