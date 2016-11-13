@@ -1,5 +1,7 @@
-
+#+allegro
 (in-package :user)
+#-allegro
+(in-package :cl-user)
 
 (defpackage :clim-test
   (:use :clim-lisp :clim)

@@ -4,10 +4,14 @@
 (defpackage :tk
   ;;-- No we really need
   ;; to use the x11 package?
-  (:use :common-lisp :ff #+ignore :x11)
+  (:use :common-lisp
+	#+allegro :ff
+	#+ccl :ccl
+	#+ignore :x11)
   (:nicknames :xt)
+  #+allegro
   (:import-from :excl #:if*)
-  (:import-from :clim-utils #:fintern #:package-fintern)
+  (:import-from :clim-utils #:fintern #:package-fintern #-allegro #:if*)
   (:export
    #:initialize-motif-toolkit
    #:widget-parent
@@ -30,6 +34,7 @@
    #:window-property-list
    ))
 
-(setf (package-definition-lock (find-package :tk)) t)
+#+allegro
+(setf (excl:package-definition-lock (find-package :tk)) t)
 
 (in-package :tk)

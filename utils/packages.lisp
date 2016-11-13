@@ -13,10 +13,16 @@
   #+allegro (:implementation-packages :clim-lisp :clim-utils)
   ;; 28Jan97 added allegro package for aclpc since mop stuff was moved
   ;; there in 3.0.1 -tjm
+  #+allegro
   (:use common-lisp #+allegro clos
 	#+(and (version>= 9 0) allegro) excl
 	#-(and (version>= 9 0) allegro) stream
 	#+aclpc allegro)
+  #+ccl
+  (:use common-lisp
+	ccl)
+  #-(or allegro ccl)
+  (:use common-lisp)
 
  ;; Import these symbols so that we can define methods for them.
  (:shadow pathname truename)
@@ -26,6 +32,8 @@
 
  #+allegro
  (:import-from :excl #:non-dynamic-extent)
+ #-allegro
+ (:import-from :cl-user #:non-dynamic-extent)
 
  (:export
    &allow-other-keys
@@ -1089,6 +1097,8 @@
   (:use)				;use nothing
   #+allegro
   (:import-from :excl #:non-dynamic-extent)
+  #-allegro
+  (:import-from :cl-user #:non-dynamic-extent)
   (:export
     ;; Resources
     allocate-resource
@@ -1140,6 +1150,8 @@
   (:use)                                ;use nothing
   #+allegro
   (:import-from :excl #:non-dynamic-extent)
+  #-allegro
+  (:import-from :cl-user #:non-dynamic-extent)
   #+allegro (:implementation-packages
              :silica
              :clim-utils
@@ -2733,8 +2745,10 @@
 
   #+allegro
   (:import-from :excl #:non-dynamic-extent)
-  #+allegro (:import-from excl
-    arglist)
+  #-allegro
+  ;; (:import-from :cl-user #:non-dynamic-extent)
+  #+allegro (:import-from excl arglist)
+  #-allegro (:import-from :ccl #:arglist)
 
   (:export
     arglist
@@ -2756,7 +2770,9 @@
     with-collection
     with-fast-vector-references
     with-gensyms
-
+    #-allegro
+    if*
+    
     ;; From LISP-UTILITIES
     *end-of-file-marker*
     +largest-coordinate+
@@ -2805,6 +2821,8 @@
     simple-vector-push-extend
     standard-io-environment-vars-and-vals
     string-to-foreign
+    #+ccl
+    string-to-octets/null-terminated
     time-elapsed-p
     trap-on-error
     whitespace-char-p
@@ -2996,7 +3014,8 @@
     button-index-name
     command-name-from-symbol
     modifier-key-index
-    modifier-key-index-name))
+    modifier-key-index-name
+    non-dynamic-extent))
 
 #+(or aclpc acl86win32)
 (eval-when (compile load eval)
@@ -3009,6 +3028,7 @@
 
   #+allegro
   (:import-from :excl #:non-dynamic-extent)
+  #-allegro
   (:shadowing-import-from clim-utils
     defun
     flet labels
@@ -3292,12 +3312,16 @@
 
 (in-package :clim)
 
-(cl:defparameter *clim-version* excl::*common-lisp-version-number*)
+(cl:defparameter *clim-version*
+  #+allegro excl::*common-lisp-version-number*
+  #+ccl ccl::*openmcl-version*
+  #-(or allegro ccl) nil)
 
+#+allegro(
 #+(version>= 5 0)
 (cl:locally (cl:declare (cl:special excl::*version-info*))
   (cl:when (cl:boundp 'excl::*version-info*)
-    (cl:push (cl:cons "CLIM" *clim-version*) excl::*version-info*)))
+    (cl:push (cl:cons "CLIM" *clim-version*) excl::*version-info*))))
 
 
 ;; #+(version>= 6 0 pre-final 0)

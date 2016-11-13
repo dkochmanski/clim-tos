@@ -7,13 +7,17 @@
 (defpackage :tk-silica
   (:nicknames :xm-silica :xt-silica)
   (:use :clim-lisp :clim-utils :clim :silica :tk)
+  #+allegro
   (:import-from :excl #:if*)
+  #-allegro
+  (:import-from :clim-utils #:if*)
   (:export
    *xt-font-families*
    *xt-logical-size-alist*
    *xt-cursor-type-alist*
    ))
 
+#+allegro
 (setf (package-definition-lock (find-package :tk-silica)) t)
 
 (in-package :tk-silica)

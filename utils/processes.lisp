@@ -13,6 +13,7 @@
 
 (eval-when (compile load eval)
 ;;;  (require :mdproc)
+  #+allegro
   (require :process))
 
 (defvar *multiprocessing-p* 

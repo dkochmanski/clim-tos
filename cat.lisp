@@ -52,5 +52,6 @@
 
 (cl:in-package #:cl-user)
 
+#+allegro
 (unless (ff:get-entry-point (ff:convert-foreign-name "XmCreateMyDrawingArea"))
   (load "./liblib_motif_wrapper.so"))

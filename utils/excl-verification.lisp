@@ -1,4 +1,5 @@
-(in-package :sys)
+#+allegro(in-package :sys)
+#-allegro(in-package :common-lisp)
 
 
 (eval-when (compile load eval)

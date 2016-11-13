@@ -25,7 +25,7 @@
 
 (defparameter *declarations-may-be-exposed-by-macro-expansion* nil)
 
-(lisp:defun extract-declarations (body &optional environment)
+(cl-user::defun extract-declarations (body &optional environment)
   (declare (values documentation declarations body))
   (let ((declarations nil)
 	(documentation nil))

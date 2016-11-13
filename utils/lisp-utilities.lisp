@@ -431,9 +431,13 @@
   (intern (let ((pkg *package*))
 	    (with-standard-io-environment
 		(let ((*package* pkg))
-		  (apply #'lisp:format () format-string
+		  (apply #'cl-user::format () format-string
 			 (mapcar #'(lambda (x)
-				     (excl::if* (symbolp x)
+				     (#+allegro
+				      excl::if*
+				      #-allegro
+				      if*
+				      (symbolp x)
 					then (symbol-name x)
 					else x))
 				 format-args)))))
@@ -450,7 +454,7 @@
 (defun gensymbol (&rest parts)
   (declare (dynamic-extent parts))
   (when (null parts) (setf parts '(gensymbol)))
-  (make-symbol (lisp:format nil "~{~A-~}~D" parts (incf *gensymbol*))))
+  (make-symbol (cl-user::format nil "~{~A-~}~D" parts (incf *gensymbol*))))
 )	;eval-when
 
 ;;; For macro writers; you can have your GENSYMBOLs start at 1.  Use
@@ -966,7 +970,7 @@
 #-Genera
 (defmacro defun-property ((symbol indicator) lambda-list &body body)
   (let ((function-name
-	  (make-symbol (lisp:format nil "~A-~A-~A" symbol indicator 'property))))
+	  (make-symbol (cl-user::format nil "~A-~A-~A" symbol indicator 'property))))
     `(progn (defun ,function-name ,lambda-list ,@body)
 	    (eval-when (load eval) (setf (get ',symbol ',indicator) #',function-name)))))
 
@@ -1642,7 +1646,9 @@
 ;;;
 
 ;;; This is here to limit need for FF package to compile time.
-(defun system-free (x) (excl:free x))
+(defun system-free (x)
+  #+allegro(excl:free x)
+  #+ccl(ccl::free x))
 
 ;;; ALLOCATE-CSTRUCT was adapted from ff:make-cstruct.
 ;;; We aren't using ff:make-cstruct because it uses excl:aclmalloc.
@@ -1661,13 +1667,24 @@
 
 (defun allocate-memory (size init)
   ;; Used only by ALLOCATE-CSTRUCT.
-  (let ((pointer (excl:malloc size)))
+  (let ((pointer #+allegro(excl:malloc size)
+		 #+ccl(ccl::malloc size)))
     (when init
       (do ((i 0 (+ i #-64bit 4 #+64bit 8)))
 	  ((>= i size))
 	(declare (fixnum i))
-	(setf (sys:memref-int pointer i 0 :unsigned-natural) 0)))
+	(setf #+allegro(sys:memref-int pointer i 0 :unsigned-natural)
+	      #+ccl(ccl::paref pointer :unsigned-fullword i) 0)))
     pointer))
+
+#+ccl
+(defun string-to-octets/null-terminated (string)
+  (loop
+     with octets = nil
+     for c across (ccl::encode-string-to-octets string
+						:external-format :utf-8)
+     do (push c octets)
+     finally (return (apply #'vector (reverse (push 0 octets))))))
 
 ;;; We aren't using excl:string-to-native by default because it uses
 ;;; excl:aclmalloc.
@@ -1682,14 +1699,23 @@
                 (type string string)
                 (type integer address))
   (unless (stringp string)
-    (excl::.type-error string 'string))
+    #+allegro
+    (excl::.type-error string 'string)
+    #+ccl
+    (ccl::signal-type-error string 'string))
   (if address
       (excl:string-to-native string :address address)
-      (let* ((octets (excl:string-to-octets string :null-terminate t))
+      (let* ((octets
+	      #+allegro
+	      (excl:string-to-octets string :null-terminate t)
+	      #+ccl
+	      (string-to-octets/null-terminated string))
              (length (length octets)))
         (declare (optimize (safety 0))
                       (type fixnum length))
-        (setf address (excl:malloc length))
+        (setf address
+	      #+allegro(excl:malloc length)
+	      #+ccl(ccl::malloc length))
         (dotimes (i length)
           (declare (fixnum i))
           (setf (sys:memref-int address 0 i :unsigned-byte)
