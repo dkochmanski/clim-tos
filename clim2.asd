@@ -9,7 +9,7 @@
     :components
     (
      (:file "cat")
-     (:file "utils/excl-verification")
+     #+Allegro (:file "utils/excl-verification")
      (:file "package")
      (:file "utils/packages")
      (:file "demo/packages")
@@ -30,7 +30,7 @@
      (:file "utils/timers")
      (:file "utils/protocols")
      (:file "utils/clim-streams")
-     (:file "utils/excl-streams")
+     #+Allegro (:file "utils/excl-streams")
      (:file "utils/clim-macros")
      (:file "clim/clim-defs")
      (:file "utils/transformations")
@@ -104,7 +104,7 @@
      ;;(:file "clim/translators")
      (:file "clim/histories")
      ;;(:file "clim/ptypes2")
-     (:file "clim/excl-presentations")
+     #+Allegro (:file "clim/excl-presentations")
      (:file "clim/standard-types")
      (:file "clim/table-formatting")
 

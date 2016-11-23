@@ -3324,7 +3324,7 @@
 #+(and Allegro (version>= 5 0))
 (cl:locally (cl:declare (cl:special excl::*version-info*))
   (cl:when (cl:boundp 'excl::*version-info*)
-    (cl:push (cl:cons "CLIM" *clim-version*) excl::*version-info*))))
+    (cl:push (cl:cons "CLIM" *clim-version*) excl::*version-info*)))
 
 
 #+(and allegro (version>= 6 0 pre-final 0))
