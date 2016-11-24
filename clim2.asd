@@ -18,7 +18,9 @@
      (:file "demo/packages")
      (:file "test/test-pkg")
      (:file "load-clim")
+     #+Allegro
      (:file "tk/pkg")
+     #+Allegro
      (:file "tk-silica/pkg")
      (:file "xlib/package")
 
@@ -165,50 +167,89 @@
      (:file "xlib/gl")
      (:file "xlib/dpms")
 
+     #+Allegro
      (:file "tk/macros")
+     #+Allegro
      (:file "tk/xt-defs")
+     #+Allegro
      (:file "tk/xt-funs")
+     #+Allegro
      (:file "tk/foreign-obj")
       ;; Xlib stuff
+     #+Allegro
      (:file "tk/xlib")
+     #+Allegro
      (:file "tk/font")
+     #+Allegro
      (:file "tk/gcontext")
+     #+Allegro
      (:file "tk/graphics")
       ;; Toolkit stuff
+     #+Allegro
      (:file "tk/meta-tk")
+     #+Allegro
      (:file "tk/make-classes")
+     #+Allegro
      (:file "tk/foreign")
+     #+Allegro
      (:file "tk/widget")
+     #+Allegro
      (:file "tk/resources")
+     #+Allegro
      (:file "tk/event")
+     #+Allegro
      (:file "tk/callbacks")
+     #+Allegro
      (:file "tk/xt-classes")
+     #+Allegro
      (:file "tk/xt-init")
 
 
+     #+Allegro
      (:file "tk/xm-defs")
+     #+Allegro
      (:file "tk/xm-funs")
+     #+Allegro
      (:file "tk/xm-classes")
+     #+Allegro
      (:file "tk/xm-callbacks")
+     #+Allegro
      (:file "tk/xm-init")
+     #+Allegro
      (:file "tk/xm-widgets")
+     #+Allegro
      (:file "tk/xm-font-list")
+     #+Allegro
      (:file "tk/xm-protocols")
+     #+Allegro
      (:file "tk/convenience")
+     #+Allegro
      (:file "tk/make-widget")
 
+     #+Allegro
      (:file "tk-silica/xt-silica")
+     #+Allegro
      (:file "tk-silica/xt-stipples")
+     #+Allegro
      (:file "tk-silica/xm-silica")
+     #+Allegro
      (:file "tk-silica/xt-graphics")
+     #+Allegro
      (:file "tk-silica/image")
+     #+Allegro
      (:file "tk-silica/xt-frames")
+     #+Allegro
      (:file "tk-silica/xm-frames")
+     #+Allegro
      (:file "tk-silica/xm-dialogs")
+     #+Allegro
      (:file "tk-silica/xt-gadgets")
+     #+Allegro
      (:file "tk-silica/xm-gadgets")
 
+     #+Allegro
      (:file "tk-silica/xt-pixmaps")
+     #+Allegro
      (:file "tk-silica/gc-cursor")
      (:file "clim/japanese-input-editor")
 
@@ -218,10 +259,15 @@
 ;     (:file "test/test-clim")
 ;     (:file "test/test-demos")
 
+     #+Allegro
      (:file "wnn/pkg")
+     #+Allegro
      (:file "wnn/load-wnn")
+     #+Allegro
      (:file "wnn/jl-defs")
+     #+Allegro
      (:file "wnn/jl-funs")
+     #+Allegro
      (:file "wnn/jserver")
 
      (:file "hpgl/pkg")
@@ -256,6 +302,7 @@
 	       (:file "graphics-demos")
 	       (:file "graphics-editor")
 	       (:file "ico")
+	       #+Allegro
 	       (:file "japanese-graphics-editor")
 	       (:file "listener")
 	       (:file "navdata")
@@ -263,6 +310,7 @@
 	       (:file "palette")
 	       (:file "peek-frame")
 	       (:file "plot")
+	       #+Allegro
 	       (:file "process-browser")
 	       (:file "puzzle")
 	       (:file "thinkadot")

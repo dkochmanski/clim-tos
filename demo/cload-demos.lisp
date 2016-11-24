@@ -32,14 +32,23 @@
 				    (directory
 				     (make-pathname
 				      :directory (pathname-directory
-						  #.(truename
-						     excl::*source-pathname*)))))
+						  #.(#-Clozure
+						     truename
+						     #+Clozure
+						     cl::truename
+						     #+Allegro
+						     excl::*source-pathname*
+						     #+Clozure
+						     ccl::*loading-file-source-file*)))))
   (mapcar #'(lambda (name)
 	      (let ((name (merge-pathnames
 			   directory
 			   name)))
 		(if forcep
 		    (compile-file name)
-		  (excl::compile-file-if-needed name))
+		    (#+Allegro
+		     excl::compile-file-if-needed
+		     #+Clozure
+		     compile-file name))
 		(load name)))
 	  *demo-files*))

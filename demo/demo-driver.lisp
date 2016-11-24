@@ -47,7 +47,11 @@
 	;; In particular, this can occur when listing
 	;; the Japanese graphics-editor when the correct
 	;; Japanese fonts are not accessible.	
-	(let ((result (catch 'excl::printer-error
+	(let ((result (catch
+			  #+Allegro
+			'excl::printer-error
+			#+Clozure
+			'error
 			(with-output-as-presentation (stream demo 'demo)
 			  (format stream "~A~%" name))
 			nil)))
@@ -98,7 +102,10 @@
 		   (raise-frame frame))
 	       (run-frame-top-level frame)))))
     (if background 
-	(mp:process-run-function 
+	(#+Allegro
+	 mp:process-run-function
+	 #+clozure
+	 ccl::process-run-function
 	 `(:name ,(demo-name demo)
 	   :initial-bindings ((*package* . ',*package*)))
 	 #'do-it)

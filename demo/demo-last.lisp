@@ -2,7 +2,10 @@
 ;; See the file LICENSE for the full license governing this code.
 ;;
 
+#+Allegro
 (in-package :user)
+#-Allegro
+(in-package :cl-user)
 
 ;; (cond ((excl::featurep :clim-motif)
 ;;        (provide :climdemoxm)

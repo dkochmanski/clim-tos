@@ -7,6 +7,7 @@
 
 (in-package :postscript-clim)
 
+#+Allegro
 (macrolet ((def-ps-stubs (functions macros)
 	       `(progn
 		  ,@(mapcar #'(lambda (fn)

@@ -68,19 +68,22 @@
      :end-of-line-action :allow))
 
 
-(define-pane-type :interactor (&rest options &key (scroll-bars :vertical))
+(define-pane-type :interactor (&rest options &key (scroll-bars :vertical)
+				     &allow-other-keys)
   #+allegro (declare (non-dynamic-extent options))
   `(make-clim-interactor-pane
      ,@options
      :scroll-bars ,scroll-bars))
 
-(define-pane-type :application (&rest options &key (scroll-bars :both))
+(define-pane-type :application (&rest options &key (scroll-bars :both)
+				      &allow-other-keys)
   #+allegro (declare (non-dynamic-extent options))
   `(make-clim-application-pane
      ,@options
      :scroll-bars ,scroll-bars))
 
-(define-pane-type :accept-values (&rest options &key (scroll-bars :vertical))
+(define-pane-type :accept-values (&rest options &key (scroll-bars :vertical)
+					&allow-other-keys)
   #+allegro (declare (non-dynamic-extent options))
   `(make-clim-stream-pane
      :type 'accept-values-pane

@@ -466,8 +466,8 @@
 		(destructuring-bind (gf method) item
 		  (with-output-as-presentation (stream method 'expression
 						:allow-sensitive-inferiors nil)
-		    (prin1 (#-aclpc clos:generic-function-name
-                    #+aclpc generic-function-name gf) stream)))))))))))
+		    (prin1 (#+(and Allegro (not aclpc)) clos:generic-function-name
+                    #+(or (not Allegro) (and Allegro aclpc)) generic-function-name gf) stream)))))))))))
 
 
 ;;; Package browsing
@@ -698,9 +698,9 @@
 	   ;;--- How to arrange for the slot names to be printed?
 	   ;; This works for Genera Flavors because they are embedded in CLOS
 	   (let* ((class (class-of object))
-		  (slots (#-aclpc clos:class-slots #+aclpc class-slots class)))
+		  (slots (#+(and Allegro (not aclpc)) clos:class-slots #+(or (not Allegro) (and Allegro aclpc)) class-slots class)))
 	     (loop for slot in slots
-		   as slot-name = (#-aclpc clos:slot-definition-name #+aclpc slot-definition-name slot)
+		   as slot-name = (#+(and Allegro (not aclpc)) clos:slot-definition-name #+(or (not Allegro) (and Allegro aclpc)) slot-definition-name slot)
 		   collect (if (slot-boundp object slot-name)
 			       (slot-value object slot-name)
 			       *unbound-marker*))))
@@ -1423,8 +1423,8 @@
     ((class-node 'class-call-node
       :prompt "class node to show slots for" :gesture :subnode-1))
   (let* ((class (node-object class-node))
-	 (slots (sort (mapcar #' #-aclpc clos:slot-definition-name #+aclpc slot-definition-name
-                          (#-aclpc clos:class-direct-slots #+aclpc class-direct-slots class))
+	 (slots (sort (mapcar #' #+(and Allegro (not aclpc)) clos:slot-definition-name #+(or (not Allegro) (and Allegro aclpc)) slot-definition-name
+                          (#+(and Allegro (not aclpc)) clos:class-direct-slots #+(or (not Allegro) (and Allegro aclpc)) class-direct-slots class))
 		      #'string-lessp)))
     (when (and slots
 	       (not (subnode-object-present-in-node class-node slots :test #'equal)))
@@ -1436,14 +1436,14 @@
     ((class-node 'class-call-node
       :prompt "class node to show methods for" :gesture :subnode-2))
   (let* ((class (node-object class-node))
-	 (methods (#-aclpc clos:specializer-direct-methods #+aclpc specializer-direct-methods class))
+	 (methods (#+(and Allegro (not aclpc)) clos:specializer-direct-methods #+(or (not Allegro) (and Allegro aclpc)) specializer-direct-methods class))
 	 (method-list
 	   (loop for method in methods
-		 collect (list (#-aclpc clos:method-generic-function #+aclpc method-generic-function method) method))))
+	      collect (list (#+(and Allegro (not aclpc)) clos:method-generic-function #+(or (not Allegro) (and Allegro aclpc)) method-generic-function method) method))))
     (setq method-list (sort method-list #'string-lessp
 			    :key #'(lambda (item)
-				     (let ((name (#-aclpc clos:generic-function-name
-                                  #+aclpc generic-function-name (first item))))
+				     (let ((name (#+(and Allegro (not aclpc)) clos:generic-function-name
+                                  #+(or (not Allegro) (and Allegro aclpc)) generic-function-name (first item))))
 				       (if (listp name) (second name) name)))))
     (when (and method-list
 	       (not (subnode-object-present-in-node class-node method-list

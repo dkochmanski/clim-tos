@@ -1,6 +1,6 @@
 ;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Package: POSTSCRIPT-CLIM; Base: 10; Lowercase: Yes -*-
 
-#+(version= 8 1)
+#+(and Allegro (version= 8 1))
 (sys:defpatch "climps" 6
     "v1: Handle unsupported inks in CLIM's Postscript backend in a correctable way."
   :type :clim2

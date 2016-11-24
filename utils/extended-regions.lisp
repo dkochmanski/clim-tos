@@ -940,10 +940,10 @@
   :radius-2-dx (coordinate radius-2-dx) :radius-2-dy (coordinate radius-2-dy)
   :start-angle (cond (start-angle (float start-angle 0f0))
 		     (end-angle 0f0)
-		     (t nil))
+		     (t 0f0))
   :end-angle (cond (end-angle (float end-angle 0f0))
 		   (start-angle (float (* 2 pi) 0f0))
-		   (t nil)))
+		   (t 0f0)))
 
 (defmethod make-load-form ((ellipse standard-ellipse) #-aclpc &optional #-aclpc environment)
   #-aclpc (declare (ignore environment))

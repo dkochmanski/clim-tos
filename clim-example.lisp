@@ -19,4 +19,7 @@
 	   (let ((frame (make-application-frame 'test)))
 	     (setq *test-frame* frame)
 	     (run-frame-top-level frame))))
-    (mp:process-run-function "test" #'run)))
+    #+Allegro
+    (mp:process-run-function "test" #'run)
+    #+Clozure
+    (ccl::process-run-function "test" #'run)))

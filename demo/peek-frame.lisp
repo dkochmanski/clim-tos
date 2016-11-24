@@ -301,8 +301,13 @@ Revised and stripped down by Scott McKay (SWM@Symbolics.COM) for CLIM 2.0.
     (unwind-protect
 	(progn
 	  (setq pipe
+		#+Allegro
 		(excl:run-shell-command (first program)
-					:output :stream :wait nil))
+					:output :stream :wait nil)
+		#-Allegro
+		(uiop/run-program::%run-program (first program)
+						:output :stream
+						:wait nil))
 	  (loop
 	    (let ((line (read-line pipe nil nil)))
 	      (if (null line)
