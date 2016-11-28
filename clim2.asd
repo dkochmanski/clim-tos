@@ -3,6 +3,9 @@
 ;;; accordance with the licence specified in the LICENSE file or the
 ;;; MIT license.
 
+#+(or ANSI-90 ANSI-CL)
+(pushnew :clx-ansi-common-lisp *features*)
+
 (asdf:defsystem :clim2
     :depends-on ()
     :serial t
@@ -17,7 +20,7 @@
      (:file "load-clim")
      (:file "tk/pkg")
      (:file "tk-silica/pkg")
-     (:file "xlib/pkg")
+     (:file "xlib/package")
 
      (:file "utils/defun-utilities")
      (:file "utils/reader")
@@ -132,12 +135,35 @@
      (:file "clim/item-list-manager")
      (:file "clim/stream-trampolines")
 
-     (:file "xlib/ffi")
-     (:file "xlib/load-xlib")
-     (:file "xlib/xlib-defs")
-     (:file "xlib/xlib-funs")
-     (:file "xlib/x11-keysyms")
-     (:file "xlib/last")
+     ;; Common Lisp X11 (xlib)
+     (:file "xlib/depdefs")
+     (:file "xlib/clx")
+     #-(or Clozure Allegro) (:file "xlib/dependent")
+     #+Clozure (:file "xlib/dep-openmcl")
+     #+Allegro (:file "xlib/dep-allegro")
+     (:file "xlib/macros")
+     (:file "xlib/bufmac")
+     (:file "xlib/buffer")
+     (:file "xlib/display")
+     (:file "xlib/gcontext")
+     (:file "xlib/input")
+     (:file "xlib/requests")
+     (:file "xlib/fonts")
+     (:file "xlib/graphics")
+     (:file "xlib/text")
+     (:file "xlib/attributes")
+     (:file "xlib/translate")
+     (:file "xlib/keysyms")
+     (:file "xlib/manager")
+     (:file "xlib/image")
+     (:file "xlib/resource")
+     #+Allegro (:file "xlib/excldep")
+     (:file "xlib/shape")
+     (:file "xlib/xvidmode")
+     (:file "xlib/xrender")
+     (:file "xlib/glx")
+     (:file "xlib/gl")
+     (:file "xlib/dpms")
 
      (:file "tk/macros")
      (:file "tk/xt-defs")
@@ -187,10 +213,10 @@
      (:file "clim/japanese-input-editor")
 
      ;; system: testing
-     (:file "test/test-driver")
-     (:file "test/test-clim-tests")
-     (:file "test/test-clim")
-     (:file "test/test-demos")
+;     (:file "test/test-driver")
+;     (:file "test/test-clim-tests")
+;     (:file "test/test-clim")
+;     (:file "test/test-demos")
 
      (:file "wnn/pkg")
      (:file "wnn/load-wnn")
