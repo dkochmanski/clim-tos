@@ -34,8 +34,6 @@
 
  #+allegro
  (:import-from :excl #:non-dynamic-extent)
- #-allegro
- (:import-from :cl-user #:non-dynamic-extent)
 
  #+Clozure
  (:import-from :ccl #:atomic-incf #:atomic-decf #:class-prototype
@@ -1103,8 +1101,6 @@
   (:use)				;use nothing
   #+allegro
   (:import-from :excl #:non-dynamic-extent)
-  #-allegro
-  (:import-from :cl-user #:non-dynamic-extent)
   (:export
     ;; Resources
     allocate-resource
@@ -1156,8 +1152,6 @@
   (:use)                                ;use nothing
   #+allegro
   (:import-from :excl #:non-dynamic-extent)
-  #-allegro
-  (:import-from :cl-user #:non-dynamic-extent)
   #+allegro (:implementation-packages
              :silica
              :clim-utils
@@ -2751,10 +2745,8 @@
 
   #+allegro
   (:import-from :excl #:non-dynamic-extent)
-  #-allegro
-  ;; (:import-from :cl-user #:non-dynamic-extent)
   #+allegro (:import-from excl arglist)
-  #-allegro (:import-from :ccl #:arglist)
+  #+Clozure (:import-from :ccl #:arglist)
 
   (:export
     arglist
