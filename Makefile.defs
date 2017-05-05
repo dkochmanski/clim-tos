@@ -9,24 +9,6 @@ SHARED_EXT = so
 LISP	= ../src/lispi$(exe)
 DCL	= dcli
 
-# Set the case mode when building and dumping an image
-# case_mode:
-#	ansi -- traditional case-insensitive upper-case CL
-#	modern -- case-sensitive lower-case CL
-case_mode = ansi
-
-ifeq ($(case_mode),ansi)
-CASE_MODE		= :case-insensitive-upper
-endif
-
-ifeq ($(case_mode),modern)
-CASE_MODE		= :case-sensitive-lower
-endif
-
-ifndef CASE_MODE
-..........................case_mode not defined or bad value...................
-endif
-
 CL	= $(LISP) -I $(DCL)
 CLOPTS	= -qq -batch -backtrace-on-error -locale japan.euc
 
