@@ -203,9 +203,6 @@ install_obj:
 install_clim: install_obj
 	cp $(PRODUCT-FASLS) $(ICS-PRODUCT-FASLS) $(DEST)
 
-echo_src_files:
-	@echo $(PRODUCT_SRC_FILES)
-
 include Makefile.cobjs
 
 include Makefile.wnn
