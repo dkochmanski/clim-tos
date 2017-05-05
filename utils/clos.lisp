@@ -276,8 +276,6 @@
 ;; For example, (DEFMETHOD* (SETF CURSOR-POSITION) (NX NY (CURSOR T)) ...)
 ;; Then (SETF (CURSOR-POSITION cursor) (VALUES nx ny))
 (defmacro defmethod* (name &body quals-lambda-list-and-body)
-  (declare (arglist name [qualifiers]* lambda-list &body body))
-  #+Genera (declare (zwei:indentation . zwei:indent-for-clos-defmethod))
   (assert (and (listp name) (eq (first name) 'setf) (null (cddr name))) ()
 	  "Syntax error in ~S: This only works on ~S methods" 'defmethod* 'setf)
   (let (qualifiers real-arglist body accessor-arg
