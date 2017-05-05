@@ -13,7 +13,7 @@ DCL	= dcli
 # case_mode:
 #	ansi -- traditional case-insensitive upper-case CL
 #	modern -- case-sensitive lower-case CL
-case_mode = modern
+case_mode = ansi
 
 ifeq ($(case_mode),ansi)
 CASE_MODE		= :case-insensitive-upper
