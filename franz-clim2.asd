@@ -9,11 +9,10 @@
 ;;; based on `clim-standalone' in sys/sysdcl.lisp
 (defsystem #:franz-clim2/core
   :description "Core functionality (doesn't contain backends)."
-  :components ((:file "utils/packages")
-               (:file "utils/defun-utilities")
-               (:module "clim"
+  :depends-on (#:franz-clim2/silica)
+  :components ((:module "clim"
                         :components
-                        (#+(or) "Basic tools"
+                        (;#+(or) "Basic tools"
                          (:file "gestures")
                          (:file "defprotocol")
                          (:file "stream-defprotocols")
@@ -97,6 +96,42 @@
 
                          #+(or) "Bootstrap everything"
                          (:file "stream-trampolines")))))
+
+(defsystem #:franz-clim2/utils
+  :components
+  ((:file "utils/packages")
+   (:file "utils/defun-utilities")))
+
+(defsystem #:franz-clim2/silica
+  :depends-on (#:franz-clim2/utils)
+  :components
+  ((:module "silica"
+            :components
+            (;#+(or) "Silica"
+             (:file "macros")
+             (:file "classes")
+             (:file "text-style")
+             (:file "sheet")
+             (:file "mirror")
+             (:file "event")
+             (:file "port")
+             (:file "medium")
+             (:file "framem")
+             (:file "graphics")
+             (:file "pixmaps")
+             (:file "std-sheet")
+
+             ;; "Windshield", aka "DashBoard"
+             #+(or) "Layout gadgets"
+             (:file "layout")
+             (:file "db-layout")
+             (:file "db-box")
+             (:file "db-table")
+
+             #+(or) "'Physical' gadgets"
+             (:file "gadgets")
+             (:file "db-border")
+             (:file "db-scroll")))))
 
 (defsystem #:franz-clim2/postscript
   :description "Draw-only backend as defined in the specification.")
