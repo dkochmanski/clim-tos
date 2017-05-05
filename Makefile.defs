@@ -27,17 +27,6 @@ ifndef CASE_MODE
 ..........................case_mode not defined or bad value...................
 endif
 
-# This controls whether patches are loaded before dumping an image.
-# They should be loaded except during development
-# load_patches:
-#	yes -- load them
-#	no -- don't load
-load_patches = yes
-
-ifeq ($(load_patches),no)
-STOP_PATCHES = '(pushnew :clim-dont-load-patches *features*)'
-endif
-
 CL	= $(LISP) -I $(DCL)
 CLOPTS	= -qq -batch -backtrace-on-error -locale japan.euc
 
