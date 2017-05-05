@@ -1,15 +1,15 @@
 
 (in-package #:asdf-user)
 
-(defsystem #:franz-clim2
+(defsystem #:gramps-clim2
   :description "CLIM 2 implementation released by Franz Inc."
   :license "BSD-4-Clause"
-  :depends-on (#:franz-clim2/core))
+  :depends-on (#:gramps-clim2/core))
 
 ;;; based on `clim-standalone' in sys/sysdcl.lisp
-(defsystem #:franz-clim2/core
+(defsystem #:gramps-clim2/core
   :description "Core functionality (doesn't contain backends)."
-  :depends-on (#:franz-clim2/silica)
+  :depends-on (#:gramps-clim2/silica)
   :components ((:module "clim"
                         :components
                         (;#+(or) "Basic tools"
@@ -98,7 +98,7 @@
                          (:file "stream-trampolines")))))
 
 ;;; based on `clim-utils'
-(defsystem #:franz-clim2/utils
+(defsystem #:gramps-clim2/utils
   :components
   ((:module "utils"
             :components ((:file "packages")
@@ -128,8 +128,8 @@
                          (:file "designs")))))
 
 ;;; based on `clim-silica'
-(defsystem #:franz-clim2/silica
-  :depends-on (#:franz-clim2/utils)
+(defsystem #:gramps-clim2/silica
+  :depends-on (#:gramps-clim2/utils)
   :components
   ((:module "silica"
             :components
@@ -159,11 +159,11 @@
              (:file "db-border")
              (:file "db-scroll")))))
 
-(defsystem #:franz-clim2/postscript
+(defsystem #:gramps-clim2/postscript
   :description "Draw-only backend as defined in the specification.")
 
-(defsystem #:franz-clim2/clx-backend
+(defsystem #:gramps-clim2/clx-backend
   :description "Reference backend for X-Window system.")
 
-(defsystem #:franz-clim2/examples
-  :description "Applications bundled in franz-clim2 repository.")
+(defsystem #:gramps-clim2/examples
+  :description "Applications bundled in gramps-clim2 repository.")
