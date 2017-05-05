@@ -56,11 +56,6 @@
       CCL-2)				;Except for CLOSE (and WITH-OPEN-STREAM)
 (pushnew :clim-uses-lisp-stream-functions *features*)
 
-;;; CLIM-ANSI-Conditions means this lisp truly supports the ANSI CL condition system
-;;; CLIM-Conditions      means that it has a macro called DEFINE-CONDITION but that it works
-;;;                      like Allegro 3.1.13 or Lucid.
-(pushnew :CLIM-ANSI-Conditions *features*)
-
 #+Allegro
 (pushnew :allegro-v4.0-constructors *features*)
 
