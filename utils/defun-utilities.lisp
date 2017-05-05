@@ -6,18 +6,6 @@
 
 ;;;"Copyright (c) 1991 International Lisp Associates.  All rights reserved."
 
-;;; Useful proclamations, very early on
-
-;; not part of ANSI CL, but they're nice to have around
-#+(or (and MCL CCL-2) allegro Minima Clozure SBCL)
-(eval-when (compile load eval)
-  (proclaim '(declaration values))
-  (proclaim '(declaration arglist)))
-
-#+aclpc
-(eval-when (compile load eval)
-  (proclaim '(declaration arglist)))
-
 ;;; Moved here from DEFUN.  DEFUN now only contains the portable implementation
 ;;; of the DYNAMIC-EXTENT declaration, and so is not loaded into Lisps which 
 ;;; implement that declaration.
