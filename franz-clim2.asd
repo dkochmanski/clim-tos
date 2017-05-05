@@ -97,11 +97,37 @@
                          #+(or) "Bootstrap everything"
                          (:file "stream-trampolines")))))
 
+;;; based on `clim-utils'
 (defsystem #:franz-clim2/utils
   :components
-  ((:file "utils/packages")
-   (:file "utils/defun-utilities")))
+  ((:module "utils"
+            :components ((:file "packages")
+                         (:file "defun-utilities")
+                         (:file "reader")
+                         (:file "clos-patches")
+                         (:file "clos")
 
+                         ;; General lisp extensions
+                         (:file "utilities")
+                         (:file "lisp-utilities")
+                         (:file "processes")
+                         (:file "queue")
+                         (:file "timers")
+                         (:file "protocols")
+
+                         ;; Establish a uniform stream model
+                         #+ (or) (:file "trivial-gray-streams")
+
+                         ;; Basic utilities for Silica and CLIM
+                         (:file "clim-macros")
+                         (:file "transformations")
+                         (:file "regions")
+                         (:file "region-arithmetic")
+                         (:file "extended-regions")
+                         (:file "base-designs")
+                         (:file "designs")))))
+
+;;; based on `clim-silica'
 (defsystem #:franz-clim2/silica
   :depends-on (#:franz-clim2/utils)
   :components
