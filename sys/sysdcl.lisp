@@ -206,7 +206,6 @@
    "stream-defprotocols"
    "defresource"
    "temp-strings"
-   #+(and MCL CCL-2) "coral-defs"
    "clim-defs"
 
    ;; Definitions and protocols
