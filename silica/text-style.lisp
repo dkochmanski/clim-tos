@@ -346,9 +346,9 @@
             (setf (cdr mapping-pair) underlying)
             (push (cons logical underlying) (cdr pair)))))))
 
-(defconstant %%face-code-no-merge (byte 1 28))
-(defconstant %%face-code-class (byte 4 24))
-(defconstant %%face-code-faces (byte 24 0))
+(defparameter %%face-code-no-merge (byte 1 28))
+(defparameter %%face-code-class (byte 4 24))
+(defparameter %%face-code-faces (byte 24 0))
 
 (defun face->face-code (face)
   (when (null face) (return-from face->face-code nil))

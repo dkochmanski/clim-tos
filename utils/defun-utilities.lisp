@@ -15,7 +15,6 @@
 (defparameter *declarations-may-be-exposed-by-macro-expansion* nil)
 
 (cl:defun extract-declarations (body &optional environment)
-  (declare (values documentation declarations body))
   (let ((declarations nil)
 	(documentation nil))
     (block process-declarations

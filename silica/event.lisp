@@ -701,21 +701,10 @@
   ;; Gosh, this macro is bad style, and violates the MOP.
   ;; Piling warts upon warts, we have to force finalization at
   ;; macroexpand time... - smh 18may93
-  (#+Allegro clos:finalize-inheritance 
-   #+aclpc acl:finalize-inheritance
-   #+Clozure ccl:finalize-inheritance
-   #-(or Allegro aclpc Clozure) cl:finalize-inheritance
-   (find-class event-class)) ;smh 18may93
-  (let* ((slots #+aclpc  (acl:class-slots (find-class event-class))
-                #+(and MCL CCL-2) (ccl:class-slots (find-class event-class))
-                #+Clozure (ccl:class-slots (find-class event-class))
-                #-(or (and MCL CCL-2) aclpc Clozure) (clos:class-slots (find-class event-class))
-                )
-         (slot-names #+aclpc (mapcar #'acl:slot-definition-name slots)
-                     #+(and MCL CCL-2) (mapcar #'ccl:slot-definition-name slots)
-                     #+Clozure (mapcar #'ccl:slot-definition-name slots)
-                     #-(or (and MCL CCL-2) aclpc Clozure) (mapcar #'clos:slot-definition-name slots)
-                     )
+  (closer-mop:finalize-inheritance
+   (find-class event-class))            ;smh 18may93
+  (let* ((slots (closer-mop:class-slots (find-class event-class)))
+         (slot-names (mapcar #'closer-mop:slot-definition-name slots))
          (resource-name (fintern "*~A-~A*" event-class 'resource)))
     `(progn
        (defvar ,resource-name nil)
@@ -723,25 +712,25 @@
          ,@(mapcar #'(lambda (slot)
                        (if (eq slot 'timestamp)
                            `(setf (slot-value event ',slot)
-                              (or ,slot (atomic-incf *event-timestamp*)))
-                         `(setf (slot-value event ',slot) ,slot)))
+                                  (or ,slot (atomic-incf *event-timestamp*)))
+                           `(setf (slot-value event ',slot) ,slot)))
                    slot-names))
        (let ((old (assoc ',event-class *resourced-events*)))
          (unless old
            (setq *resourced-events*
-             (append *resourced-events*
-                     (list (list ',event-class ',resource-name
-                                 ;; Allocates, misses, creates, deallocates
-                                 #+meter-events ,@(list 0 0 0 0)))))))
+                 (append *resourced-events*
+                         (list (list ',event-class ',resource-name
+                                     ;; Allocates, misses, creates, deallocates
+                                     #+meter-events ,@(list 0 0 0 0)))))))
        ;; When an event is in the event resource, we use the timestamp
        ;; to point to the next free event
        (let ((previous-event (make-instance ',event-class)))
          (setq ,resource-name previous-event)
          (repeat ,(1- nevents)
-                 (let ((event (make-instance ',event-class
-                                             :timestamp nil)))
-                   (setf (slot-value previous-event 'timestamp) event)
-                   (setq previous-event event)))))))
+           (let ((event (make-instance ',event-class
+                                       :timestamp nil)))
+             (setf (slot-value previous-event 'timestamp) event)
+             (setq previous-event event)))))))
 
 (define-event-resource pointer-motion-event 20)
 (define-event-resource pointer-enter-event 20)
@@ -829,15 +818,9 @@
 (defun copy-event (event)
   (let* ((class (class-of event))
          (copy (allocate-instance class)))
-    (dolist (slot (#+aclpc acl:class-slots 
-                   #+Clozure ccl:class-slots
-                   #-(or aclpc Clozure) clos:class-slots class))
-      (let ((name (#+aclpc acl:slot-definition-name 
-                   #+Clozure ccl:slot-definition-name
-                   #-(or aclpc Clozure) clos:slot-definition-name slot))
-            (allocation (#+aclpc acl:slot-definition-allocation
-                         #+Clozure ccl:slot-definition-allocation
-                         #-(or aclpc Clozure) clos:slot-definition-allocation slot)))
+    (dolist (slot (closer-mop:class-slots class))
+      (let ((name (closer-mop:slot-definition-name slot))
+            (allocation (closer-mop:slot-definition-allocation slot)))
         (when (and (eql allocation :instance)
                    (slot-boundp event name))
           (setf (slot-value copy name) (slot-value event name)))))

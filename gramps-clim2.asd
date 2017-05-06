@@ -129,7 +129,8 @@
 
 ;;; based on `clim-silica'
 (defsystem #:gramps-clim2/silica
-  :depends-on (#:gramps-clim2/utils)
+  :depends-on (#:gramps-clim2/utils
+               #:closer-mop)
   :components
   ((:module "silica"
             :components

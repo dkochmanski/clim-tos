@@ -147,7 +147,9 @@
                 *keyword-package*))))
 
 ;; A fixnum, incremented only with ATOMIC-INCF
-(defvar *event-timestamp* 0)
+(declaim (type fixnum *event-timestamp*))
+#+sbcl (sb-ext:defglobal *event-timestamp* 0)
+#-sbcl (defvar *event-timestamp* 0)
 
 (define-event-class event ()
   ((timestamp :reader event-timestamp
@@ -244,7 +246,7 @@
 (defconstant +pointer-right-button+  (ash 1 10))
 
 ;; The order of this must match the values above
-(defconstant *pointer-buttons* '#(:left :middle :right))
+(defparameter *pointer-buttons* '#(:left :middle :right))
 
 (deftype button-name () '(member :left :middle :right))
 
@@ -260,7 +262,7 @@
 (defconstant +double-key+  (ash 1 5))
 
 ;; The order of this must match the values above
-(defconstant *modifier-keys* '#(:shift :control :meta :super :hyper :double))
+(defparameter *modifier-keys* '#(:shift :control :meta :super :hyper :double))
 
 (deftype shift-keysym   () '(member :left-shift :right-shift))
 (deftype double-keysym  () '(member :left-double :right-double))
