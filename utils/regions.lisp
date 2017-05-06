@@ -11,8 +11,7 @@
 (defgeneric transform-region (transformation region))
 (defgeneric untransform-region (transformation region))
 
-(defgeneric point-position (point)
-  #-aclpc (declare (values x y)))
+(defgeneric point-position (point))
 (defgeneric point-x (point))
 (defgeneric point-y (point))
 
@@ -24,8 +23,7 @@
 
 (defgeneric region-set-function (region))
 (defgeneric region-set-regions (region &key normalize))
-(defgeneric map-over-region-set-regions (function region &key normalize)
-  (declare (dynamic-extent function)))
+(defgeneric map-over-region-set-regions (function region &key normalize))
 
 (defgeneric region-union (region1 region2))
 (defgeneric region-intersection (region1 region2))
@@ -33,10 +31,8 @@
 
 (defgeneric polyline-closed (polyline))
 (defgeneric polygon-points (polygon))
-(defgeneric map-over-polygon-coordinates (function polygon)
-  (declare (dynamic-extent function)))
-(defgeneric map-over-polygon-segments (function polygon)
-  (declare (dynamic-extent function)))
+(defgeneric map-over-polygon-coordinates (function polygon))
+(defgeneric map-over-polygon-segments (function polygon))
 
 (defgeneric line-start-point (line))
 (defgeneric line-end-point (line))
@@ -45,34 +41,27 @@
 
 (defgeneric rectangle-min-point (rectangle))
 (defgeneric rectangle-max-point (rectangle))
-(defgeneric rectangle-edges* (rectangle)
-  #-aclpc (declare (values min-x min-y max-x max-y)))
+(defgeneric rectangle-edges* (rectangle))
 (defgeneric rectangle-min-x (rectangle))
 (defgeneric rectangle-min-y (rectangle))
 (defgeneric rectangle-max-x (rectangle))
 (defgeneric rectangle-max-y (rectangle))
 (defgeneric rectangle-width (rectangle))
 (defgeneric rectangle-height (rectangle))
-(defgeneric rectangle-size (rectangle)
-  #-aclpc (declare (values width height)))
+(defgeneric rectangle-size (rectangle))
 
 (defgeneric ellipse-center-point (ellipse))
 (defgeneric ellipse-center-point* (ellipse))
-(defgeneric ellipse-radii (ellipse)
-  #-aclpc (declare (values radius-1-dx radius-1-dy radius-2-dx radius-2-dy)))
+(defgeneric ellipse-radii (ellipse))
 (defgeneric ellipse-start-angle (ellipse))
 (defgeneric ellipse-end-angle (ellipse))
 
 (defgeneric opacity-value (opacity))
 
-(defgeneric bounding-rectangle* (region)
-  #-aclpc (declare (values left top right bottom)))
-(defgeneric bounding-rectangle-set-edges (region left top right bottom)
-  #-aclpc (declare (values region)))
-(defgeneric bounding-rectangle-set-position (region x y)
-  #-aclpc (declare (values region)))
-(defgeneric bounding-rectangle-set-size (region width height)
-  #-aclpc (declare (values region)))
+(defgeneric bounding-rectangle* (region))
+(defgeneric bounding-rectangle-set-edges (region left top right bottom))
+(defgeneric bounding-rectangle-set-position (region x y))
+(defgeneric bounding-rectangle-set-size (region width height))
 
 (defmacro define-symmetric-region-method (name (region1 region2) &body body)
   `(progn
@@ -788,18 +777,18 @@
     bottom))
 (define-bounding-rectangle-setf bottom)
 
-(defgeneric* (setf bounding-rectangle*) (left top right bottom region))
-(defmethod* (setf bounding-rectangle*) 
-	    (left top right bottom (region standard-bounding-rectangle))
+(defgeneric (setf bounding-rectangle*) (left top right bottom region))
+(defmethod (setf bounding-rectangle*) 
+    (left top right bottom (region standard-bounding-rectangle))
   (bounding-rectangle-set-edges region left top right bottom))
 
-(defgeneric* (setf bounding-rectangle-position) (x y region))
-(defmethod* (setf bounding-rectangle-position) 
+(defgeneric (setf bounding-rectangle-position) (x y region))
+(defmethod (setf bounding-rectangle-position) 
 	    (x y (region standard-bounding-rectangle))
   (bounding-rectangle-set-position region x y))
 
-(defgeneric* (setf bounding-rectangle-size) (width height region))
-(defmethod* (setf bounding-rectangle-size) 
+(defgeneric (setf bounding-rectangle-size) (width height region))
+(defmethod (setf bounding-rectangle-size) 
 	    (width height (region standard-bounding-rectangle))
   (bounding-rectangle-set-size region width height))
 
