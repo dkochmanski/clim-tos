@@ -2821,7 +2821,6 @@
     with-stack-copy-of-list
     with-stack-list
     with-stack-list*
-    with-standard-io-environment
     with-warnings-for-definition
     writing-clauses
 
