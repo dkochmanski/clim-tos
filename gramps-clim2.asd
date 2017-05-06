@@ -117,6 +117,7 @@
 
                          ;; Establish a uniform stream model
                          #+ (or) (:file "trivial-gray-streams")
+                         (:file "clim-streams")
 
                          ;; Basic utilities for Silica and CLIM
                          (:file "clim-macros")
