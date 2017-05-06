@@ -458,10 +458,6 @@
 ;;; keyword :STREAM argument to *standard-input*.  The application can call
 ;;; stream-read-gesture directly.
 (defun read-gesture (&rest args &key (stream *standard-input*) &allow-other-keys)
-  (declare (arglist &rest args
-                    &key (stream *standard-input*)
-                         timeout peek-p input-wait-test input-wait-handler
-                         pointer-button-press-handler))
   (declare (dynamic-extent args))
   (with-keywords-removed (keywords args '(:stream))
     (apply #'stream-read-gesture stream keywords)))
@@ -694,8 +690,8 @@
   ;; Make sure the pointer is on the right sheet
   (set-sheet-pointer-position stream pointer x y))
 
-(defgeneric* (setf stream-pointer-position) (x y stream))
-(defmethod* (setf stream-pointer-position) (x y (stream t))
+(defgeneric (setf stream-pointer-position) (x y stream))
+(defmethod (setf stream-pointer-position) (x y (stream t))
   (stream-set-pointer-position stream x y))
 
 (defmethod stream-set-input-focus ((stream input-protocol-mixin))

@@ -51,9 +51,9 @@
     ;; cares?? --CIM
     (values x y (+ x width) (+ y width))))
 
-(defconstant cursor_active (byte 1 0))
-(defconstant cursor_state  (byte 1 1))
-(defconstant cursor_focus  (byte 1 2))
+(defparameter cursor_active (byte 1 0)) ;NOTE use serapeum's lexical global instead? -- jacek.zlydach, 2017-05-06
+(defparameter cursor_state  (byte 1 1))  ;NOTE use serapeum's lexical global instead? -- jacek.zlydach, 2017-05-06
+(defparameter cursor_focus  (byte 1 2))  ;NOTE use serapeum's lexical global instead? -- jacek.zlydach, 2017-05-06
 
 (defun decode-cursor-flags (flags)
   #+Genera (declare (values active state focus))
@@ -69,8 +69,8 @@
   (with-slots (x y) cursor
     (values x y)))
 
-(defgeneric* (setf cursor-position) (x y cursor))
-(defmethod* (setf cursor-position) (x y (cursor standard-text-cursor))
+(defgeneric (setf cursor-position) (x y cursor))
+(defmethod (setf cursor-position) (x y (cursor standard-text-cursor))
   (cursor-set-position cursor x y))
 
 (defmethod cursor-set-position ((cursor standard-text-cursor) nx ny &optional fastp)

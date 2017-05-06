@@ -98,8 +98,8 @@
 (progn
 
 (defmacro write-forwarding-cl-output-stream-function (name args &key #+Genera message)
-  (let* ((cl-name (find-symbol (symbol-name name) (find-package :lisp)))
-	 (method-name (intern (lisp:format nil "~A-~A" 'stream (symbol-name name))))
+  (let* ((cl-name (find-symbol (symbol-name name) (find-package :cl)))
+	 (method-name (intern (cl:format nil "~A-~A" 'stream (symbol-name name))))
 	 (optional-args (or (member '&optional args) (member '&key args)))
 	 (required-args (ldiff args optional-args))
 	 (optional-parameters (mapcan #'(lambda (arg)
@@ -182,8 +182,8 @@
 						     &key eof
 							  #+Genera message
 							  additional-arguments)
-  (let* ((cl-name (find-symbol (symbol-name name) (find-package :lisp)))
-	 (method-name (intern (lisp:format nil "~A-~A" 'stream (symbol-name name))))
+  (let* ((cl-name (find-symbol (symbol-name name) (find-package :cl)))
+	 (method-name (intern (cl:format nil "~A-~A" 'stream (symbol-name name))))
 	 (args (mapcar #'(lambda (var) (if (atom var) var (first var)))
 		       (order-preserving-set-difference lambda-list lambda-list-keywords)))
 	 (stream-args (remove 'stream args))
@@ -264,10 +264,10 @@
   (cond ((streamp stream)
 	 ;; this isn't going to quite work for ~&,
 	 ;; but it's better than nothing.
-	 (write-string (apply #'lisp:format nil format-control format-args) stream)
+	 (write-string (apply #'cl:format nil format-control format-args) stream)
 	 nil)
 	(t
-	 (apply #'lisp:format stream format-control format-args))))
+	 (apply #'cl:format stream format-control format-args))))
 
 ) ;; #-Cloe-Runtime
 

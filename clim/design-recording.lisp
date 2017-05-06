@@ -28,9 +28,7 @@
       (map-over-output-records #'make-design record))
     (make-instance 'composite-over :designs (apply #'vector designs))))
 
-(defgeneric draw-design (design stream &rest args)
-  #-(or aclpc acl86win32) (declare (arglist design stream &key . #.(all-drawing-options-lambda-list nil))))
-
+(defgeneric draw-design (design stream &rest args))
 
 ;;; Simple composite designs
 (defmethod draw-design ((composite composite-over) stream &rest args)

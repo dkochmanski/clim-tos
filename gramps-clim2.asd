@@ -31,7 +31,7 @@
 
                          #+(or) "Output recording"
                          (:file "recording-defs")
-                         (:file "formatting-output-defs")
+                         (:file "formatted-output-defs")
                          (:file "recording-protocol")
                          (:file "text-recording")
                          (:file "graphics-recording")
@@ -118,6 +118,7 @@
                          ;; Establish a uniform stream model
                          #+ (or) (:file "trivial-gray-streams")
                          (:file "clim-streams")
+                         (:file "cl-streams")
 
                          ;; Basic utilities for Silica and CLIM
                          (:file "clim-macros")

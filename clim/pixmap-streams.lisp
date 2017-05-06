@@ -73,7 +73,7 @@
         (funcall continuation pixmap-stream))
       (slot-value pixmap-medium 'silica::pixmap))))
 
-(defconstant +gray-out-ink+
+(defparameter +gray-out-ink+
     (compose-in (make-opacity .5) +background-ink+))
 
 (defun pixmap-from-menu-item (associated-window menu-item printer presentation-type

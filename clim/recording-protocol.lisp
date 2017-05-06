@@ -133,8 +133,8 @@
   (declare (type coordinate x y))
   (bounding-rectangle-set-position record (coordinate x) (coordinate y)))
 
-(defgeneric* (setf output-record-position) (x y record))
-(defmethod* (setf output-record-position) (x y (record t))
+(defgeneric (setf output-record-position) (x y record))
+(defmethod (setf output-record-position) (x y (record t))
   (output-record-set-position record x y))
 
 (defmethod output-record-start-cursor-position ((record output-record-element-mixin))
@@ -157,8 +157,8 @@
             (+ left dx) (+ top dy) (+ right dx) (+ bottom dy))
           (setf start-x nx start-y ny))))))
 
-(defgeneric* (setf output-record-start-cursor-position) (x y record))
-(defmethod* (setf output-record-start-cursor-position) (x y (record t))
+(defgeneric (setf output-record-start-cursor-position) (x y record))
+(defmethod (setf output-record-start-cursor-position) (x y (record t))
   (output-record-set-start-cursor-position record x y))
 
 (defmethod output-record-end-cursor-position ((record output-record-element-mixin))
@@ -171,8 +171,8 @@
     (setf end-x (coordinate nx))
     (setf end-y (coordinate ny))))
 
-(defgeneric* (setf output-record-end-cursor-position) (x y record))
-(defmethod* (setf output-record-end-cursor-position) (x y (record t))
+(defgeneric (setf output-record-end-cursor-position) (x y record))
+(defmethod (setf output-record-end-cursor-position) (x y (record t))
   (output-record-set-end-cursor-position record x y))
 
 (defmethod output-record-old-start-cursor-position ((record output-record-element-mixin))
@@ -324,8 +324,7 @@
 #+Genera (zwei:defindentation (map-over-output-records-overlapping-region 2 1))
 (defgeneric map-over-output-records-overlapping-region
             (function record region
-             &optional x-offset y-offset &rest continuation-args)
-  (declare (dynamic-extent function continuation-args)))
+             &optional x-offset y-offset &rest continuation-args))
 
 ;;; This must map over the children in such a way that, when it maps over
 ;;; overlapping children, the topmost (most recently inserted) child is
@@ -336,8 +335,7 @@
 #+Genera (zwei:defindentation (map-over-output-records-containing-position 3 1))
 (defgeneric map-over-output-records-containing-position
             (function record x y
-             &optional x-offset y-offset &rest continuation-args)
-  (declare (dynamic-extent function continuation-args)))
+             &optional x-offset y-offset &rest continuation-args))
 
 ;;; X-offset and Y-offset represent the accumulated offset between the
 ;;; regions's native coordinates and "our" coordinates and must be added
@@ -425,7 +423,6 @@
 ;; to be ADDED to any coordinates relative to OUTPUT-RECORD to give you
 ;; absolute coordinates.
 (defun convert-from-relative-to-absolute-coordinates (stream output-record)
-  (declare (values x-offset y-offset))
   (cond ((null output-record)
          ;;--- Why on earth do we need this now?
          (values (coordinate 0) (coordinate 0)))
@@ -449,7 +446,6 @@
 ;; to be ADDED to any absolute coordinates to give you coordinates
 ;; relative to OUTPUT-RECORD.
 (defun convert-from-absolute-to-relative-coordinates (stream output-record)
-  (declare (values x-offset y-offset))
   (cond ((null output-record)
          ;;--- Why on earth do we need this now?
          (values (coordinate 0) (coordinate 0)))

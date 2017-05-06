@@ -45,6 +45,12 @@
       #-Clozure t
       (ccl:augment-environment environment)))
 
+#+ (or sbcl ccl)
+(defun-inline  compile-file-environment-p (environment)
+  (declare (ignore environment))
+  ;; FIXME this shouldn't even need to exist, I think. -- jacek.zlydach, 2017-05-06
+  nil)
+
 #+(and allegro (not (version>= 4 1)))
 (defgeneric make-load-form (object))
 

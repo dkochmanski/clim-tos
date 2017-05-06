@@ -13,7 +13,9 @@
 ;;; We use the term "extent" here to mean a bounding rectangle...
 
 ;; A fixnum, incremented only with ATOMIC-INCF
-(defvar *generation-tick* 0)
+(declaim (type fixnum *generation-tick*))
+#+sbcl(sb-ext:defglobal *generation-tick* 0)
+#-sbcl(defvar *generation-tick* 0)
 
 (define-protocol-class updating-output-record (output-record))
 
@@ -315,8 +317,14 @@
   `(letf-globally (((stream-redisplaying-p ,stream) t))
      ;; the generation is only necessary for output-records that move
      ;; in the hierarchy.
-     (let ((*generation-tick* (atomic-incf *generation-tick*)))
-       ,@body)))
+
+     ;; NOTE not sure if this is a proper workaround due to SBCL requiring
+     ;; *generation-tick* to be "global", i.e. not special. -- jacek.zlydach, 2017-05-06
+     #-sbcl (let ((*generation-tick* (atomic-incf *generation-tick*)))
+             ,@body)
+     #+sbcl (progn
+              (atomic-incf *generation-tick*)
+              ,@body)))
 
 (defun redisplay (record stream &key (check-overlapping t))
   (unless (redisplayable-stream-p stream)

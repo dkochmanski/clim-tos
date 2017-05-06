@@ -811,7 +811,6 @@
 (defun accept-comma (stream desired-type view
                      &key (delimiter-character #\,)
                           echo-space echo-string-before-blip)
-  (declare (values more-to-come object type))
   (with-input-context (desired-type) (object type)
        (loop
          (let ((char (read-gesture :stream stream)))
@@ -954,7 +953,7 @@
 ;;;; Sequence Presentation Types
 
 (define-presentation-type sequence (element-type)
-  :inherit-from t                        ;enforce CL definition
+  :inherit-from (find-class 't)                     ;enforce CL definition ; NOTE changed "t" to "(find-class 't)" -- jacek.zlydach, 2017-05-06
   :parameters-are-types t
   :options ((separator #\,)
             (echo-space t)))

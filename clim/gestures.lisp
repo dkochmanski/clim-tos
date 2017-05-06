@@ -241,7 +241,6 @@
            (= m1 m2)))))
 
 (defun parse-gesture-spec (gesture-spec)
-  (declare (values keysym modifier-state))
   (when (atom gesture-spec)
     (return-from parse-gesture-spec
       (if (and (characterp gesture-spec)

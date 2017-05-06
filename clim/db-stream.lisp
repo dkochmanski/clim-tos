@@ -137,7 +137,6 @@
     (setf display-time value)))
 
 (defmethod pane-needs-redisplay ((pane clim-stream-pane))
-  (declare (values needs-redisplay clear))
   (with-slots (display-time) pane
     (ecase display-time
       ((t)
@@ -560,8 +559,8 @@
   (when (pane-viewport stream)
     (scroll-extent stream x y)))
 
-(defgeneric* (setf window-viewport-position) (x y stream))
-(defmethod* (setf window-viewport-position) (x y (stream clim-stream-sheet))
+(defgeneric (setf window-viewport-position) (x y stream))
+(defmethod (setf window-viewport-position) (x y (stream clim-stream-sheet))
   (window-set-viewport-position stream x y))
 
 (defmethod window-inside-edges ((stream clim-stream-sheet))

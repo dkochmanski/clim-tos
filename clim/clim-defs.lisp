@@ -292,8 +292,7 @@
             &key partial-completers allow-any-input
                  possibility-printer (help-displays-possibilities t)) 
            &body body)
-  (declare (values object success string nmatches)
-           (ignore allow-any-input possibility-printer help-displays-possibilities))
+  (declare (ignore allow-any-input possibility-printer help-displays-possibilities))
   #+Genera (declare (zwei:indentation 0 3 1 1))
   (let ((string '#:string)
         (action '#:action))
@@ -345,14 +344,6 @@
 
 ;;; From ACCEPTING-VALUES.LISP
 (defmacro accepting-values ((&optional stream &rest args) &body body)
-  (declare (arglist (&optional stream
-                     &key frame-class command-table own-window
-                          background foreground text-style
-                          exit-boxes resize-frame align-prompts
-                          initially-select-query-identifier modify-initial-query
-                          resynchronize-every-pass (check-overlapping t)
-                          label x-position y-position width height (scroll-bars nil))
-                    &body body))
   #+Genera (declare (zwei:indentation 0 3 1 1))
   (default-input-stream stream accepting-values)
   `(flet ((accepting-values-body (,stream) ,@body))

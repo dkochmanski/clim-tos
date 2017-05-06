@@ -24,7 +24,6 @@
                (insert-default nil) (replace-input t)
                (present-p nil) (active-p t))
   (declare (dynamic-extent accept-args))
-  (declare (values object type))
   (declare (ignore prompt-mode display-default
 		   activation-gestures additional-activation-gestures
 		   delimiter-gestures additional-delimiter-gestures 

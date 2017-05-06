@@ -119,8 +119,6 @@
 ;; of one argument, the element.
 (defmacro do-history-elements ((history element-var index-var &rest options)
                                &body body)
-  (declare (arglist (history element-var index-var
-                     &key index offset cutoff-length test) &body body))
   `(flet ((do-history-elements-body (,element-var ,index-var) ,@body))
      (declare (dynamic-extent #'do-history-elements-body))
      (do-history-elements-1 ,history #'do-history-elements-body ,@options)))

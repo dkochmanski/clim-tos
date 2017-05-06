@@ -28,7 +28,6 @@
   (:default-initargs :query-table (make-hash-table :test #'equal)))
 
 (defmethod find-query ((record accept-values-output-record) query-identifier)
-  (declare (values query found-p))
   (gethash query-identifier (slot-value record 'query-table)))
 
 ;; We are in control of the AVV code, and we know that there is only 1 AVV
@@ -1144,12 +1143,6 @@
                                                                                                                  &body body &environment env)
   #+Genera (declare (zwei:indentation 1 3 2 1))
   #-(or Genera Minima) (declare (ignore env))
-  #-acl3.0 ; temporary restriction?
-  (declare (arglist ((&optional stream 
-                                &key documentation query-identifier
-                                (cache-value t) (cache-test #'eql)
-                                view resynchronize)
-                     prompt &body body)))
   (default-input-stream stream accept-values-command-button)
   (with-keywords-removed (options options '(:view))
     (let ((constant-prompt-p
