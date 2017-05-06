@@ -952,11 +952,19 @@
 
 ;;;; Sequence Presentation Types
 
-(define-presentation-type sequence (element-type)
+#+sbcl(define-presentation-type sequence (element-type)
   :inherit-from (find-class 't)                     ;enforce CL definition ; NOTE changed "t" to "(find-class 't)" -- jacek.zlydach, 2017-05-06
   :parameters-are-types t
   :options ((separator #\,)
             (echo-space t)))
+
+;;; NOTE CCL seems to like it the old way -- jacek.zlydach, 2017-05-06
+#-sbcl(define-presentation-type sequence (element-type)
+  :inherit-from t                     ;enforce CL definition
+  :parameters-are-types t
+  :options ((separator #\,)
+            (echo-space t)))
+
 
 (define-presentation-method describe-presentation-type :after
                             ((type sequence) stream plural-count)

@@ -74,6 +74,12 @@
 	    v))
    (:-ics (make-hash-table :test #'equal))))
 
+;;; NOTE temporary definition to make examples work; not sure
+;;; what implementation would be right. -- jacek.zlydach, 2017-05-06
+#+ (or sbcl ccl)
+(defun mapping-table-initform ()
+  (make-hash-table :test #'equal))
+
 #+(and Allegro (not (or aclpc acl86win32)))
 (defun mapping-cache-initform ()
   (excl:ics-target-case
@@ -83,6 +89,12 @@
 		(cons nil nil)))
 	    v))
    (:-ics (cons nil nil))))
+
+;;; NOTE temporary definition to make examples work; not sure
+;;; what implementation would be right. -- jacek.zlydach, 2017-05-06
+#+ (or sbcl ccl)
+(defun mapping-cache-initform ()
+  (cons nil nil))
 
 (define-protocol-class sheet ())
 
