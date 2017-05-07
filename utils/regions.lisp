@@ -765,30 +765,30 @@
     top))
 (define-bounding-rectangle-setf top)
 
-(defun-inline bounding-rectangle-right (region) 
-  (with-bounding-rectangle-ltrb (left top right bottom) region 
+(defun-inline bounding-rectangle-right (region)
+  (with-bounding-rectangle-ltrb (left top right bottom) region
     (declare (ignore left top bottom))
     right))
 (define-bounding-rectangle-setf right)
 
-(defun-inline bounding-rectangle-bottom (region) 
-  (with-bounding-rectangle-ltrb (left top right bottom) region 
+(defun-inline bounding-rectangle-bottom (region)
+  (with-bounding-rectangle-ltrb (left top right bottom) region
     (declare (ignore left top right))
     bottom))
 (define-bounding-rectangle-setf bottom)
 
-(defgeneric (setf bounding-rectangle*) (left top right bottom region))
-(defmethod (setf bounding-rectangle*) 
+(defgeneric* (setf bounding-rectangle*) (left top right bottom region))
+(defmethod* (setf bounding-rectangle*)
     (left top right bottom (region standard-bounding-rectangle))
   (bounding-rectangle-set-edges region left top right bottom))
 
-(defgeneric (setf bounding-rectangle-position) (x y region))
-(defmethod (setf bounding-rectangle-position) 
+(defgeneric* (setf bounding-rectangle-position) (x y region))
+(defmethod* (setf bounding-rectangle-position)
 	    (x y (region standard-bounding-rectangle))
   (bounding-rectangle-set-position region x y))
 
-(defgeneric (setf bounding-rectangle-size) (width height region))
-(defmethod (setf bounding-rectangle-size) 
+(defgeneric* (setf bounding-rectangle-size) (width height region))
+(defmethod* (setf bounding-rectangle-size)
 	    (width height (region standard-bounding-rectangle))
   (bounding-rectangle-set-size region width height))
 

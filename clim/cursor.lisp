@@ -69,8 +69,8 @@
   (with-slots (x y) cursor
     (values x y)))
 
-(defgeneric (setf cursor-position) (x y cursor))
-(defmethod (setf cursor-position) (x y (cursor standard-text-cursor))
+(defgeneric* (setf cursor-position) (x y cursor))
+(defmethod* (setf cursor-position) (x y (cursor standard-text-cursor))
   (cursor-set-position cursor x y))
 
 (defmethod cursor-set-position ((cursor standard-text-cursor) nx ny &optional fastp)

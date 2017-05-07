@@ -147,8 +147,8 @@
       (setf cursor-y (coordinate y))))
   (stream-ensure-cursor-visible stream x y))
 
-(defgeneric (setf stream-cursor-position) (x y stream))
-(defmethod (setf stream-cursor-position) (x y (stream t))
+(defgeneric* (setf stream-cursor-position) (x y stream))
+(defmethod* (setf stream-cursor-position) (x y (stream t))
   (stream-set-cursor-position stream x y))
 
 ;; NB: X and Y are already coordinates!

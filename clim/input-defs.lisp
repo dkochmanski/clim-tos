@@ -134,8 +134,8 @@
         (port-set-pointer-position (port pointer) pointer native-x native-y))
     (values x y)))
 
-(defgeneric (setf pointer-position) (x y pointer))
-(defmethod (setf pointer-position) (x y (pointer standard-pointer))
+(defgeneric* (setf pointer-position) (x y pointer))
+(defmethod* (setf pointer-position) (x y (pointer standard-pointer))
   (pointer-set-position pointer x y))
 
 ;; X and Y are in stream coordinates
@@ -190,8 +190,8 @@
       (declare (ignore x y native-x native-y))
       (values root-x root-y))))
 
-(defgeneric (setf pointer-native-position) (x y pointer))
-(defmethod (setf pointer-native-position) (x y (pointer standard-pointer))
+(defgeneric* (setf pointer-native-position) (x y pointer))
+(defmethod* (setf pointer-native-position) (x y (pointer standard-pointer))
   (pointer-set-native-position pointer x y))
 
 ;; X and Y are in native (device) coordinates

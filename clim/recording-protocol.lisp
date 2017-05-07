@@ -133,8 +133,8 @@
   (declare (type coordinate x y))
   (bounding-rectangle-set-position record (coordinate x) (coordinate y)))
 
-(defgeneric (setf output-record-position) (x y record))
-(defmethod (setf output-record-position) (x y (record t))
+(defgeneric* (setf output-record-position) (x y record))
+(defmethod* (setf output-record-position) (x y (record t))
   (output-record-set-position record x y))
 
 (defmethod output-record-start-cursor-position ((record output-record-element-mixin))
@@ -157,8 +157,8 @@
             (+ left dx) (+ top dy) (+ right dx) (+ bottom dy))
           (setf start-x nx start-y ny))))))
 
-(defgeneric (setf output-record-start-cursor-position) (x y record))
-(defmethod (setf output-record-start-cursor-position) (x y (record t))
+(defgeneric* (setf output-record-start-cursor-position) (x y record))
+(defmethod* (setf output-record-start-cursor-position) (x y (record t))
   (output-record-set-start-cursor-position record x y))
 
 (defmethod output-record-end-cursor-position ((record output-record-element-mixin))
@@ -171,8 +171,8 @@
     (setf end-x (coordinate nx))
     (setf end-y (coordinate ny))))
 
-(defgeneric (setf output-record-end-cursor-position) (x y record))
-(defmethod (setf output-record-end-cursor-position) (x y (record t))
+(defgeneric* (setf output-record-end-cursor-position) (x y record))
+(defmethod* (setf output-record-end-cursor-position) (x y (record t))
   (output-record-set-end-cursor-position record x y))
 
 (defmethod output-record-old-start-cursor-position ((record output-record-element-mixin))

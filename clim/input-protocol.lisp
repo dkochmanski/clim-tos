@@ -690,8 +690,8 @@
   ;; Make sure the pointer is on the right sheet
   (set-sheet-pointer-position stream pointer x y))
 
-(defgeneric (setf stream-pointer-position) (x y stream))
-(defmethod (setf stream-pointer-position) (x y (stream t))
+(defgeneric* (setf stream-pointer-position) (x y stream))
+(defmethod* (setf stream-pointer-position) (x y (stream t))
   (stream-set-pointer-position stream x y))
 
 (defmethod stream-set-input-focus ((stream input-protocol-mixin))
