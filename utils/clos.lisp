@@ -224,7 +224,6 @@
   (values `(setf ,accessor-name) t))
 
 (defun make-setf*-function-name (accessor-name)
-  (declare (values setf-function-name defsetf-done-p))
   (let ((writer (get accessor-name 'setf-function-name))
 	(old-p nil))
     (when writer
