@@ -12,7 +12,7 @@
   :depends-on (#:gramps-clim2/silica)
   :components ((:module "clim"
                         :components
-                        (;#+(or) "Basic tools"
+                        (;; Basic tools
                          (:file "gestures")
                          (:file "defprotocol")
                          (:file "stream-defprotocols")
@@ -20,7 +20,7 @@
                          (:file "temp-strings")
                          (:file "clim-defs")
 
-                         #+(or) "Definitions and protocols"
+                         ;; Definitions and protocols
                          (:file "stream-class-defs")
                          (:file "interactive-defs")
                          (:file "cursor")
@@ -29,7 +29,7 @@
                          (:file "input-protocol")
                          (:file "output-protocol")
 
-                         #+(or) "Output recording"
+                         ;; Output recording
                          (:file "recording-defs")
                          (:file "formatted-output-defs")
                          (:file "recording-protocol")
@@ -37,21 +37,21 @@
                          (:file "graphics-recording")
                          (:file "design-recording")
 
-                         #+(or) "Input editing"
+			 ;; Input editing
                          (:file "interactive-protocol")
                          (:file "input-editor-commands")
                          #+(and allegro (not acl86win32)) (:file "japanese-input-editor")
 
-                         #+(or) "Incremental redisplay"
+                         ;; Incremental redisplay
                          (:file "incremental-redisplay")
 
-                         #+(or) "Windows"
+                         ;; Windows (sheets)
                          (:file "coordinate-sorted-set")
                          (:file "r-tree")
                          (:file "window-stream")
                          (:file "pixmap-streams")
 
-                         #+(or) "Presentation types"
+			 ;; Presentation types
                          (:file "ptypes1")
                          (:file "completer")
                          (:file "presentations")
@@ -61,21 +61,21 @@
                          (:file "standard-types")
                          #+allegro (:file "excl-presentations")
 
-                         #+(or) "Formatted output"
+                         ;; Formatted output
                          (:file "table-formatting")
                          (:file "graph-formatting")
                          (:file "surround-output")
                          (:file "text-formatting")
 
-                         #+(or) "Pointer tracking"
+			 ;; Pointer tracking
                          (:file "tracking-pointer")
                          (:file "dragging-output")
 
-                         #+(or) "Gadgets"
+                         ;; Gadgets
                          (:file "db-stream")
                          (:file "gadget-output")
 
-                         #+(or) "Application building substrate"
+                         ;; Application building substrate
                          (:file "accept")
                          (:file "present")
                          (:file "command")
@@ -94,7 +94,7 @@
                          (:file "drag-and-drop")
                          (:file "item-list-manager")
 
-                         #+(or) "Bootstrap everything"
+                         ;; Bootstrap everything
                          (:file "stream-trampolines")))))
 
 ;;; based on `clim-utils'
@@ -136,7 +136,7 @@
   :components
   ((:module "silica"
             :components
-            (;#+(or) "Silica"
+            (;; Silica
              (:file "macros")
              (:file "classes")
              (:file "text-style")
@@ -151,13 +151,13 @@
              (:file "std-sheet")
 
              ;; "Windshield", aka "DashBoard"
-             #+(or) "Layout gadgets"
+             ;; Layout gadgets
              (:file "layout")
              (:file "db-layout")
              (:file "db-box")
              (:file "db-table")
 
-             #+(or) "'Physical' gadgets"
+             ;; 'Physical' gadgets
              (:file "gadgets")
              (:file "db-border")
              (:file "db-scroll")))))
