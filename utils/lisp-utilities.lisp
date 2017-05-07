@@ -48,7 +48,7 @@
 			       (reverse ,run-time-vals))
 	    ,wrapped-body)))))
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defun decode-once-only-arguments (variables)
   (let ((vars nil)
 	(env nil)
@@ -399,7 +399,7 @@
 
 (defvar *gensymbol* 0)
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defun gensymbol (&rest parts)
   (declare (dynamic-extent parts))
   (when (null parts) (setf parts '(gensymbol)))
@@ -507,11 +507,11 @@
 	   (when ,condition-value (setf ,@unwind-forms)))))))
 
 #-(and ansi-90 (not allegro) (not Symbolics))
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (proclaim '(declaration non-dynamic-extent)))
 
 #+aclpc
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (proclaim '(declaration non-dynamic-extent ignorable)))
 
 #+(and ansi-90 (not allegro) (not aclpc) (not Symbolics))
@@ -924,7 +924,7 @@
   (let ((function-name
 	  (make-symbol (cl:format nil "~A-~A-~A" symbol indicator 'property))))
     `(progn (defun ,function-name ,lambda-list ,@body)
-	    (eval-when (load eval) (setf (get ',symbol ',indicator) #',function-name)))))
+	    (eval-when (:load-toplevel :execute) (setf (get ',symbol ',indicator) #',function-name)))))
 
 (defmacro do-delimited-substrings (((string &key (start 0) end)
 				    (start-index-var end-index-var &optional char-var))
@@ -1266,7 +1266,7 @@
 	        (find-class name errorp environment)))
 
 #+(and allegro never-never-and-never)
-(eval-when (compile)
+(eval-when (:compile-toplevel)
   (warn "~S hacked for lack of environment support in 4.1" 'find-class-that-works))
 
 

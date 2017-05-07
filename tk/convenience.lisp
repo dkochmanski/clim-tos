@@ -5,13 +5,13 @@
 (in-package :tk)
 
 #-(version>= 6 1)
-(eval-when (eval compile)
+(eval-when (:execute :compile-toplevel)
   (defmacro define-convenience-class (class superclasses entry-point)
     (let ((c-function-name
 	   (intern (substitute #\_ #\-
 			       (lispify-tk-name entry-point :package nil)))))
       `(progn
-	 (eval-when (eval compile)
+	 (eval-when (:execute :compile-toplevel)
 	   (defforeign ',c-function-name
 	       :entry-point (ff:convert-foreign-name ,entry-point)
 	       :call-direct t
@@ -39,13 +39,13 @@
 		   (xt_manage_child o))
 		 o))))))))
 #+(version>= 6 1)
-(eval-when (eval compile)
+(eval-when (:execute :compile-toplevel)
   (defmacro define-convenience-class (class superclasses entry-point)
     (let ((c-function-name
 	   (intern (substitute #\_ #\-
 			       (lispify-tk-name entry-point :package nil)))))
       `(progn
-	 (eval-when (eval compile)
+	 (eval-when (:execute :compile-toplevel)
 	   (def-foreign-call (,c-function-name ,entry-point)
 	       ((w :foreign-address) (x :foreign-address) (y :foreign-address) (z :int fixnum))
 	     :returning :foreign-address

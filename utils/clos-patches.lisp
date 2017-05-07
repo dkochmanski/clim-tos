@@ -35,7 +35,7 @@
       sys::*compile-file-environment*))
 
 #+(and allegro never-in-a-million-years)
-(eval-when (compile)
+(eval-when (:compile-toplevel)
   (warn "~S hacked for lack of environment support in 4.1" 'compile-file-environment-p))
 
 #+(or (and MCL CCL-2) Clozure)
@@ -90,7 +90,7 @@
 ;;; by load-reference-to-presentation-type-class isn't sufficient without this,
 ;;; because a MAKE-LOAD-FORM form for a presentatation type class could be evaluated
 ;;; before a superclass has been defined.
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (setq compiler::.random-forms-max. 0))
 
 

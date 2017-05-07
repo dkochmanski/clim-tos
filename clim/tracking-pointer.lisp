@@ -7,7 +7,7 @@
 ;;;"Copyright (c) 1990, 1991, 1992 Symbolics, Inc.  All rights reserved.
 ;;; Portions copyright (c) 1988, 1989, 1990 International Lisp Associates."
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 
 ;;; For compile-time checking.
 (defvar *tracking-pointer-clauses* nil)                ;each clause looks like (name arglist)

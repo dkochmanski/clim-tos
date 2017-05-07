@@ -10,7 +10,7 @@
 ;;; on INPUT-EDITING-STREAM-MIXIN rather than on our specific implementation of
 ;;; an input editor.  This may prove to be a foolish decision down the pike.
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defvar *ie-command-arglist* '(stream input-buffer gesture numeric-argument))
 )
 

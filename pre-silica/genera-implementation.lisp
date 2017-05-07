@@ -6,7 +6,7 @@
 "Copyright (c) 1990, 1991, 1992 Symbolics, Inc.  All rights reserved."
 
 ;;; Defined below
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (proclaim '(special *sheet-device*))
   #+IMach (proclaim '(special *small-sheet-device*)))
 

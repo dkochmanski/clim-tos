@@ -52,7 +52,7 @@
 	  #-Genera t
       (setf (window-label top-level-sheet) name))))
 
-(eval-when (eval compile load)
+(eval-when (:execute :compile-toplevel :load-toplevel)
 
 (defstruct (frame-descriptor (:print-function print-frame-descriptor))
   name
@@ -176,7 +176,7 @@
 				     `(list ',name ',type ,@options)))
 			       pane-descriptions)))
 	`(progn
-	   (eval-when (compile)
+	   (eval-when (:compile-toplevel)
 	     (when ',command-table
 	       (setf (compile-time-property ',(first command-table) 'command-table-name) t))
 	     (define-application-frame-1 ',name ',slots ,pane-descriptions

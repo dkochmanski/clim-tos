@@ -35,7 +35,7 @@
 ;; ANSI-90, corresponding to what we think the spec will be, in late 1990.
 
 #+Allegro
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (warn "This file is no longer used in the Allegro port. \
 Something is wrong if this warning appears!"))
 
@@ -45,7 +45,7 @@ Something is wrong if this warning appears!"))
   (pushnew :ansi-90 *features*))
 
 #+Genera
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (multiple-value-bind (major minor) (sct:get-system-version)
     (declare (ignore minor))
     (when (>= major 437)
@@ -111,7 +111,7 @@ Something is wrong if this warning appears!"))
 ;;; *** A temporary workaround, easier than fixing all references to
 ;;; *** LISP:<foo>.  --RWK 20.Nov.90
 #+ANSI-90
-(eval-when (eval compile load)
+(eval-when (:execute :compile-toplevel :load-toplevel)
   (flet ((fix-package (pack-name add-name)
            (setq add-name (string add-name))
            (let ((pack (find-package pack-name)))
@@ -136,12 +136,12 @@ Something is wrong if this warning appears!"))
 ;;;
 
 #-(or Minima Genera)
-(eval-when (eval load compile)
+(eval-when (:execute :load-toplevel :compile-toplevel)
   (shadow (list (intern (symbol-name :make-pathname) :lisp)
                 (intern (symbol-name :pathname-directory) :lisp))))
 
 #-(or Minima Genera)
-(eval-when (eval load compile)
+(eval-when (:execute :load-toplevel :compile-toplevel)
   (export (list (intern (symbol-name :make-pathname) :clim-defsystem)
                 (intern (symbol-name :pathname-directory) :clim-defsystem))))
 
@@ -1211,7 +1211,7 @@ pathname fields are evaluated."
 
 ;; The following are used to prevent multiple compilations/loads from occuring
 ;; during a single call to LOAD-SYSTEM or COMPILE-SYSTEM.
-(eval-when (eval compile)
+(eval-when (:execute :compile-toplevel)
   (proclaim '(special *loaded-systems* *loaded-modules* 
                       *compiled-systems* *compiled-modules*
                       *tracep*)))

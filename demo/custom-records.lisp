@@ -137,7 +137,7 @@
   ;; Eat up the initargs that records are supposed to handle
   (declare (ignore object type single-box)))
 
-(eval-when (compile)
+(eval-when (:compile-toplevel)
   (proclaim '(inline make-data-point)))
 
 (defun make-data-point (u v)

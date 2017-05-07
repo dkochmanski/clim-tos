@@ -8,7 +8,7 @@
 ;;; Portions copyright (c) 1991, 1992 Franz, Inc.  All rights reserved."
 
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 
 ;; NOTE: if you change this list of keywords, you also have to change the keyword arguments
 ;; accepted by (CLOS:METHOD INVOKE-WITH-DRAWING-OPTIONS (DRAWING-STATE-MIXIN T))
@@ -66,7 +66,7 @@
 )        ;eval-when
 
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 
 (defun write-graphics-function-transformer (name
                                             medium-graphics-function-name

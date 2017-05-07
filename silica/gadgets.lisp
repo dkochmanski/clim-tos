@@ -784,7 +784,7 @@ The text-field must have the focus before you can call this function."))
 	:height h :min-height 0 :max-height max-height))))
 
 ;;;#+(or aclpc acl86win32)
-;;;(eval-when (compile load eval)
+;;;(eval-when (:compile-toplevel :load-toplevel :execute)
 ;;;   ;;mm: 11Jan95 - this is defined later in clim\db-strea
 ;;;   (unless (ignore-errors (find-class 'clim-stream-pane))
 ;;;      (defclass clim-stream-pane () ())))

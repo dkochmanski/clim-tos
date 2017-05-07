@@ -3005,7 +3005,7 @@
     modifier-key-index-name))
 
 #+(or aclpc acl86win32)
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
  (intern '#:non-dynamic-extent (find-package :clim-utils)))
 
 (defpackage clim-silica

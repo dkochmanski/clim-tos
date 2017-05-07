@@ -20,7 +20,7 @@
   (warn warn-string)
   nil)
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defmacro with-collection (&body body)
   `(let (($with-collection-result$ nil)
          $with-collection-tail$)

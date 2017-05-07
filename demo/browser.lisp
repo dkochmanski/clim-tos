@@ -170,13 +170,13 @@
 
 ;; This is the most basic instantiable sort of call node.
 ;; Commands and translators are written on this, not on BASIC-CALL-NODE.
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defclass call-node (basic-call-node) ())
 )
 
 ;; CALL-SUBNODEs are a stripped-down version of CALL-NODEs, which mostly
 ;; means that most commands and translators don't operate on subnodes.
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defclass call-subnode (basic-call-node) ())
 )
 
@@ -189,7 +189,7 @@
 
 
 ;; Ellipsis nodes
-(eval-when (load compile eval)
+(eval-when (:load-toplevel :compile-toplevel :execute)
 (defclass ellipsis-call-node
 	  (basic-call-node)
   ((replaced-node :reader ellipsis-node-replaced-node :initarg :replaced-node)))

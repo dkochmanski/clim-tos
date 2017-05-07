@@ -9,7 +9,7 @@
 
 ;;; Compatibility stubs for CLIM 1.1
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   ;; We use this below to flag the compatibility code...
   (pushnew :CLIM-1-compatibility *features*))
 
@@ -130,7 +130,7 @@
   (transform-position transform x y))
 
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defun probably-stream-or-medium-p (symbol)
   (and (symbolp symbol)
        ;;--- This is really not completely safe

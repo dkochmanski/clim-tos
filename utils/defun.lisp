@@ -220,7 +220,7 @@
 			:downward-p ,downward-p)
      ,@body))
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (lisp:defun lintern (symbol)
   (intern (symbol-name symbol) #+Genera :future-common-lisp #-Genera :lisp))
 )
@@ -357,7 +357,7 @@
     #-PCL `(cl:method ,function-name ,specifier-list ,@qualifiers)))
 
 #+(and allegro (not acl86win32) (version>= 4 1))
-(eval-when (compile load eval) (require :scm))
+(eval-when (:compile-toplevel :load-toplevel :execute) (require :scm))
 #+(and allegro (not acl86win32) (version>= 4 1))
 (excl::define-simple-parser defmethod scm::defmethod-parser)
 

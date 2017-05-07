@@ -17,7 +17,7 @@
 
 "Copyright (c) 1990, 1991, 1992 Symbolics, Inc.  All rights reserved."
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 
 ;;; Tell the world that we're here
 ;;;--- These need to be in the CLIM.fasl also.
@@ -57,7 +57,7 @@
 ;;; our own trampolines which will call our generic function, and then write default
 ;;; methods which will invoke the COMMON-LISP package equivalents.
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 
 #+(or allegro
       Minima

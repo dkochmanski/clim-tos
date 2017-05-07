@@ -110,7 +110,7 @@
   
   (defvar *empty-compound-string* nil)
 
-  (eval-when (compile) (declaim (special *font-list-tags*)))
+  (eval-when (:compile-toplevel) (declaim (special *font-list-tags*)))
   
   (defun partition-compound-string (s f &key (start 0) (end (length s)))
     (unless (eql (length s) 0)

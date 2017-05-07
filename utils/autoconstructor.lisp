@@ -93,7 +93,7 @@
        ;; the compile time environment that a function with this name and
        ;; this argument list has been defined.  The portable way to do this
        ;; is with defun.
-       (eval-when (compile load eval)
+       (eval-when (:compile-toplevel :load-toplevel :execute)
 	 (proclaim '(notinline ,name))
 	 (proclaim '(function ,name)))
        #+++ignore ;; See if FUNCTION proclamation is sufficient.

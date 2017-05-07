@@ -12,7 +12,7 @@
 #+(or Allegro Lucid) (defpackage :clim-lisp)
 
 #-(or Allegro Lucid)
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (unless (find-package :clim-lisp)
     (make-package "CLIM-LISP" :use '("COMMON-LISP"))))
 
@@ -61,7 +61,7 @@
 			   :key #'first)))
 	(when bad-option
 	  (warn "Unknown ~S option: ~S" 'defpackage (first bad-option))))
-      `(eval-when (compile load eval)
+      `(eval-when (:compile-toplevel :load-toplevel :execute)
 	 (let ((,package-var (make-package-aux
 			       ',package-name :use nil
 			       ,@(when nicknames `(:nicknames ',(mapcar #'string nicknames)))

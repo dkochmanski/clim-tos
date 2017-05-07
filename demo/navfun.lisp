@@ -61,7 +61,7 @@
 		:accessor position-deviation)))
 
 #+allegro
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defclass fp-point ()
       ((latitude :initarg :latitude
 		 :accessor point-latitude)
@@ -106,7 +106,7 @@
 	       :accessor position-longname)))
 
 #+allegro
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defclass named-position (ground-position)
       ((name :initarg :name
 	     :accessor position-name)
@@ -125,7 +125,7 @@
       (write (position-name position) :stream stream :escape nil))))
 
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 
 (defun degminsec (degrees &optional (minutes 0) (seconds 0))
   (float (/ (+ (* degrees 3600) (* minutes 60) seconds) 3600)))
@@ -235,7 +235,7 @@
 (defclass airport (named-position) ())
 
 #+allegro
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defclass airport (named-position) ()))
 
 (defmethod draw-position ((airport airport) stream &optional label)
@@ -255,7 +255,7 @@
 (defclass vor (named-position) ())
 
 #+allegro
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defclass waypoint (named-position) ())
   (defclass vor (named-position) ()))
 
@@ -299,7 +299,7 @@
 (defclass ndb (named-position) ())
 
 #+allegro
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defclass ndb (named-position) ()))
 
 (defmethod describe-position-object ((ndb ndb) stream)
@@ -310,7 +310,7 @@
 (defclass named-intersection (named-position) ())
 
 #+allegro
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defclass named-intersection (named-position) ()))
 
 (defmethod draw-position ((intersection named-intersection) stream &optional label)
@@ -327,7 +327,7 @@
 (defclass visual-checkpoint (named-position) ())
 
 #+allegro
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defclass visual-checkpoint (named-position) ()))
 
 
@@ -395,7 +395,7 @@
      (legs :initarg :legs :accessor route-legs)))
 
 #+allegro
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defclass basic-route-segment ()
       ((at :initarg :at
 	   :accessor route-segment-at)))
@@ -438,7 +438,7 @@
 (defclass route (basic-route) ())
 
 #+allegro
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defclass route (basic-route) ()))
 
 (defun route-segment-position-name (route-segment)
@@ -473,7 +473,7 @@
 (defclass victor-airway (basic-route) ())
 
 #+allegro
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defclass victor-airway-segment (basic-route-segment)
       ((properties :accessor victor-airway-segment-properties)
        (next-leg :accessor victor-airway-segment-next-leg)))
@@ -575,7 +575,7 @@
 		   :accessor aircraft-hobs-or-tach)))
 
 #+allegro
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defclass aircraft ()
       ((identification :initarg :identification	; Aircraft tail number
 		       :accessor aircraft-identification)
@@ -689,7 +689,7 @@
      (color :initarg :color
 	    :accessor flight-plan-color)))
 #+allegro
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defclass flight-plan ()
       ((type :initarg :type :accessor flight-plan-type)
        (aircraft-id :initarg :aircraft-id :accessor flight-plan-aircraft-id)

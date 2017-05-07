@@ -43,7 +43,7 @@
                (presentation-subtypep-1 type-name context-name)
                (presentation-typep object context-type))))))))
 
-(eval-when (compile eval load)
+(eval-when (:compile-toplevel :execute :load-toplevel)
   ;; Only the PRESENTATION-MENU translator lives in this
   (unless (find-command-table 'presentation-menu-command-table :errorp nil)
     (make-command-table 'presentation-menu-command-table :inherit-from nil))

@@ -138,7 +138,7 @@
                                   (frame standard-application-frame))
   (adjust-layout-requirements frame (frame-current-layout frame)))
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defun define-application-frame-1 (name state-variables pane-descriptions
                                    &key top-level layouts
                                         command-table)
@@ -233,7 +233,7 @@
                                `',layout)))
                        layouts))))
       `(progn
-         (eval-when (compile)
+         (eval-when (:compile-toplevel)
            (when ',command-table
              (setf (compile-time-property ',(first command-table) 'command-table-name) t))
            (define-application-frame-1 ',name ',slots ,pane-constructors
@@ -1370,7 +1370,7 @@
   (process-command-event sheet event))
 
 ;;;#+(or aclpc acl86win32)
-;;;(eval-when (compile load eval)
+;;;(eval-when (:compile-toplevel :load-toplevel :execute)
 ;;;   ;;mm: 11Jan95 - this is defined later in  ???
 ;;;   (unless (ignore-errors (find-class 'activity-frame))
 ;;;      (defclass activity-frame () ())))

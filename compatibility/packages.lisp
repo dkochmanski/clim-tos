@@ -7,7 +7,7 @@
 ;;;"Copyright (c) 1992 Symbolics, Inc.  All rights reserved."
 
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defvar *clim-1-symbols*
 	'(*abort-characters*
 	  *activation-characters*
@@ -109,7 +109,7 @@
   `(progn ,@body))
 
 ;; Import the above symbols into the CLIM package, then export them
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (let ((clim (find-package :clim)))
     (dolist (symbol *clim-1-symbols*)
       (import symbol clim)

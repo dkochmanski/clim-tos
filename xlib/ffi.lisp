@@ -9,11 +9,11 @@
 (defmacro def-exported-constant (name value)
   ;; define the constant and export it from :x11
   `(progn
-     (eval-when (eval load compile)
+     (eval-when (:execute :load-toplevel :compile-toplevel)
        (export ',name))
      (defconstant ,name ,value)))
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defun transmogrify-ff-type (type)
     (if (consp type)
 	(case (car type)
@@ -27,7 +27,7 @@
 
 (defmacro def-exported-foreign-synonym-type (new-name old-name)
   `(progn
-     (eval-when (eval load compile)
+     (eval-when (:execute :load-toplevel :compile-toplevel)
        (export ',new-name))
      (ff::def-c-typedef ,new-name ,@(transmogrify-ff-type old-name))))
 
@@ -47,7 +47,7 @@
 			(mapcar #'(lambda (x)
 				    (fintern "~A-~A" name (car x)))
 				slots))))
-	  `(eval-when (eval load compile)
+	  `(eval-when (:execute :load-toplevel :compile-toplevel)
 	     (export '(,@(make-exports name)
 		       ,@(make-exports array-name)))))
        ,(flet ((foo-slot (slot)
@@ -144,9 +144,9 @@
 #-(version>= 6 1)
 (defmacro def-exported-foreign-function ((name &rest options) &rest args)
   `(progn
-     (eval-when (eval load compile)
+     (eval-when (:execute :load-toplevel :compile-toplevel)
        (export ',name))
-     (eval-when (compile eval load)
+     (eval-when (:compile-toplevel :execute :load-toplevel)
        ,(let ((c-name (ff:convert-foreign-name (second (assoc :name options))))
 	      (return-type (or (second (assoc :return-type options))
 			       'void)))
@@ -195,9 +195,9 @@
 #+(version>= 6 1)
 (defmacro def-exported-foreign-function ((name &rest options) &rest args)
   `(progn
-     (eval-when (eval load compile)
+     (eval-when (:execute :load-toplevel :compile-toplevel)
        (export ',name))
-     (eval-when (compile eval load)
+     (eval-when (:compile-toplevel :execute :load-toplevel)
        ,(let ((c-name (second (assoc :name options)))
 	      (return-type (or (second (assoc :return-type options))
 			       'void)))

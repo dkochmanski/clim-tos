@@ -306,7 +306,7 @@
   t)
 
 ;;;#+(or aclpc acl86win32)
-;;;(eval-when (compile load eval)
+;;;(eval-when (:compile-toplevel :load-toplevel :execute)
 ;;;   ;;mm: 11Jan95 - this is defined later in  ???
 ;;;   (unless (ignore-errors (find-class 'basic-history))
 ;;;      (defclass basic-history () ())))
@@ -566,7 +566,7 @@
                the same name as a CLOS class.")))
     ;; Generate the expander function and pass it to load-presentation-type-abbreviation
     `(define-group ,name define-presentation-type-abbreviation
-       (eval-when (compile)
+       (eval-when (:compile-toplevel)
          #+(or Genera Cloe-Runtime Minima (and MCL CCL-2))
            (setf (compile-time-property ',name 'presentation-type-abbreviation)
                  ,function)
@@ -747,7 +747,7 @@
           ;; Generate the form that stores all the information and defines the
           ;; automatically-defined presentation methods
           `(progn
-             (eval-when (compile)
+             (eval-when (:compile-toplevel)
                (ensure-presentation-type ',name ',parameters ',options ',direct-supertypes
                                          ',description ',history
                                          ',parameters-are-types
@@ -1558,12 +1558,12 @@
 ;;; Presentation generic functions have their own class just so we can define
 ;;; one method that aids in implementing presentation-method-combination
 #-(and MCL CCL-2)
-(eval-when (eval load compile)
+(eval-when (:execute :load-toplevel :compile-toplevel)
 (defclass presentation-generic-function
           (standard-generic-function #+Minima-Developer standard-object)
   ()
   (:metaclass closer-mop:funcallable-standard-class))
-)        ;end of (eval-when (eval load compile)
+)        ;end of (eval-when (:execute :load-toplevel :compile-toplevel)
 
 #+CLIM-extends-CLOS
 (defvar *presentation-method-argument-class*)
@@ -1604,7 +1604,7 @@
 ;;; extension to call-method
 ;;;--- If combined methods were generated during compile-file, this would need
 ;;;--- to get an environment argument from somewhere
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (define-method-combination presentation-method-combination ()
       ((around (:around))
        (before (:before))
@@ -1672,7 +1672,7 @@
             (if bindings
                 `(let* ,bindings ,form)
                 form)))))))
-)        ;end of (eval-when (compile load eval)
+)        ;end of (eval-when (:compile-toplevel :load-toplevel :execute)
 
 
 ;;;; Definitions of Presentation Generic Functions

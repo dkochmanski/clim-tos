@@ -12,7 +12,7 @@
 (pushnew :ansi-90 *features*)
 
 #+(and allegro microsoft)
-(eval-when (compile load eval) 
+(eval-when (:compile-toplevel :load-toplevel :execute) 
   (pushnew :acl86win32 *features*))
 
 ;;;; Set up translations so we can find stuff.

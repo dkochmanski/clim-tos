@@ -4,7 +4,7 @@
 (in-package :user)
 
 #+(and Allegro (or microsoft mswindows))
-(eval-when (compile load eval) (push :acl86win32 *features*))
+(eval-when (:compile-toplevel :load-toplevel :execute) (push :acl86win32 *features*))
 
 #+acl86win32
 (let ((excl::*enable-package-locked-errors* nil))

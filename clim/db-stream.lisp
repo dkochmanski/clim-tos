@@ -378,7 +378,7 @@
   ()
   (:default-initargs :default-view +gadget-dialog-view+))
 
-(eval-when (compile)
+(eval-when (:compile-toplevel)
   ;; defined later in the compilation...
   (declaim (special *default-menu-text-style*))
   )

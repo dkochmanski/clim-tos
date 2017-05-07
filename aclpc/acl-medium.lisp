@@ -1819,7 +1819,7 @@ device-independent bitmap, an icon, nor a cursor."))
     (setf (gethash "magenta" table) +magenta+)
     table))
 
-(eval-when (load eval)
+(eval-when (:load-toplevel :execute)
   (initialize-named-colors))
 
 (defun clim-internals::kana-process-gesture (istream gesture type)

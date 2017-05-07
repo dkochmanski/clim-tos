@@ -361,11 +361,11 @@
   (view nil))
 
 #+(and allegro aclpc)
-(eval-when (compile load)
+(eval-when (:compile-toplevel :load-toplevel)
   (setf (find-class 'presentation-history-element) nil))
 
 #+(and allegro aclpc)
-(eval-when (compile)
+(eval-when (:compile-toplevel)
   (warn "~S structure hacked for bug2419" 'presentation-history-element))
 
 (defun make-presentation-type-history (type &key (maximum-length *default-history-length*)

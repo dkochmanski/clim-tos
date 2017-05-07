@@ -20,7 +20,7 @@
 (setq clos-internals::*invalidate-clim-handler-caches* #'invalidate-presentation-caches)
 
 ;;; maybe this wants to be taken out after the load-only phase?
-(eval-when (compile load #+(or aclpc acl86win32) eval)
+(eval-when (:compile-toplevel :load-toplevel #+(or aclpc acl86win32) :execute)
 
 (defvar *translator-function-arglist*
         '(object presentation context-type frame event window x y)))

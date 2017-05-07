@@ -15,7 +15,7 @@
 ;;;    as per CLtL.
 ;;; 2) The set of possible "mouse buttons" is :LEFT, :MIDDLE, and :RIGHT.
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 
 ;; Button indices are 0, 1, or 2
 (defun-inline button-index (name)

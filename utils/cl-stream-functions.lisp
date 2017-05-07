@@ -47,7 +47,7 @@
     (when (eq (first optional-args) '&optional)
       (pop optional-args))
     `(define-group ,name write-forwarding-cl-output-stream-function
-       (eval-when (compile load eval) (proclaim '(inline ,name)))
+       (eval-when (:compile-toplevel :load-toplevel :execute) (proclaim '(inline ,name)))
        (defun ,name (,@required-args &optional stream ,@optional-args)
 	 (cond ((null stream) (setq stream *standard-output*))
 	       ((eq stream t) (setq stream *terminal-io*)))
@@ -96,7 +96,7 @@
     (when (member (first (last method-lambda-list)) lambda-list-keywords)
       (setf method-lambda-list (butlast method-lambda-list)))
     `(define-group ,name write-forwarding-cl-input-stream-function
-       (eval-when (compile load eval) (proclaim '(inline ,name)))
+       (eval-when (:compile-toplevel :load-toplevel :execute) (proclaim '(inline ,name)))
        ,(if eof
 	    (let ((args `(eof-error-p eof-value ,@(and (not (eq eof :no-recursive))
 						       '(recursive-p)))))

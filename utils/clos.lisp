@@ -11,7 +11,7 @@
 (in-package :clim-utils)
 
 #+Allegro-v4.0-constructors
-(eval-when (compile eval load) (require :constructor))
+(eval-when (:compile-toplevel :execute :load-toplevel) (require :constructor))
 
 ;;; ----------------
 ;;; Constructors
@@ -36,7 +36,7 @@
 (defmacro define-constructor (name class lambda-list &body initargs)
   (let ((rest-arg (member '&rest lambda-list)))
     `(progn
-       (eval-when (compile load eval) (proclaim '(inline ,name)))
+       (eval-when (:compile-toplevel :load-toplevel :execute) (proclaim '(inline ,name)))
        (defun ,name ,lambda-list
 	 ,@(when rest-arg
 	     `((declare (dynamic-extent ,(second rest-arg)))))
@@ -106,7 +106,7 @@
 
 ;(defvar *dynamic-classes* (make-hash-table :test #'equal))
 ;
-;(eval-when (compile load eval) (proclaim '(inline %make-standard-class)))
+;(eval-when (:compile-toplevel :load-toplevel :execute) (proclaim '(inline %make-standard-class)))
 ;(defun %make-standard-class (name supers)
 ;
 ;  #+Lucid

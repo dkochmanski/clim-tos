@@ -88,7 +88,7 @@
            ,(if record-supplied record `(stream-recording-p ,new-stream))
            ,(if draw-supplied draw `(stream-drawing-p ,new-stream)))))))
 
-(eval-when (compile eval load)
+(eval-when (:compile-toplevel :execute :load-toplevel)
 (defvar *output-record-constructor-cache* (make-hash-table))
 
 (defmacro construct-output-record (type &rest initargs &environment env)

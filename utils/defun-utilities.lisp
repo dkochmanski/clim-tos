@@ -75,7 +75,7 @@
 ;;;; don't use define-group, because it does a excl::record-source-file,
 ;;;; which will be also done by defun!  This causes duplicate definition in
 ;;;; file warnings.
-     (eval-when (compile load eval) (proclaim '(inline ,name)))
+     (eval-when (:compile-toplevel :load-toplevel :execute) (proclaim '(inline ,name)))
      (defun ,name ,lambda-list
        ,@body)))
 
@@ -101,7 +101,7 @@
     `(let ((,native-string-var ,string-exp))
        ,@body))
 
-  (eval-when (compile load eval) (export 'with-native-string))
+  (eval-when (:compile-toplevel :load-toplevel :execute) (export 'with-native-string))
 
   (defun mb-to-string (mb-vector)
     (let* ((lgth (length mb-vector))
@@ -109,4 +109,4 @@
       (dotimes (i lgth string)
 	(setf (schar string i) (code-char (aref mb-vector i))))))
 
-  (eval-when (compile load eval) (export 'mb-to-string)))
+  (eval-when (:compile-toplevel :load-toplevel :execute) (export 'mb-to-string)))

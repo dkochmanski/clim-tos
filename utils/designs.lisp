@@ -331,7 +331,7 @@ Try closing color-intensive applications such as Netscape, or try~%~
 setting the colormap X resource to yes to get a private colormap,~%~
 then restart your application.")
 
-(eval-when (#-allegro compile load eval)
+(eval-when (#-allegro :compile-toplevel :load-toplevel :execute)
 (define-condition palette-full (error)
   ((palette :initarg :palette :reader palette-full-palette)
    (color :initarg :color :reader palette-full-color))

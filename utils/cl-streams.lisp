@@ -126,7 +126,7 @@
        ;; Shadow the Common Lisp function with one that calls the generic function,
        ;; except in Genera and Cloe where the Common Lisp function will work
        #-(or Genera (and MCL CCL-2))
-       (eval-when (compile load eval) (proclaim '(inline ,name)))
+       (eval-when (:compile-toplevel :load-toplevel :execute) (proclaim '(inline ,name)))
        #-(or Genera (and MCL CCL-2))
        (defun ,name (,@required-args &optional stream ,@optional-args)
 	 (case stream
@@ -172,7 +172,7 @@
 
 ;;;
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defun order-preserving-set-difference (set-one set-two)
   #-(and MCL CCL-2) (set-difference set-one set-two)
   #+(and MCL CCL-2) (nreverse (set-difference set-one set-two)))
@@ -196,7 +196,7 @@
        ;; Shadow the Common Lisp function with one that calls the generic function,
        ;; except in Genera or Cloe where the Common Lisp function will work
        #-(or Genera (and MCL CCL-2))
-       (eval-when (compile load eval) (proclaim '(inline ,name)))
+       (eval-when (:compile-toplevel :load-toplevel :execute) (proclaim '(inline ,name)))
        #-(or Genera (and MCL CCL-2))
        ,(if eof
 	    (let ((args `(eof-error-p eof-value ,@(and (not (eq eof :no-recursive))
