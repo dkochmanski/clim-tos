@@ -43,7 +43,7 @@
      (mapping-cache :initform
 		    #+(or aclpc acl86win32) (cons nil nil)
 		    #-(or aclpc acl86win32) (mapping-cache-initform))
-#+(or aclpc acl86win32)
+#+(or aclpc acl86win32 (and))
      (undefined-text-style :initform *undefined-text-style*
                            :accessor port-undefined-text-style)
      ;; When this is true, the text style to device font mapping is done
