@@ -168,7 +168,7 @@
 ;;; based on `clx-clim' in clx/sysdcl.lisp
 (defsystem #:gramps-clim2/clx-backend
   :description "Reference backend for X-Window system."
-  :depends-on (#:clx)
+  :depends-on (#:clx #:gramps-clim2/core)
   :components
   ((:module "clx"
 	    :components
