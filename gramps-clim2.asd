@@ -162,6 +162,22 @@
              (:file "db-border")
              (:file "db-scroll")))))
 
+#+ (or)
+(defsystem #:gramps-clim2/homegrown
+  :depends-on (#:gramps-clim2/silica)
+  :components
+  ((:module "homegrown"
+  	    :components
+	    ;; not fully compatible with silica (???)
+  	    ((:file "scroll-pane")
+  	     (:file "db-button")
+  	     (:file "db-label")
+  	     (:file "db-slider")
+  	     (:file "db-menu")
+  	     (:file "db-list" :depends-on ("db-menu"))
+  	     (:file "db-text")
+  	     (:file "last")))))
+
 (defsystem #:gramps-clim2/postscript
   :description "Draw-only backend as defined in the specification.")
 
