@@ -487,7 +487,6 @@
 
 (defoperation text-size medium-protocol
   ((medium medium) string &key text-style start end)
-  (declare (values largest-x total-height last-x last-y baseline))
   (:no-defgeneric t))
 
 

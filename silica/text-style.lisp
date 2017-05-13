@@ -494,7 +494,6 @@
 (defmethod text-size ((medium basic-medium) string
                       &key (text-style (medium-merged-text-style medium))
                            (start 0) end)
-  (declare (values largest-x total-height last-x last-y baseline))
   ;; this shouldn't be necessary because of trampolines directly above
   ;;  31jan97 tjm w/colin
   #+(or aclpc acl86win32)
@@ -815,7 +814,6 @@
 
 #-(or aclpc acl86win32)
 (defun-inline char-character-set-and-index (character)
-  (declare (values character-set index))
   (values #+Allegro
 	  (excl:ics-target-case
            (:-ics *standard-character-set*)
@@ -830,7 +828,6 @@
 #+(or aclpc acl86win32)
 ;;; For now, only standard character set characters are understood...
 (defun-inline char-character-set-and-index (character)
-  (declare (values character-set index))
   (values *standard-character-set* (char-code character)))
 
 

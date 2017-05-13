@@ -866,7 +866,6 @@
 
 (defun canonicalize-and-match-lambda-lists (canonical-order user-specified
 					    &optional allow-user-keys)
-  #+nil(declare (values lambda-list ignores))
   (check-type canonical-order list)
   (check-type user-specified list)
   (let* ((new-lambda-list nil)
@@ -1308,7 +1307,6 @@
 ;; The idiom for using this is
 ;; (MULTIPLE-VALUE-SETQ (VECTOR FP) (SIMPLE-VECTOR-PUSH-EXTEND ELEMENT VECTOR FP)).
 (defun simple-vector-push-extend (element vector fill-pointer &optional extension)
-  #+nil(declare (values vector fill-pointer))
   (declare (type fixnum fill-pointer)
 	   (type simple-vector vector))
   (let ((length (array-dimension vector 0)))
@@ -1325,7 +1323,6 @@
     (values vector fill-pointer)))
 
 (defun simple-vector-insert-element (element index vector fill-pointer &optional extension)
-  #+nil(declare (values vector fill-pointer))
   (declare (type fixnum index fill-pointer)
 	   (type simple-vector vector))
   (let ((length (array-dimension vector 0)))

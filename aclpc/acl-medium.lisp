@@ -155,15 +155,12 @@
   (color-rgb (wincolor->color (win:GetSysColor win:COLOR_BTNFACE))))
 
 (defmethod dc-image-for-ink ((medium acl-medium) (ink (eql +foreground-ink+)))
-  (declare (values image created-bitmap created-mask-bitmap))
   (dc-image-for-ink medium (medium-foreground medium)))
 
 (defmethod dc-image-for-ink ((medium acl-medium) (ink (eql +background-ink+)))
-  (declare (values image created-bitmap created-mask-bitmap))
   (dc-image-for-ink medium (medium-background medium)))
 
 (defmethod dc-image-for-ink ((medium acl-medium) (ink t))
-  (declare (values image created-bitmap created-mask-bitmap))
   ;; Don't blow out if somebody tries to use a fancy ink like compose-in.
   (dc-image-for-ink medium (medium-foreground medium)))
 
@@ -209,7 +206,6 @@
 			(convert blue))))))
 
 (defmethod dc-image-for-ink ((medium acl-medium) (ink color))
-  (declare (values image created-bitmap created-mask-bitmap))
   (let ((cache (port-dc-cache (port medium))))
     (or (gethash ink cache)
 	(setf (gethash ink cache)
@@ -235,17 +231,14 @@
   *blank-image*)
 
 (defmethod dc-image-for-ink ((medium acl-medium) (ink (eql +everywhere+)))
-  (declare (values image created-bitmap created-mask-bitmap))
   (dc-image-for-ink medium +foreground-ink+))
 
 (defmethod dc-image-for-ink ((medium acl-medium) (ink standard-opacity))
-  (declare (values image created-bitmap created-mask-bitmap))
   (if (>= (opacity-value ink) 0.5)
     (dc-image-for-ink medium +foreground-ink+)
     *blank-image*))
 
 (defmethod dc-image-for-ink ((medium acl-medium) (ink region))
-  (declare (values image created-bitmap created-mask-bitmap))
   (dc-image-for-ink medium +foreground-ink+))
 
 ;;; ink for patterns, tiles, etc
@@ -439,7 +432,6 @@
        (color->wincolor (elt designs tcolor))))))
 
 (defmethod dc-image-for-ink ((medium acl-medium) (ink pattern))
-  (declare (values image created-bitmap created-mask-bitmap))
   ;; The "pattern" part of the ink is put into the brush.
   ;; This will return a list of two DCs if one of the inks is transparent.
   (let ((cache (port-dc-cache (port medium))))
@@ -506,7 +498,6 @@ draw icons and mouse cursors on the screen.
 |#
 
 (defmethod dc-image-for-ink ((medium acl-medium) (ink rectangular-tile))
-  (declare (values image created-bitmap created-mask-bitmap))
   ;; The only case we handle right now is stipples
   (let ((cache (port-dc-cache (port medium))))
     (or (gethash ink cache)
@@ -541,7 +532,6 @@ draw icons and mouse cursors on the screen.
   (error "This NT CLIM operation is NYI (Not Yet Implemented)."))
 
 (defmethod dc-image-for-ink ((medium acl-medium) (ink flipping-ink))
-  (declare (values image created-bitmap created-mask-bitmap))
   (let ((cache (port-dc-cache (port medium))))
     (or (gethash ink cache)
 	(setf (gethash ink cache)
@@ -565,7 +555,6 @@ draw icons and mouse cursors on the screen.
 			       :background-color nil))))))))
 
 (defmethod dc-image-for-ink ((medium acl-medium) (ink contrasting-ink))
-  (declare (values image created-bitmap created-mask-bitmap))
   (dc-image-for-ink medium (make-color-for-contrasting-ink ink)))
 
 (defmethod dc-image-for-ink ((medium acl-medium) (ink composite-out))

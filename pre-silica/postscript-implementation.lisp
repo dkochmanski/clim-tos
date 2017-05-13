@@ -908,8 +908,6 @@ x y translate xra yra scale 0 0 1 sa ea arcp setmatrix end} def
 
 (defmethod stream-glyph-for-character ((stream postscript-implementation-mixin)
 				       character style &optional our-font)
-  (declare (values index font escapement-x escapement-y origin-x origin-y bb-x bb-y
-		   fixed-width-font-p))
   (with-ps-stream-glyph-for-character
     (stream-glyph-for-character stream character style our-font)))
 

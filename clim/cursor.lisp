@@ -56,7 +56,6 @@
 (defparameter +cursor-focus+  (byte 1 2))
 
 (defun decode-cursor-flags (flags)
-  #+Genera (declare (values active state focus))
   (values (ldb-test +cursor-active+ flags)
           (ldb-test +cursor-state+ flags)
           (ldb-test +cursor-focus+ flags)))

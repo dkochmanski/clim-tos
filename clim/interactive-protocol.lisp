@@ -591,7 +591,6 @@
 ;; the result does not want to include the space, but which succeeds on a
 ;; balancing open-paren and the result does want to include the paren.
 (defun forward-or-backward (input-buffer start-position reverse-p predicate)
-  (declare (values new-position))
   (let ((position start-position)
         (adjustment (if reverse-p -1 +1))
         (limit (if reverse-p 0 (fill-pointer input-buffer))))

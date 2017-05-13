@@ -57,7 +57,6 @@
 ;;; The heart of function body processing:
 (lisp:defun decode-function (lambda-list body environment
 			     &key clos-method-p function-name downward-p generic-function-p)
-  (declare (values new-lambda-list new-body))
   #-Genera (declare (ignore function-name))
   (let* ((ignores nil)
 	 (new-lambda-list nil)

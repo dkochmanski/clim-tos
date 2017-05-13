@@ -258,7 +258,6 @@
 
 (defoperation text-size basic-extended-output-protocol
   ((stream basic-extended-output-protocol) string &key text-style start end)
-  #-aclpc (declare (values largest-x total-height last-x last-y baseline))
   (:no-defgeneric t))
 
 (defoperation stream-cursor-position basic-extended-output-protocol

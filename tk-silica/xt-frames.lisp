@@ -103,7 +103,6 @@
 	  default-item  ;; bug12221/spr25238
 	  
 	  )
-  (declare (values value chosen-item gesture))
   ;; let's degrade to CLIM 1 style menus if we need scroll-bars
   (if scroll-bars
       (call-next-method)

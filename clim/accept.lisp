@@ -335,7 +335,6 @@
 				(delimiter-gestures nil delimiter-gestures-p)
 				(additional-delimiter-gestures nil)
 				(start 0) (end nil))
-  (declare (values object type index))
 
   ;; Allow the arguments to be presentation type abbreviations
   (multiple-value-bind (expansion expanded)

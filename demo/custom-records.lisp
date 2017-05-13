@@ -318,7 +318,6 @@
 (defun bsearch (number vector 
 		&key (key #'identity) (start 0) (end (1- (length vector))))
   ;; If a number is in between two values, return the first of the two
-  (declare (values index element))
   (if (< end start)
       (values nil 0)
       (let (#+Genera (vector vector) 
@@ -397,7 +396,6 @@
 	      internal-time-units-per-second))))))
 
 (defun display-sample-dataset (dataset &optional (stream *standard-output*))
-  (declare (values output-record elapsed-time))
   (terpri stream)
   (elapsed-time (display-data dataset stream)))
 

@@ -109,8 +109,7 @@
 (defgeneric display-node (call-node stream))
 (defgeneric node-generate-inferior-objects (call-node subtype))
 (defgeneric node-any-inferior-objects-p (call-node subtype))
-(defgeneric node-arc-drawer (call-node)
-  #+genera (declare (values arc-drawer arc-drawing-options)))
+(defgeneric node-arc-drawer (call-node))
 
 
 (defclass basic-call-node ()
@@ -219,9 +218,7 @@
 (defvar *browser-types* nil)
 
 (defgeneric browser-type-subtypes (type))
-(defgeneric browser-type-information (type subtype)
-  #+genera (declare (values node-maker root-node-maker
-			    graph-type grapher-args presentation-type options)))
+(defgeneric browser-type-information (type subtype))
 
 (defmacro define-browser-type (type presentation-type graph-type options &body subtypes)
   #+genera (declare (zwei:indentation 3 3 4 1))

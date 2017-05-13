@@ -18,7 +18,6 @@
 		       (end (1- (length array))))
   "Binary search to find a number in a sorted array."
   ;; If a number is inbetween two values, return the first of the two.
-  (declare (values index element))
   (if (< end start)
       (values nil 0)
       (let ((array array) mid Nmid found)

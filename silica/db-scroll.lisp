@@ -317,7 +317,6 @@
 ;;; Given min1, max1 and value1 which is between them it will return
 ;;; value2 which would be proportionally between min2 and max2.
 (defun compute-symmetric-value (min1 max1 value1 min2 max2)
-  (declare (values value2))
   (let* ((distance1 (- max1 min1))
          (fraction1 (if (zerop distance1)
                         0

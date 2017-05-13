@@ -414,7 +414,6 @@
 (defvar *old-mouse-chord-shifts* 0)
 
 (defun-inline buttons-up (old-buttons new-buttons)
-  (declare (values buttons-up buttons-down))
   (values (boole boole-andc2 old-buttons new-buttons)
 	  (boole boole-andc2 new-buttons old-buttons)))
 
@@ -741,7 +740,6 @@
 ;; See general comments about sheet-native-native-region* and
 ;; sheet-native-region* about functions vs macros, etc.
 (defun genera-window-margins (mirror)
-  (declare (values left top inside-width inside-height))
   (multiple-value-bind (left top)
       (scl:send mirror :margins)
     (multiple-value-bind (width height)

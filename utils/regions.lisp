@@ -657,7 +657,6 @@
 ;; Make a new bounding rectangle for the region, and shift its position by DX,DY,
 ;; and return the new rectangle.
 (defun bounding-rectangle-shift-position (region dx dy &optional reuse-rectangle)
-  (declare (values region))
   (declare (type real dx dy))
   (let ((rectangle (bounding-rectangle region reuse-rectangle))
 	(dx (coordinate dx))
@@ -710,7 +709,6 @@
     (- bottom top)))
 
 (#-acl86win32 defun-inline #+acl86win32 defun bounding-rectangle-size (region)
-  (declare (values width height))
   (with-bounding-rectangle* (left top right bottom) region 
     #||(when (> right 10000) 
        (setq *reg* region)
@@ -745,7 +743,6 @@
 	    (+ top (/ (- bottom top) 2)))))
 
 (defun bounding-rectangle-ltrb (region)
-  (declare (values left top right bottom))
   (with-bounding-rectangle* (left top right bottom) region
     (values left top right bottom)))
 

@@ -264,7 +264,6 @@
                 (pointer-y-position pointer) y-position))))))
 
 (defmethod query-pointer ((pointer standard-pointer))
-  (declare (values sheet x y))
   (with-slots (sheet x-position y-position) pointer
     (values sheet x-position y-position)))
 

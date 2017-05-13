@@ -274,7 +274,6 @@
                              (cell-align-x ':left) (cell-align-y ':top)
                              pointer-documentation menu-type gesture
                              x-position y-position)
-  (declare (values value chosen-item gesture))
   (declare (ignore text-style default-item foreground background
                    label scroll-bars printer presentation-type
                    cache unique-id id-test cache-value cache-test
@@ -301,7 +300,6 @@
                  (cell-align-x ':left) (cell-align-y ':top)
                  pointer-documentation menu-type gesture
                  background foreground)
-  (declare (values value chosen-item gesture))
   (declare (ignore #-aclpc keys gesture))
   (flet ((present-item (item stream)
            (present item presentation-type :stream stream)))
@@ -498,7 +496,6 @@
                                       x-spacing y-spacing (row-wise nil)
                                       (cell-align-x ':left) (cell-align-y ':top)
                                       menu-type)
-  (declare (values value chosen-item gesture))
   (flet ((present-item (item stream)
            (present item presentation-type :stream stream)))
     (declare (dynamic-extent #'present-item))
@@ -614,7 +611,6 @@
                              label text-style (scroll-bars t)
                              pointer-documentation menu-type
                         &allow-other-keys)
-  (declare (values value chosen-item gesture))
   (declare (dynamic-extent keys))
   (with-slots (name menu-contents items default-presentation root-window)
               static-menu

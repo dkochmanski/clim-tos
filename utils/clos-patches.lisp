@@ -99,7 +99,6 @@
 
 #+(and allegro (not (version>= 4 1)))
 (lisp:defun slot-value-alist (body)
-  (declare (values real-body alist))
   (let ((alist nil))
     (do* ((real-body body (cdr real-body))
           (form (car real-body) (car real-body)))

@@ -1080,7 +1080,6 @@
 
 (defun accept-sequence-element (stream element-type view separators
                                 element-default element-default-type default-supplied-p)
-  (declare (values object object-type))
   (multiple-value-bind (object object-type)
       (with-input-context (element-type) (object object-type)
            (with-delimiter-gestures (separators)
@@ -1733,7 +1732,6 @@
 
 #+Genera
 (defun dw-type-to-clim-type (object dw-type)
-  (declare (values new-object clim-type changed-p))
   (dw:with-type-decoded (type-name data-args pr-args) dw-type
      (let ((new (assoc type-name *dw-type-to-clim-type-alist*)))
        (if new

@@ -701,7 +701,6 @@ a point. Hence we have 72dpi resolution printer.
 (defmethod port-glyph-for-character ((port hpgl-port)
 				     character appearance &optional our-font)
   #+Genera
-  (declare (values index font escapement-x escapement-y origin-x origin-y bb-x bb-y))
   (with-hpgl-port-glyph-for-character (port)
     (port-glyph-for-character medium character appearance our-font)))
 
@@ -722,8 +721,6 @@ a point. Hence we have 72dpi resolution printer.
 					    string start end
 					    style cursor-x max-x
 					    &optional glyph-buffer)
-  #+Genera (declare (values write-char next-char-index new-cursor-x
-			    new-baseline new-height font))
   ;;(declare (ignore stream))
   (let (#+ignore (port (port medium)))
     (with-hpgl-port-glyph-for-character (port)

@@ -470,7 +470,6 @@
 ;; relative to ANCESTOR in order to get coordinates relative to
 ;; DESCENDANT.
 (defun convert-from-ancestor-to-descendant-coordinates (ancestor descendant)
-  (declare (values x-offset y-offset))
   (cond ((eq descendant ancestor)
          (values (coordinate 0) (coordinate 0)))
         ((null descendant)
@@ -491,7 +490,6 @@
 ;; relative to DESCENDANT in order to get coordinates relative to
 ;; ANCESTOR.
 (defun convert-from-descendant-to-ancestor-coordinates (descendant ancestor)
-  (declare (values x-offset y-offset))
   (cond ((eq descendant ancestor)
          (values (coordinate 0) (coordinate 0)))
         ((null descendant)

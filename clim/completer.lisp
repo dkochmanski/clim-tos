@@ -44,7 +44,6 @@
                        &key partial-completers allow-any-input possibility-printer
                             (help-displays-possibilities t))
   (declare (dynamic-extent function))
-  (declare (values answer-object success string))
   (with-temporary-string (stuff-so-far :length 100 :adjustable t)
    (with-delimiter-gestures (partial-completers)
     (with-activation-gestures (*magic-completion-gestures*)
@@ -278,7 +277,6 @@
 (defun complete-from-possibilities (string completions delimiters
                                     &key (action :complete) predicate
                                          (name-key #'first) (value-key #'second))
-  (declare (values string success object nmatches possibilities))
   (when (and (not (eq action :possibilities))
              (not (eq action :apropos-possibilities))
              (zerop (length string)))
@@ -318,7 +316,6 @@
 ;; gotten by funcalling a generator rather than from a completion alist.
 (defun complete-from-generator (string generator delimiters
                                 &key (action :complete) predicate)
-  (declare (values string success object nmatches possibilities))
   (declare (dynamic-extent generator))
   (when (and (not (eq action :possibilities))
              (not (eq action :apropos-possibilities))
@@ -356,7 +353,6 @@
 (defun chunkwise-complete-string (string completion object action delimiters
                                   best-completion best-length best-object
                                   nmatches possibilities)
-  (declare (values best-completion best-length best-object nmatches possibilities))
   (let* ((length (length string))
          (matches (if (eq action :apropos-possibilities)
                       (if (search string completion :test #'char-equal) length 0)
@@ -408,7 +404,6 @@
 ;; where the strings mismatches and the index of the last character that was
 ;; unambiguous.  When MERGE-P, STRING1 gets side-effected.
 (defun chunkwise-string-compare (string1 string2 delimiters &optional merge-p end1)
-  (declare (values matched ambiguous))
   (let ((len1 (or end1 (length string1)))
         (len2 (length string2))
         (matched 0)

@@ -124,7 +124,6 @@
   (:default-initargs :input-buffer nil))
 
 (defun disassemble-display-spec (display &optional (default-display 0) (default-screen 0))
-  (declare (values host display-number nscreen))
   (let ((host-n (position #\: display)))
     (unless host-n
       (return-from disassemble-display-spec 
@@ -1788,7 +1787,6 @@
 ;; TEXT-STYLE  must be a fully merged text style
 (defmethod stream-glyph-for-character
 	   ((stream clx-window) character text-style &optional our-font)
-  (declare (values index font escapement-x escapement-y origin-x origin-y bb-x bb-y))
   (with-slots (window display-device-type) stream
     (multiple-value-bind (character-set index)
 	(char-character-set-and-index character)
@@ -1835,7 +1833,6 @@
 
 ;;; Too bad we have to copy the glyphs again, but that's life...
 (defun noop-translate-function (src src-start src-end font dst dst-start)
-  (declare (values ending-index horizontal-motion width))
   (declare (ignore font))
   (replace dst src :start1 dst-start :start2 src-start :end2 src-end)
   (values src-end nil nil))

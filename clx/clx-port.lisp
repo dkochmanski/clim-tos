@@ -322,7 +322,6 @@
 
 (defmethod port-glyph-for-character ((port clx-port)
 				     character text-style &optional our-font)
-  (declare (values index font escapement-x escapement-y origin-x origin-y bb-x bb-y))
   (multiple-value-bind (character-set index)
       (char-character-set-and-index character)
     (when (eq character-set *standard-character-set*)

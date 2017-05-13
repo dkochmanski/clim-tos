@@ -97,7 +97,6 @@
 
 ;; Get the element from HISTORY indexed by INDEX.
 (defmethod history-element ((history basic-history) index &optional fixup-p)
-  (declare (values element index))
   (let ((delta 0))
     (with-slots (elements current-length temporary-element) history
       (without-scheduling

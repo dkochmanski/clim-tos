@@ -16,7 +16,6 @@
   `(push-unique '(,name ,arglist) *tracking-pointer-clauses* :key #'car))
 
 (defun validate-tracking-pointer-clause (name arglist)
-  (declare (values new-arglist ignores))
   (let ((item (find name *tracking-pointer-clauses* :key #'car)))
     (unless item
       (error "~S is not a known TRACKING-POINTER clause." name))

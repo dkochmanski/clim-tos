@@ -313,7 +313,6 @@
   (gethash command-name (slot-value command-table 'commands)))
 
 (defun command-accessible-in-command-table-p (command-name command-table)
-  (declare (values command-table))
   (do-command-table-inheritance (comtab command-table)
     (when (command-present-in-command-table-p command-name comtab)
       (return-from command-accessible-in-command-table-p comtab)))
@@ -385,7 +384,6 @@
          (slot-value (find-command-table command-table) 'command-line-names))))
 
 (defun find-command-from-command-line-name (name command-table &key (errorp t))
-  (declare (values command command-table))
   (do-command-table-inheritance (comtab command-table)
     ;;--- Use binary search on COMMAND-LINE-NAMES (completion aarrays)
     (let ((item (find name (slot-value comtab 'command-line-names)
@@ -549,7 +547,6 @@
        (slot-value (find-command-table command-table) 'menu)))
 
 (defun find-menu-item (menu-name command-table &key (errorp t))
-  (declare (values menu-item command-table))
   (let* ((command-table (find-command-table command-table))
          (item (find menu-name (slot-value command-table 'menu)
                      :test #'menu-name-equal :key #'first)))
@@ -786,7 +783,6 @@
 
 (defun find-keystroke-item (keystroke command-table
                             &key (test #'keyboard-event-matches-gesture-name-p) (errorp t))
-  (declare (values menu-item command-table))
   (let* ((command-table (find-command-table command-table))
          (entry (block find-entry
                   ;; Do it the hard way so that GESTURE-SPEC-EQL doesn't see NILs
@@ -805,7 +801,6 @@
 
 (defun lookup-keystroke-item (keystroke command-table
                               &key (test #'keyboard-event-matches-gesture-name-p))
-  (declare (values menu-item command-table))
   (labels ((map-menu (command-table)
              (map nil #'(lambda (entry)
                           (let ((item (third entry)))

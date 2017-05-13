@@ -26,7 +26,6 @@
                            &key (repaint t) multiple-window
                                 (erase #'erase-output-record erase-sp) feedback
                                 (finish-on-release *dragging-output-finish-on-release*))
-  (declare (values final-x final-y delta-x delta-y))
   (let (last-x last-y
         (delta-x 0)
         (delta-y 0)

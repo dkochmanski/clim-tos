@@ -85,7 +85,6 @@
              ,@body))))))
 
 (defun gesture-name-button-and-modifiers (gesture-name)
-  (declare (values button modifier-state))
   (do-button-and-modifier-state (button modifier-state bucket)
     (when (member gesture-name bucket)
       (return-from gesture-name-button-and-modifiers
@@ -94,7 +93,6 @@
   nil)
 
 (defun gesture-name-keysym-and-modifiers (gesture-name)
-  (declare (values keysym modifier-state))
   (dotimes (index (ash 1 (length *modifier-keys*)))
     (let ((bucket (aref *keysym-and-modifier-key->gesture* index)))
       (dolist (entry bucket)
@@ -266,7 +264,6 @@
 ;; A slower, more careful version of the above that gets used to
 ;; validate programmer input
 (defun decode-gesture-spec (gesture-spec &key (errorp t))
-  (declare (values keysym modifiers))
   (when (atom gesture-spec)
     (return-from decode-gesture-spec
       (values gesture-spec nil)))

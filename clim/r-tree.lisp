@@ -225,7 +225,6 @@
 
 ;; Add a record to an R tree, and return the (possibly new) root
 (defun r-tree-insert (root record)
-  (declare (values new-root))
   (let ((leaf root))
     (loop 
       (when (r-tree-leaf-node-p leaf)
@@ -451,7 +450,6 @@
 
 ;; Remove an object from the R tree and trim it appropriately
 (defun r-tree-delete (root record)
-  (declare (values new-root found-p))
   (with-stack-array (orphans 20 :fill-pointer 0)
     (multiple-value-bind (found-p delete-p)
         (r-tree-delete-1 root record orphans)

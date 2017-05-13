@@ -510,7 +510,6 @@
 (defun presentation-matches-context-type (presentation context-type
                                           frame window x y
                                           &key event (modifier-state 0))
-  (declare (values translator any-match-p))
   (let ((one-matched nil)
         (translators
           (find-presentation-translators
