@@ -165,8 +165,19 @@
 (defsystem #:gramps-clim2/postscript
   :description "Draw-only backend as defined in the specification.")
 
+;;; based on `clx-clim' in clx/sysdcl.lisp
 (defsystem #:gramps-clim2/clx-backend
-  :description "Reference backend for X-Window system.")
+  :description "Reference backend for X-Window system."
+  :depends-on (#:clx)
+  :components
+  ((:module "clx"
+	    :components
+	    ((:file "pkgdcl")
+	     (:file "clx-port")
+	     (:file "clx-mirror")
+	     (:file "clx-medium")
+	     (:file "clx-pixmaps")
+	     (:file "clx-frames")))))
 
 (defsystem #:gramps-clim2/examples
   :description "Applications bundled in gramps-clim2 repository.")
