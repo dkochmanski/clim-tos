@@ -10,12 +10,12 @@
 
 ;; Ports and grafts
 
-(defvar *default-server-path* #+(and allegro (not microsoft)) '(:motif)
-                              #+Lucid '(:clx)
-                              #+Genera `(:genera)
-                              #+Cloe-Runtime `(:cloe)
-                              #+(and allegro microsoft) '(:aclpc)
-                              #-(or allegro Lucid Genera Cloe-Runtime) nil)
+(defvar *default-server-path*
+  #+(and allegro (not microsoft)) '(:motif)
+  #+Genera `(:genera)
+  #+Cloe-Runtime `(:cloe)
+  #+(and allegro microsoft) '(:aclpc)
+  #-(or allegro Lucid Genera Cloe-Runtime) '(:clx))
 
 
 (defvar *ports* nil)
