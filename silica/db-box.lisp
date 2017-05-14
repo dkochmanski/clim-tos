@@ -21,16 +21,19 @@
 (defmethod initialize-instance :after 
 	   ((pane box-pane) &key contents &allow-other-keys)
   (dolist (child contents)
-    (typecase child                     ;FIXME temporarily changed etypecase to typecase -- jacek.zlydach, 2017-05-14
+    ;;NOTE WORKAROUND temporarily changed etypecase to typecase, to avoid a runtime error in demo.
+    ;; Should be restored to etypecase after the source of that error is found.
+    ;;  -- jacek.zlydach, 2017-05-14
+    (typecase child
       (number)
       ((member :fill))
       (pane (sheet-adopt-child pane child))
       (cons
-	;; Handle top-down layout syntax
-	(unless (and (typep (first child) '(or (member :fill) (real 0 *)))
-		     (panep (second child)))
-	  (error "Invalid box child: ~S" child))
-	(sheet-adopt-child pane (second child)))))
+       ;; Handle top-down layout syntax
+       (unless (and (typep (first child) '(or (member :fill) (real 0 *)))
+                    (panep (second child)))
+         (error "Invalid box child: ~S" child))
+       (sheet-adopt-child pane (second child)))))
   (setf (slot-value pane 'contents) contents))
 
 (defmethod handle-event :after ((pane box-pane) (event pointer-motion-event))
@@ -59,7 +62,10 @@
 	    (minor-max most-positive-fixnum)
 	    scale)
 	(dolist (entry contents)
-          (when entry                   ;<-- added as a null prevention
+          ;; NOTE WORKAROUND wrapped the whole cond in a when block, to avoid error caused
+          ;; by `entry' being NIL for some reason during initialization of the demo.
+          ;;   -- jacek.zlydach, 2017-05-14
+          (when entry
            (cond ((eq entry :fill) (incf major+ +fill+))
                  ((numberp entry) (incf major entry))
                  (t
@@ -176,10 +182,12 @@
     (let ((space-requirement
            (compose-space box-pane :width width :height height)))
       (flet ((compose (x)
-	       (cond ((null x) :fill)   ;NOTE added as a safeguard for NIL
-                     ((atom x) (compose-space x :width width))
-		     ((eq (car x) :fill) :fill)
-		     (t (car x)))))
+	       (cond
+                 ;;NOTE WORKAROUND added null clause as a safeguard for NIL showing up during initialization of the demo -- jacek.zlydach, 2017-05-14
+                 ((null x) :fill)
+                 ((atom x) (compose-space x :width width))
+                 ((eq (car x) :fill) :fill)
+                 (t (car x)))))
 	(declare (dynamic-extent #'compose))
 	(let* ((adjust (* spacing (1- (length (sheet-children box-pane)))))
 	       (sizes 

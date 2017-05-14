@@ -239,6 +239,17 @@
         (:horizontal (- right left))
         (:vertical (- bottom top))))))
 
+;;; NOTE WORKAROUND
+;;; The following methods requires 4 parameters. Added `workaround' parameter for that,
+;;; but the methods should be further reviewed for correctness.
+;;; - scroll-up-line-callback
+;;; - scroll-down-line-callback
+;;; - scroll-up-page-callback
+;;; - scroll-down-page-callback
+;;; - scroll-to-top-callback
+;;; - scroll-to-bottom-callback
+;;;
+;;; -- jacek.zlydach 2017-05-14
 (defmethod scroll-up-line-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation whatever)
   (with-slots (current-size current-value port) scroll-bar
     (with-slots (viewport contents) scroller-pane

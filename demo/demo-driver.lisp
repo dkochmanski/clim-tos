@@ -48,7 +48,11 @@
 	;; which occurs while printing the demos name.
 	;; In particular, this can occur when listing
 	;; the Japanese graphics-editor when the correct
-	;; Japanese fonts are not accessible.	
+	;; Japanese fonts are not accessible.
+
+        ;; NOTE WORKAROUND added #'error clause for non-Allegro Lisps, because
+        ;; that seems to be the closest equivalent as far as I can tell without access
+        ;; to Allegro environment. -- jacek.zlydach, 2017-05-14
 	(let ((result (catch #-allegro 'error #+Allegro 'excl::printer-error
 			(with-output-as-presentation (stream demo 'demo)
 			  (format stream "~A~%" name))
@@ -103,11 +107,6 @@
         (let ((bt:*default-special-bindings* `((*package* . ',*package*))))
           (bt:make-thread #'do-it :name (demo-name demo)))
         (do-it))))
-
-;; (mp:process-run-function 
-;;  `(:name ,(demo-name demo)
-;;    :initial-bindings ((*package* . ',*package*)))
-;;  #'do-it)
 	
 (defvar *demo-frame* nil)
 

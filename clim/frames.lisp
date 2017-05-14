@@ -1278,7 +1278,9 @@
      (re-enable-menu-items ,frame)))
 
 (defmethod execute-frame-command ((frame standard-application-frame) command)
-  (when (listp command)                 ;NOTE workaround for command == :timeout
+  ;; NOTE WORKAROUND added a when clause because demo sometimes passes :timeout
+  ;; as `command', which is obviously not a list. -- jacek.zlydach, 2017-05-14
+  (when (listp command)
     (apply (command-name command) (command-arguments command)))
   #+ignore ;; from jeff on 4/8/99
   (with-menu-disabled frame
@@ -1495,6 +1497,9 @@
                           (frame-top-level-sheet frame)))
 
 (defmethod frame-standard-output ((frame standard-application-frame))
+  ;; NOTE WORKAROUND returning `*standard-output*' instead of executing the following block,
+  ;; because the value found by it (during initialization of the demo) causes a "app pane not a stream"
+  ;; error.
   *standard-output*
   ;; commented out because it causes frame-not-a-stream error
   #+nil(if (not (member '*standard-output* (slot-value frame 
