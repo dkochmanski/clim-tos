@@ -8,6 +8,8 @@
 
 (defvar *demos* nil)
 
+(define-presentation-type demo ())      ;<-- ?? It seems to help though. - jacek.zlydach, 2017-05-04.
+
 (defclass demo ()
   ((name :reader demo-name :initarg :name)
    (class :reader demo-class :initarg :class)
@@ -47,7 +49,7 @@
 	;; In particular, this can occur when listing
 	;; the Japanese graphics-editor when the correct
 	;; Japanese fonts are not accessible.	
-	(let ((result (catch 'excl::printer-error
+	(let ((result (catch #-allegro 'error #+Allegro 'excl::printer-error
 			(with-output-as-presentation (stream demo 'demo)
 			  (format stream "~A~%" name))
 			nil)))
@@ -84,25 +86,28 @@
 	     (when (or force (null frame))
 	       (setq frame (apply (if activity-p
 				      #'make-instance
-				    #'make-application-frame)
+                                      #'make-application-frame)
 				  (demo-class demo)
 				  :frame-manager (find-frame-manager :port port)
 				  (demo-initargs demo))))
 	     (if entry
 		 (setf (cdr entry) frame)
-	       (push (cons port frame) (demo-frames demo)))
+                 (push (cons port frame) (demo-frames demo)))
 	     (if (slot-value frame 'clim-internals::top-level-process)
 		 (unless activity-p
 		   (when (eq (frame-state frame) :shrunk)
 		     (note-frame-deiconified (frame-manager frame) frame))
 		   (raise-frame frame))
-	       (run-frame-top-level frame)))))
-    (if background 
-	(mp:process-run-function 
-	 `(:name ,(demo-name demo)
-	   :initial-bindings ((*package* . ',*package*)))
-	 #'do-it)
-      (do-it))))
+                 (run-frame-top-level frame)))))
+    (if background
+        (let ((bt:*default-special-bindings* `((*package* . ',*package*))))
+          (bt:make-thread #'do-it :name (demo-name demo)))
+        (do-it))))
+
+;; (mp:process-run-function 
+;;  `(:name ,(demo-name demo)
+;;    :initial-bindings ((*package* . ',*package*)))
+;;  #'do-it)
 	
 (defvar *demo-frame* nil)
 

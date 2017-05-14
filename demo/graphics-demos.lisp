@@ -180,9 +180,9 @@ rotation and scaling."
 			     :ink (if (oddp i) +background-ink+ +foreground-ink+))))
 	  (demo-sleep stream 2))))))
 
-(defconstant *random-ink-list*
-	     (list +red+ +green+ +blue+
-		   +cyan+ +magenta+ +yellow+ +black+))
+(defparameter *random-ink-list*
+  (list +red+ +green+ +blue+
+        +cyan+ +magenta+ +yellow+ +black+))
 
 (defun random-ink ()
   (nth (random (length *random-ink-list*)) *random-ink-list*))

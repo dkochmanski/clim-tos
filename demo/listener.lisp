@@ -656,5 +656,5 @@
 #+Genera
 (define-genera-application lisp-listener
 			   :pretty-name "CLIM Lisp Listener"
-			   :select-key #\ˆ
+			   :select-key #\ [FIXME insert character 210]
 			   :width +fill+ :height +fill+)
