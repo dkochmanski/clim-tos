@@ -5,7 +5,7 @@
 (in-package :clim-internals)
 
 #-ics
-(eval-when (compile)
+(eval-when (:compile-toplevel)
   (warn "~S contains fat strings but is being compiled with a non-ICS lisp"
 	excl:*source-pathname*))
 

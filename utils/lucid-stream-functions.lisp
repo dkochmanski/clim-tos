@@ -15,7 +15,7 @@
 
 ;;; just for development
 #+ignore
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defparameter sym-list '("PEEK-CHAR" "READ-BYTE" "READ-CHAR" "UNREAD-CHAR"
 			   "READ-CHAR-NO-HANG" "LISTEN" "READ-LINE" 
 			   "CLEAR-INPUT" "WRITE-BYTE" "WRITE-CHAR"
@@ -200,7 +200,7 @@
 ;;; Higher level lisp printing functions.
 
 
-(eval-when (load)
+(eval-when (:load-toplevel)
   (let ((original-lucid-closure
 	  (or (getf (symbol-plist 'lisp:format) :original-lucid-closure) 
 	      (setf (getf (symbol-plist 'lisp:format) :original-lucid-closure)

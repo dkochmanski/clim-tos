@@ -7,16 +7,14 @@
 ;;;"Copyright (c) 1991, 1992 Franz, Inc.  All rights reserved.
 ;;; Portions copyright (c) 1992 Symbolics, Inc.  All rights reserved."
 
-(defgeneric invoke-with-sheet-medium (sheet continuation)
-  (declare (dynamic-extent continuation)))
+(defgeneric invoke-with-sheet-medium (sheet continuation))
 
 (defmacro with-sheet-medium ((medium sheet) &body body)
   `(flet ((with-sheet-medium-body (,medium) ,@body))
      (declare (dynamic-extent #'with-sheet-medium-body))
      (invoke-with-sheet-medium ,sheet #'with-sheet-medium-body)))
 
-(defgeneric invoke-with-sheet-medium-bound (sheet medium continuation)
-  (declare (dynamic-extent continuation)))
+(defgeneric invoke-with-sheet-medium-bound (sheet medium continuation))
 
 (defmacro with-sheet-medium-bound ((sheet medium) &body body)
   `(flet ((with-sheet-medium-bound-body () ,@body))

@@ -324,8 +324,7 @@
 #+Genera (zwei:defindentation (map-over-output-records-overlapping-region 2 1))
 (defgeneric map-over-output-records-overlapping-region
             (function record region
-             &optional x-offset y-offset &rest continuation-args)
-  (declare (dynamic-extent function continuation-args)))
+             &optional x-offset y-offset &rest continuation-args))
 
 ;;; This must map over the children in such a way that, when it maps over
 ;;; overlapping children, the topmost (most recently inserted) child is
@@ -336,8 +335,7 @@
 #+Genera (zwei:defindentation (map-over-output-records-containing-position 3 1))
 (defgeneric map-over-output-records-containing-position
             (function record x y
-             &optional x-offset y-offset &rest continuation-args)
-  (declare (dynamic-extent function continuation-args)))
+             &optional x-offset y-offset &rest continuation-args))
 
 ;;; X-offset and Y-offset represent the accumulated offset between the
 ;;; regions's native coordinates and "our" coordinates and must be added
@@ -425,7 +423,6 @@
 ;; to be ADDED to any coordinates relative to OUTPUT-RECORD to give you
 ;; absolute coordinates.
 (defun convert-from-relative-to-absolute-coordinates (stream output-record)
-  (declare (values x-offset y-offset))
   (cond ((null output-record)
          ;;--- Why on earth do we need this now?
          (values (coordinate 0) (coordinate 0)))
@@ -449,7 +446,6 @@
 ;; to be ADDED to any absolute coordinates to give you coordinates
 ;; relative to OUTPUT-RECORD.
 (defun convert-from-absolute-to-relative-coordinates (stream output-record)
-  (declare (values x-offset y-offset))
   (cond ((null output-record)
          ;;--- Why on earth do we need this now?
          (values (coordinate 0) (coordinate 0)))
@@ -474,7 +470,6 @@
 ;; relative to ANCESTOR in order to get coordinates relative to
 ;; DESCENDANT.
 (defun convert-from-ancestor-to-descendant-coordinates (ancestor descendant)
-  (declare (values x-offset y-offset))
   (cond ((eq descendant ancestor)
          (values (coordinate 0) (coordinate 0)))
         ((null descendant)
@@ -495,7 +490,6 @@
 ;; relative to DESCENDANT in order to get coordinates relative to
 ;; ANCESTOR.
 (defun convert-from-descendant-to-ancestor-coordinates (descendant ancestor)
-  (declare (values x-offset y-offset))
   (cond ((eq descendant ancestor)
          (values (coordinate 0) (coordinate 0)))
         ((null descendant)

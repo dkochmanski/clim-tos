@@ -47,7 +47,7 @@
 
 ;;;
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 	   
 ;; Define the new key chars for Cloe CLIM.  Regular Cloe defines 0-127, we define
 ;; 128-139 as the F-keys (F1 thru F12), 140 for c-sh-A, and 141 as c-sh-V

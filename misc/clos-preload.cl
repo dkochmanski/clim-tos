@@ -22,7 +22,7 @@
 
 (in-package :clos)
 
-(eval-when (compile)
+(eval-when (:compile-toplevel)
   (unless (boundp 'si::*clos-preload-packages*)
     (setq si::*clos-preload-packages* nil)))
 

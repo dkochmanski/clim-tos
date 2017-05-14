@@ -1164,7 +1164,7 @@ end } def
 ;;;**********************************************************************
 
 ;;; This needs to be loaded before the next form is compiled.
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (define-graphics-generic draw-postscript-literal (string x y)
   :positions-to-transform (x y) )
 )

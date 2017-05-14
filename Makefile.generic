@@ -18,8 +18,6 @@ compile: FORCE $(PRODUCT-OBJS) $(ICS-PRODUCT-OBJS) $(compile_depends)
 	echo '(setq sys::*libxt-pathname* "$(XTLIB)")' >> build.tmp
 	echo '(setq sys::*libx11-pathname* "$(XLIB)")' >> build.tmp
 	echo '(setq sys::*libwnn-pathname* "$(WNNLIB)")' >> build.tmp
-	echo '(excl:set-case-mode $(CASE_MODE))' >> build.tmp
-	echo $(STOP_PATCHES) >> build.tmp
 	echo '(load "misc/compile-1.lisp")' >> build.tmp
 	echo '(declaim (optimize (speed $(SPEED)) (debug $(DEBUG)) (safety $(SAFETY))))' >> build.tmp
 	echo '(setq *compile-print* $(compile_print))' >> build.tmp
@@ -203,9 +201,6 @@ install_obj:
 
 install_clim: install_obj
 	cp $(PRODUCT-FASLS) $(ICS-PRODUCT-FASLS) $(DEST)
-
-echo_src_files:
-	@echo $(PRODUCT_SRC_FILES)
 
 include Makefile.cobjs
 

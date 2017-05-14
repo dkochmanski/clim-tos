@@ -220,8 +220,7 @@
                        (sheet-transformation child) left top right bottom))))
           (sheet-children sheet)))))
 
-(defgeneric map-over-sheets-containing-position (function sheet x y)
-  (declare (dynamic-extent function)))
+(defgeneric map-over-sheets-containing-position (function sheet x y))
 (defmethod map-over-sheets-containing-position (function (sheet basic-sheet) x y)
   (declare (dynamic-extent function))
   (dolist (child (sheet-children sheet))
@@ -231,8 +230,7 @@
                  (region-contains-position-p (sheet-region child) x y)))
       (funcall function child))))
 
-(defgeneric map-over-sheets-overlapping-region (function sheet region)
-  (declare (dynamic-extent function)))
+(defgeneric map-over-sheets-overlapping-region (function sheet region))
 (defmethod map-over-sheets-overlapping-region (function (sheet basic-sheet) region)
   (declare (dynamic-extent function))
   (if (or (null region)                                ;--- kludge

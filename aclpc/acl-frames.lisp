@@ -288,7 +288,7 @@
   (setf (aref stringvar newlen) #\null)
   (setf (fill-pointer stringvar) newlen))
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defconstant *nstringify-buffer-default-size* 2048)
   (defvar nstringify-buffer 
       (make-array *nstringify-buffer-default-size* :fill-pointer t 
@@ -1127,7 +1127,7 @@ to be run from another."
 	    (car dotted-pair) (cdr dotted-pair) (code-char 0)
 	    (cdr dotted-pair) (code-char 0))))
 
-(eval-when (compile load eval) 
+(eval-when (:compile-toplevel :load-toplevel :execute)
   ;; All pathnames returned by SELECT-FILE must fit in the scratch string,
   ;; so make it pretty big.
   (defconstant *scratch-string-length* 2048)
@@ -1139,7 +1139,7 @@ to be run from another."
 (defparameter *scratch-c-string*
   (ff:allocate-fobject-c `(:array :char ,*scratch-string-length*)))
 
-(eval-when (compile eval load)
+(eval-when (:compile-toplevel :execute :load-toplevel)
   ;; this type useful since we don't open code anonymous types well yet:
   (ff:def-foreign-type foreign-string (:array :char 1))
   )

@@ -811,7 +811,6 @@
 (defun accept-comma (stream desired-type view
                      &key (delimiter-character #\,)
                           echo-space echo-string-before-blip)
-  (declare (values more-to-come object type))
   (with-input-context (desired-type) (object type)
        (loop
          (let ((char (read-gesture :stream stream)))
@@ -953,11 +952,19 @@
 
 ;;;; Sequence Presentation Types
 
-(define-presentation-type sequence (element-type)
-  :inherit-from t                        ;enforce CL definition
+#+sbcl(define-presentation-type sequence (element-type)
+  :inherit-from (find-class 't)                     ;enforce CL definition ; NOTE changed "t" to "(find-class 't)" -- jacek.zlydach, 2017-05-06
   :parameters-are-types t
   :options ((separator #\,)
             (echo-space t)))
+
+;;; NOTE CCL seems to like it the old way -- jacek.zlydach, 2017-05-06
+#-sbcl(define-presentation-type sequence (element-type)
+  :inherit-from t                     ;enforce CL definition
+  :parameters-are-types t
+  :options ((separator #\,)
+            (echo-space t)))
+
 
 (define-presentation-method describe-presentation-type :after
                             ((type sequence) stream plural-count)
@@ -1073,7 +1080,6 @@
 
 (defun accept-sequence-element (stream element-type view separators
                                 element-default element-default-type default-supplied-p)
-  (declare (values object object-type))
   (multiple-value-bind (object object-type)
       (with-input-context (element-type) (object object-type)
            (with-delimiter-gestures (separators)
@@ -1726,7 +1732,6 @@
 
 #+Genera
 (defun dw-type-to-clim-type (object dw-type)
-  (declare (values new-object clim-type changed-p))
   (dw:with-type-decoded (type-name data-args pr-args) dw-type
      (let ((new (assoc type-name *dw-type-to-clim-type-alist*)))
        (if new

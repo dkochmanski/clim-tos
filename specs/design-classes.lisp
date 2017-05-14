@@ -2,7 +2,7 @@
  
 (defvar *classes*)
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (pushnew :eps-bbox cl:*features*))
 
 (defmacro with-postscript-stream ((stream pathname) &body body)

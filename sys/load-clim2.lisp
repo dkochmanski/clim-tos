@@ -10,7 +10,7 @@
 		 ;; CLIM 2.0
 		 clim-sys clim-silica clim-internals clx-clim genera-clim
 		 ;; CLIM 0.9
-		 clim-conditions clim-shared clim-stream
+		 clim-shared clim-stream
 		 silica windshield on-x on-genera))
     (when (find-package pkg)
       (delete-package pkg)))

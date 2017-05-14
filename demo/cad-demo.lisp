@@ -183,7 +183,7 @@
 (defclass input (connection) ())
 
 #+allegro
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defclass input (connection) ()))
 
 (defmethod presentation-type ((input input))
@@ -206,7 +206,7 @@
 (defclass output (connection) ())
 
 #+allegro
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defclass output (connection) ()))
 
 (defmethod presentation-type ((output output))
@@ -230,7 +230,7 @@
   (:default-initargs :size *component-size*))
 
 #+allegro
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defclass component
 	    (basic-thing)
       ((inputs :initform nil)

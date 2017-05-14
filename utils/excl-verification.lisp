@@ -26,11 +26,11 @@ v5: Fix postscript, GC cursor, Windows text field bugs, speed up
 (in-package :sys)
 
 #+ignore
-(eval-when (compile)
+(eval-when (:compile-toplevel)
   (assert (member excl::*current-case-mode*
 		  '(:case-insensitive-lower :case-insensitive-upper))))
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (pushnew :clim *features*)
   (pushnew :clim-2 *features*)
   (pushnew :clim-2.1 *features*)

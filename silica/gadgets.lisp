@@ -478,13 +478,11 @@
 ;;;
 
 (defclass push-button 
-	  (action-gadget labelled-gadget-mixin) 
-    ((show-as-default :initform nil :initarg :show-as-default
-		      :accessor push-button-show-as-default)
-     #+(or aclpc acl86win32)
-     (pattern :initarg :pattern)
-     #+(or aclpc acl86win32)
-     (icon-pattern :initarg :icon-pattern)))
+    (action-gadget labelled-gadget-mixin) 
+  ((show-as-default :initform nil :initarg :show-as-default
+                    :accessor push-button-show-as-default)
+   (pattern :initarg :pattern)
+   (icon-pattern :initarg :icon-pattern)))
 
 
 ;;; Toggle button
@@ -784,7 +782,7 @@ The text-field must have the focus before you can call this function."))
 	:height h :min-height 0 :max-height max-height))))
 
 ;;;#+(or aclpc acl86win32)
-;;;(eval-when (compile load eval)
+;;;(eval-when (:compile-toplevel :load-toplevel :execute)
 ;;;   ;;mm: 11Jan95 - this is defined later in clim\db-strea
 ;;;   (unless (ignore-errors (find-class 'clim-stream-pane))
 ;;;      (defclass clim-stream-pane () ())))

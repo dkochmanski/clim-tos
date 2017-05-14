@@ -86,7 +86,7 @@
 #+Genera (SYSTEM-INTERNALS:PATCH-SECTION-ATTRIBUTES
   "-*- Mode: LISP; Syntax: Common-lisp; Package: CLIM; Base: 10; Lowercase: Yes -*-")
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (scl:export 'clim::(with-output-to-pixmap-stream) 'clim))
 
 (defmacro with-output-to-pixmap-stream ((stream) &body body)
@@ -102,7 +102,7 @@
 #+Genera (SYSTEM-INTERNALS:PATCH-SECTION-ATTRIBUTES
   "-*- Mode: LISP; Syntax: Common-lisp; Package: CLIM; Base: 10; Lowercase: Yes -*-")
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (scl:export 'clim::(copy-area
 		      allocate-pixmap deallocate-pixmap
 		      copy-to-pixmap copy-from-pixmap

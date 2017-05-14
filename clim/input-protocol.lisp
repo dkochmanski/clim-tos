@@ -413,7 +413,7 @@
          (process-abort-gesture stream gesture))))
 
 ;;;#+(or aclpc acl86win32)
-;;;(eval-when (compile load eval)
+;;;(eval-when (:compile-toplevel :load-toplevel :execute)
 ;;;   ;;mm: 11Jan95 - this is defined later in  ???
 ;;;   (unless (ignore-errors (find-class 'interactor-pane))
 ;;;      (defclass interactor-pane () ()))
@@ -458,10 +458,6 @@
 ;;; keyword :STREAM argument to *standard-input*.  The application can call
 ;;; stream-read-gesture directly.
 (defun read-gesture (&rest args &key (stream *standard-input*) &allow-other-keys)
-  (declare (arglist &rest args
-                    &key (stream *standard-input*)
-                         timeout peek-p input-wait-test input-wait-handler
-                         pointer-button-press-handler))
   (declare (dynamic-extent args))
   (with-keywords-removed (keywords args '(:stream))
     (apply #'stream-read-gesture stream keywords)))

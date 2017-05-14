@@ -78,8 +78,7 @@
   "return a list of all the queue contents"
   (copy-list (queue-head queue)))
 
-(defgeneric map-over-queue (function queue)
-  (declare (dynamic-extent function)))
+(defgeneric map-over-queue (function queue))
 
 (defmethod map-over-queue (function (queue queue))
   (declare (dynamic-extent function))

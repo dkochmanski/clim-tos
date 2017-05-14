@@ -98,8 +98,8 @@
 (progn
 
 (defmacro write-forwarding-cl-output-stream-function (name args &key #+Genera message)
-  (let* ((cl-name (find-symbol (symbol-name name) (find-package :lisp)))
-	 (method-name (intern (lisp:format nil "~A-~A" 'stream (symbol-name name))))
+  (let* ((cl-name (find-symbol (symbol-name name) (find-package :cl)))
+	 (method-name (intern (cl:format nil "~A-~A" 'stream (symbol-name name))))
 	 (optional-args (or (member '&optional args) (member '&key args)))
 	 (required-args (ldiff args optional-args))
 	 (optional-parameters (mapcan #'(lambda (arg)
@@ -126,7 +126,7 @@
        ;; Shadow the Common Lisp function with one that calls the generic function,
        ;; except in Genera and Cloe where the Common Lisp function will work
        #-(or Genera (and MCL CCL-2))
-       (eval-when (compile load eval) (proclaim '(inline ,name)))
+       (eval-when (:compile-toplevel :load-toplevel :execute) (proclaim '(inline ,name)))
        #-(or Genera (and MCL CCL-2))
        (defun ,name (,@required-args &optional stream ,@optional-args)
 	 (case stream
@@ -172,7 +172,7 @@
 
 ;;;
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defun order-preserving-set-difference (set-one set-two)
   #-(and MCL CCL-2) (set-difference set-one set-two)
   #+(and MCL CCL-2) (nreverse (set-difference set-one set-two)))
@@ -182,8 +182,8 @@
 						     &key eof
 							  #+Genera message
 							  additional-arguments)
-  (let* ((cl-name (find-symbol (symbol-name name) (find-package :lisp)))
-	 (method-name (intern (lisp:format nil "~A-~A" 'stream (symbol-name name))))
+  (let* ((cl-name (find-symbol (symbol-name name) (find-package :cl)))
+	 (method-name (intern (cl:format nil "~A-~A" 'stream (symbol-name name))))
 	 (args (mapcar #'(lambda (var) (if (atom var) var (first var)))
 		       (order-preserving-set-difference lambda-list lambda-list-keywords)))
 	 (stream-args (remove 'stream args))
@@ -196,7 +196,7 @@
        ;; Shadow the Common Lisp function with one that calls the generic function,
        ;; except in Genera or Cloe where the Common Lisp function will work
        #-(or Genera (and MCL CCL-2))
-       (eval-when (compile load eval) (proclaim '(inline ,name)))
+       (eval-when (:compile-toplevel :load-toplevel :execute) (proclaim '(inline ,name)))
        #-(or Genera (and MCL CCL-2))
        ,(if eof
 	    (let ((args `(eof-error-p eof-value ,@(and (not (eq eof :no-recursive))
@@ -264,10 +264,10 @@
   (cond ((streamp stream)
 	 ;; this isn't going to quite work for ~&,
 	 ;; but it's better than nothing.
-	 (write-string (apply #'lisp:format nil format-control format-args) stream)
+	 (write-string (apply #'cl:format nil format-control format-args) stream)
 	 nil)
 	(t
-	 (apply #'lisp:format stream format-control format-args))))
+	 (apply #'cl:format stream format-control format-args))))
 
 ) ;; #-Cloe-Runtime
 

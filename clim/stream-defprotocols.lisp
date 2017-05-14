@@ -114,8 +114,7 @@
   ((stream basic-extended-input-protocol) &key timeout input-wait-test))
 
 (defoperation stream-pointer-position basic-extended-input-protocol
-  ((stream basic-extended-input-protocol) &key (timeout 0) pointer)
-  #-aclpc (declare (values x y)))
+  ((stream basic-extended-input-protocol) &key (timeout 0) pointer))
 
 (defoperation stream-set-pointer-position basic-extended-input-protocol
   ((stream basic-extended-input-protocol) x y &key pointer))
@@ -124,12 +123,10 @@
   ((stream basic-extended-input-protocol) pointer button modifier-state x y))
 
 (defoperation stream-pointer-input-rectangle* basic-extended-input-protocol
-  ((stream basic-extended-input-protocol) pointer &key left top right bottom)
-  #-aclpc (declare (values left top right bottom)))
+  ((stream basic-extended-input-protocol) pointer &key left top right bottom))
 
 (defoperation stream-accept basic-extended-input-protocol
-  ((stream basic-extended-input-protocol) presentation-type &rest accept-args)
-  #-aclpc (declare (values object type)))
+  ((stream basic-extended-input-protocol) presentation-type &rest accept-args))
 
 (defoperation prompt-for-accept basic-extended-input-protocol
   ((stream basic-extended-input-protocol) type view &rest accept-args))
@@ -261,12 +258,10 @@
 
 (defoperation text-size basic-extended-output-protocol
   ((stream basic-extended-output-protocol) string &key text-style start end)
-  #-aclpc (declare (values largest-x total-height last-x last-y baseline))
   (:no-defgeneric t))
 
 (defoperation stream-cursor-position basic-extended-output-protocol
-  ((stream basic-extended-output-protocol))
-  #-aclpc (declare (values x y)))
+  ((stream basic-extended-output-protocol)))
 
 (defoperation stream-set-cursor-position basic-extended-output-protocol
   ((stream basic-extended-output-protocol) x y))
@@ -409,8 +404,7 @@
   ((window window-mixin) x y))
 
 (defoperation window-inside-size window-mixin
-  ((window window-mixin))
-  #-aclpc (declare (values width height)))
+  ((window window-mixin)))
 
 (defoperation window-set-inside-size window-mixin
   ((window window-mixin) new-width new-height))

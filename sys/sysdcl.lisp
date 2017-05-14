@@ -17,7 +17,7 @@
 
 "Copyright (c) 1990, 1991, 1992 Symbolics, Inc.  All rights reserved."
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 
 ;;; Tell the world that we're here
 ;;;--- These need to be in the CLIM.fasl also.
@@ -57,7 +57,7 @@
 ;;; our own trampolines which will call our generic function, and then write default
 ;;; methods which will invoke the COMMON-LISP package equivalents.
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 
 #+(or allegro
       Minima
@@ -73,11 +73,6 @@
       Clozure
       SBCL)
 (pushnew :clim-uses-lisp-stream-functions *features*)
-
-;;; CLIM-ANSI-Conditions means this lisp truly supports the ANSI CL condition system
-;;; CLIM-Conditions      means that it has a macro called DEFINE-CONDITION but that it works
-;;;                      like allegro 3.1.13 or Lucid.
-(pushnew :clim-ansi-conditions *features*)
 
 #+allegro
 (pushnew :allegro-v4.0-constructors *features*)
@@ -126,7 +121,6 @@
    "reader"
    "clos-patches"
    "clos"
-   #+CLIM-conditions "condpat" ;get the define-condition macro
 
    ;; General Lisp extensions
    "utilities"
@@ -148,7 +142,7 @@
 
    ;; Basic utilities for Silica and CLIM
    "clim-macros"
-   ("transformations" #+CLIM-conditions (:load-before-compile "condpat"))
+   "transformations"
    "regions"
    "region-arithmetic"
    "extended-regions"
@@ -206,7 +200,6 @@
    "stream-defprotocols"
    "defresource"
    "temp-strings"
-   #+(and MCL CCL-2) "coral-defs"
    "clim-defs"
 
    ;; Definitions and protocols

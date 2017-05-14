@@ -15,7 +15,7 @@
 ;;;    as per CLtL.
 ;;; 2) The set of possible "mouse buttons" is :LEFT, :MIDDLE, and :RIGHT.
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 
 ;; Button indices are 0, 1, or 2
 (defun-inline button-index (name)
@@ -85,7 +85,6 @@
              ,@body))))))
 
 (defun gesture-name-button-and-modifiers (gesture-name)
-  (declare (values button modifier-state))
   (do-button-and-modifier-state (button modifier-state bucket)
     (when (member gesture-name bucket)
       (return-from gesture-name-button-and-modifiers
@@ -94,7 +93,6 @@
   nil)
 
 (defun gesture-name-keysym-and-modifiers (gesture-name)
-  (declare (values keysym modifier-state))
   (dotimes (index (ash 1 (length *modifier-keys*)))
     (let ((bucket (aref *keysym-and-modifier-key->gesture* index)))
       (dolist (entry bucket)
@@ -241,7 +239,6 @@
            (= m1 m2)))))
 
 (defun parse-gesture-spec (gesture-spec)
-  (declare (values keysym modifier-state))
   (when (atom gesture-spec)
     (return-from parse-gesture-spec
       (if (and (characterp gesture-spec)
@@ -267,7 +264,6 @@
 ;; A slower, more careful version of the above that gets used to
 ;; validate programmer input
 (defun decode-gesture-spec (gesture-spec &key (errorp t))
-  (declare (values keysym modifiers))
   (when (atom gesture-spec)
     (return-from decode-gesture-spec
       (values gesture-spec nil)))

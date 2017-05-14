@@ -42,7 +42,7 @@
 ;;; I left a copy of this form in defsystem.lisp so that defsystem
 ;;; can be compiled (it has lots of references to LISP: symbols).
 #+(and ANSI-90 (not Allegro))
-(eval-when (eval compile load)
+(eval-when (:execute :compile-toplevel :load-toplevel)
   (flet ((fix-package (pack-name add-name)
 	   (setq add-name (string add-name))
 	   (let ((pack (find-package pack-name)))
@@ -65,7 +65,7 @@
 ;;; is really to add the ANSI names COMMON-LISP and COMMON-LISP-USER
 ;;; to the LISP and USER packages found in non-ANSI Lisps.
 #-(or Allegro aclpc)
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (flet ((clean-up-package (old-package-name primary-name required-nicknames)
 	   (let* ((package (or (find-package old-package-name)
 			       (find-package primary-name)))

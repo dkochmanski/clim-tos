@@ -16,7 +16,7 @@
 
 (in-package :silica)
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (define-event-class scrollbar-event (event) 
     ((sheet :reader event-sheet :initarg :sheet)
      (orientation :initarg :orientation :reader scrollbar-event-orientation)
@@ -474,7 +474,7 @@
     (resize-sheet child nwidth nheight)	;;; get the viewport sized correctly!
     (allocate-space child nwidth nheight)))
 
-(eval-when (compile load eval) 
+(eval-when (:compile-toplevel :load-toplevel :execute)
   ;; Turn this on as long as it gets turned off in pkgdcl.lisp
   (setq excl:*enable-package-locked-errors* common-lisp-user::*lock-preference*)
   (provide :climnt))

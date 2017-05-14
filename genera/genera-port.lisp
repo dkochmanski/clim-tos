@@ -301,7 +301,6 @@
 
 (defmethod port-glyph-for-character ((port genera-port)
 				     character style &optional our-font)
-  (declare (values index font escapement-x escapement-y origin-x origin-y bb-x bb-y
 		   fixed-width-font-p))
   (with-genera-glyph-for-character
     (port-glyph-for-character port character style our-font)))

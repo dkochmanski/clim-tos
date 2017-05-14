@@ -51,15 +51,14 @@
     ;; cares?? --CIM
     (values x y (+ x width) (+ y width))))
 
-(defconstant cursor_active (byte 1 0))
-(defconstant cursor_state  (byte 1 1))
-(defconstant cursor_focus  (byte 1 2))
+(defparameter +cursor-active+ (byte 1 0))
+(defparameter +cursor-state+  (byte 1 1))
+(defparameter +cursor-focus+  (byte 1 2))
 
 (defun decode-cursor-flags (flags)
-  #+Genera (declare (values active state focus))
-  (values (ldb-test cursor_active flags)
-          (ldb-test cursor_state flags)
-          (ldb-test cursor_focus flags)))
+  (values (ldb-test +cursor-active+ flags)
+          (ldb-test +cursor-state+ flags)
+          (ldb-test +cursor-focus+ flags)))
 
 ;;; Required method
 (defmethod (setf cursor-stream) (new-value (cursor standard-text-cursor))
@@ -96,33 +95,33 @@
     (multiple-value-bind (active state focus)
         (decode-cursor-flags flags)
       (declare (ignore active focus))
-      (setf (ldb cursor_state flags) (if new-state 1 0))
+      (setf (ldb +cursor-state+ flags) (if new-state 1 0))
       (note-cursor-change cursor 'cursor-state state new-state))))
 
 (defmethod cursor-state ((cursor standard-text-cursor))
-  (ldb-test cursor_state (slot-value cursor 'flags)))
+  (ldb-test +cursor-state+ (slot-value cursor 'flags)))
 
 (defmethod (setf cursor-active) (new-active (cursor standard-text-cursor))
   (with-slots (flags) cursor
     (multiple-value-bind (active state focus)
         (decode-cursor-flags flags)
       (declare (ignore state focus))
-      (setf (ldb cursor_active flags) (if new-active 1 0))
+      (setf (ldb +cursor-active+ flags) (if new-active 1 0))
       (note-cursor-change cursor 'cursor-active active new-active))))
 
 (defmethod cursor-active ((cursor standard-text-cursor))
-  (ldb-test cursor_active (slot-value cursor 'flags)))
+  (ldb-test +cursor-active+ (slot-value cursor 'flags)))
 
 (defmethod (setf cursor-focus) (new-focus (cursor standard-text-cursor))
   (with-slots (flags) cursor
     (multiple-value-bind (active state focus)
         (decode-cursor-flags flags)
       (declare (ignore active state))
-      (setf (ldb cursor_focus flags) (if new-focus 1 0))
+      (setf (ldb +cursor-focus+ flags) (if new-focus 1 0))
       (note-cursor-change cursor 'cursor-focus focus new-focus))))
 
 (defmethod cursor-focus ((cursor standard-text-cursor))
-  (ldb-test cursor_focus (slot-value cursor 'flags)))
+  (ldb-test +cursor-focus+ (slot-value cursor 'flags)))
 
 (defmethod (setf cursor-color) (color (cursor standard-text-cursor))
   (with-slots (flipping-ink flags) cursor

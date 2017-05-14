@@ -4,7 +4,7 @@
 
 (in-package :tk)
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   #+ignore
   (defconstant *gcontext-components*
       '((function :int)
@@ -41,7 +41,7 @@
 (defun make-xgcvalues ()
   (clim-utils::allocate-cstruct 'x11::xgcvalues :initialize t))
 
-(eval-when (compile eval)
+(eval-when (:compile-toplevel :execute)
   #+ignore
   (defun gcontext-component-to-slot-definition (x)
     (destructuring-bind

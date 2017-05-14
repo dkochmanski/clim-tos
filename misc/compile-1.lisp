@@ -1,9 +1,9 @@
-;; -*- mode: common-lisp; package: user -*-
+;; -*- mode: common-lisp; package: cl-user -*-
 ;;
 ;; See the file LICENSE for the full license governing this code.
 ;;
 
-(in-package :user)
+(in-package :cl-user)
 
 ;;; This should not matter
 ;;; (setq *ignore-package-name-case* t)
@@ -12,32 +12,8 @@
 (pushnew :ansi-90 *features*)
 
 #+(and allegro microsoft)
-(eval-when (compile load eval) 
+(eval-when (:compile-toplevel :load-toplevel :execute) 
   (pushnew :acl86win32 *features*))
-
-#-(version>= 6 0)
-(setq comp:generate-call-count-code-switch
-  (named-function |(> debug 1)|
-		  (lambda (safety size speed debug)
-		    (declare (ignore safety size speed))
-		    (> debug 1))))
-
-#-(version>= 8 2)
-(setq comp:declared-fixnums-remain-fixnums-switch
-  (named-function |(> speed 2)|
-		  (lambda (safety size speed debug)
-		    (declare (ignore safety size debug))
-		    (> speed 2))))
-
-
-;; [bug18430]:
-#+(version>= 8 2)
-(setq comp:declared-fixnums-remain-fixnums-switch
-  (named-function |(> speed 2)|
-		  (lambda (safety size speed debug compilation-speed)
-		    (declare (ignore safety size debug compilation-speed))
-		    (> speed 2))))
-
 
 ;;;; Set up translations so we can find stuff.
 ;;;

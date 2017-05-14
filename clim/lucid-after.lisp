@@ -43,7 +43,7 @@
   (pushnew 'rehash-ptypes *restart-cleanup-functions*))
 
 
-(eval-when (load)
+(eval-when (:load-toplevel)
   (pushnew :clim-2-0 *features*)
   (defparameter *clim-repacking-date* (universal-time-string (get-universal-time)))
   #+ignore                                ;breaks in 2.0

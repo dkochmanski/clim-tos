@@ -9,7 +9,7 @@
 
 (defvar *border-shape-drawer-alist* nil)
 
-(eval-when (eval compile load)
+(eval-when (:execute :compile-toplevel :load-toplevel)
 
 (defparameter *border-shape-drawer-arglist* '(stream record left top right bottom))
 

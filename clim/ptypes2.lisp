@@ -351,7 +351,6 @@
 ;;  NIL,NIL => Don't know, the answer cannot definitively be determined
 ;;  T,NIL   => Can't ever happen
 (defun presentation-subtypep (type putative-supertype)
-  (declare (values subtype-p known-p))
   (multiple-value-bind (subtype-p known-p)
       (presentation-subtypep-1 type putative-supertype)
     (when (and (eq subtype-p nil)
@@ -368,7 +367,6 @@
 ;; The guts of the above, but faster since we don't worry about the case
 ;; where a type abbreviation was passed in.
 (defun presentation-subtypep-1 (type putative-supertype)
-  (declare (values subtype-p known-p))
   (with-presentation-type-decoded (type-name type-parameters) type
     (with-presentation-type-decoded (supertype-name supertype-parameters) putative-supertype
 

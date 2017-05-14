@@ -97,7 +97,6 @@
 
 ;; Get the element from HISTORY indexed by INDEX.
 (defmethod history-element ((history basic-history) index &optional fixup-p)
-  (declare (values element index))
   (let ((delta 0))
     (with-slots (elements current-length temporary-element) history
       (without-scheduling
@@ -119,8 +118,6 @@
 ;; of one argument, the element.
 (defmacro do-history-elements ((history element-var index-var &rest options)
                                &body body)
-  (declare (arglist (history element-var index-var
-                     &key index offset cutoff-length test) &body body))
   `(flet ((do-history-elements-body (,element-var ,index-var) ,@body))
      (declare (dynamic-extent #'do-history-elements-body))
      (do-history-elements-1 ,history #'do-history-elements-body ,@options)))
@@ -363,11 +360,11 @@
   (view nil))
 
 #+(and allegro aclpc)
-(eval-when (compile load)
+(eval-when (:compile-toplevel :load-toplevel)
   (setf (find-class 'presentation-history-element) nil))
 
 #+(and allegro aclpc)
-(eval-when (compile)
+(eval-when (:compile-toplevel)
   (warn "~S structure hacked for bug2419" 'presentation-history-element))
 
 (defun make-presentation-type-history (type &key (maximum-length *default-history-length*)

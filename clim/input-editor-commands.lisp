@@ -10,7 +10,7 @@
 ;;; on INPUT-EDITING-STREAM-MIXIN rather than on our specific implementation of
 ;;; an input editor.  This may prove to be a foolish decision down the pike.
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defvar *ie-command-arglist* '(stream input-buffer gesture numeric-argument))
 )
 
@@ -334,7 +334,6 @@ This may confused the input editor" gestures))
       (queue-rescan stream ':activation))))
 
 (defun complete-symbol-name (stream input-buffer &aux (colon-string ":"))
-  (declare (values string ambiguous word-start))
   (multiple-value-bind (word-start word-end colon)
       (word-start-and-end input-buffer '(#\space #\( #\) #\")
                           (stream-insertion-pointer stream))
@@ -1068,7 +1067,6 @@ This may confused the input editor" gestures))
 ;;; Lispy input editing commands
 
 (defun function-arglist (function)
-  (declare (values arglist found-p))
   #+Clozure      (values (ccl:arglist function) t)
   #+Genera       (values (sys:arglist function) T)
   #+Cloe-Runtime (sys::arglist function)
@@ -1076,7 +1074,6 @@ This may confused the input editor" gestures))
   #+Lucid        (values (lucid-common-lisp:arglist function) t))
 
 (defun word-start-and-end (string start-chars &optional (start 0))
-  (declare (values word-start word-end colon))
   (flet ((open-paren-p (thing)
            (or (not (characterp thing))                ;noise strings and blips are delimiters
                (member thing start-chars)))
@@ -1108,7 +1105,6 @@ This may confused the input editor" gestures))
               colon))))
 
 (defun symbol-at-position (stream input-buffer delimiters)
-  (declare (values symbol package start end))
   (multiple-value-bind (word-start word-end)
       (word-start-and-end input-buffer delimiters
                           (stream-insertion-pointer stream))

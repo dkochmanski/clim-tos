@@ -13,7 +13,9 @@
 ;;; We use the term "extent" here to mean a bounding rectangle...
 
 ;; A fixnum, incremented only with ATOMIC-INCF
-(defvar *generation-tick* 0)
+(declaim (type fixnum *generation-tick*))
+#+sbcl(sb-ext:defglobal *generation-tick* 0)
+#-sbcl(defvar *generation-tick* 0)
 
 (define-protocol-class updating-output-record (output-record))
 
@@ -315,8 +317,14 @@
   `(letf-globally (((stream-redisplaying-p ,stream) t))
      ;; the generation is only necessary for output-records that move
      ;; in the hierarchy.
-     (let ((*generation-tick* (atomic-incf *generation-tick*)))
-       ,@body)))
+
+     ;; NOTE not sure if this is a proper workaround due to SBCL requiring
+     ;; *generation-tick* to be "global", i.e. not special. -- jacek.zlydach, 2017-05-06
+     #-sbcl (let ((*generation-tick* (atomic-incf *generation-tick*)))
+             ,@body)
+     #+sbcl (progn
+              (atomic-incf *generation-tick*)
+              ,@body)))
 
 (defun redisplay (record stream &key (check-overlapping t))
   (unless (redisplayable-stream-p stream)
@@ -445,7 +453,6 @@
                       (x-offset (coordinate 0)) (y-offset (coordinate 0))
                       (old-x-offset (coordinate 0)) (old-y-offset (coordinate 0)))
   (declare (type coordinate x-offset y-offset old-x-offset old-y-offset))
-  (declare (values erases moves draws erase-overlapping move-overlapping))
   #-aclpc (declare (ignore check-overlapping))
   #+ignore (when (eq record wt::*c*) (break "found it"))
   (let ((erases nil)
@@ -549,7 +556,6 @@
                              &optional (x-offset (coordinate 0)) (y-offset (coordinate 0))
                                        (old-x-offset (coordinate 0)) (old-y-offset (coordinate 0)))
   (declare (type coordinate x-offset y-offset old-x-offset old-y-offset))
-  (declare (values erases moves draws erase-overlapping move-overlapping))
   (let ((new-draws nil))
     (labels ((augment-draws (record x-offset y-offset old-x-offset old-y-offset)
                (let ((erases-that-overlap nil))
@@ -815,8 +821,6 @@
                       (old-child-extent
                         (output-record-old-bounding-rectangle child))
                       erases moves draws erase-overlapping move-overlapping)
-  (declare (values new-mode new-erases new-moves new-draws
-                   new-erase-overlapping new-move-overlapping))
   #-aclpc (declare (ignore move-overlapping erase-overlapping draws 
                    moves erases old-child-extent old-child-position)) ;--- Why
   ;; If :DELETE, and deleted all children, delete self,
@@ -930,7 +934,6 @@
             &optional check-overlapping
                       (x-offset (coordinate 0)) (y-offset (coordinate 0))
                       (old-x-offset (coordinate 0)) (old-y-offset (coordinate 0)))
-  (declare (values erases moves draws erase-overlapping move-overlapping))
   #-aclpc (declare (ignore old-x-offset old-y-offset check-overlapping))
   (with-slots (all-new old-bounding-rectangle contents-ok old-parent) record
     ;; if it's all-new, don't bother walking the hierarchy, just redraw.

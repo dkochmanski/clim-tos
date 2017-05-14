@@ -10,7 +10,7 @@
 (proclaim '(optimize (speed 3) (safety 1) (debug 1)))
 
 #+(and allegro microsoft)
-(eval-when (compile load eval) 
+(eval-when (:compile-toplevel :load-toplevel :execute) 
   (pushnew :acl86win32 *features*))
 
 #+microsoft
@@ -27,7 +27,7 @@
 
 ;; should probably change ANSI-90 to ANSI-CL throughout the CLIM code but
 ;; until then... (aclpc gets this feature in defsystem)
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (pushnew :ansi-90 *features*)
   (setf (logical-pathname-translations "clim2")
     `((";**;*.*" ,*clim-root*)))

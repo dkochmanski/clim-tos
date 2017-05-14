@@ -843,7 +843,7 @@
 ;; How can we wait for a frame to be created. Grab hold of it and then
 ;; run some commands on it.
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (require :prof))
 
 (defun do-frame-test-with-profiling (test &key (type :time) prefix)

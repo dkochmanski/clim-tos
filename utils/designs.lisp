@@ -33,8 +33,8 @@
 
 
 ;; Black and white are the same everywhere
-(defconstant +black+ (make-gray-color-1 0f0))
-(defconstant +white+ (make-gray-color-1 1f0))
+(defparameter +black+ (make-gray-color-1 0f0))
+(defparameter +white+ (make-gray-color-1 1f0))
 
 
 ;;; Gray colors
@@ -115,8 +115,8 @@
 ;;; Color constants
 
 (defmacro define-primary-color (color-name r g b)
-  `(defconstant ,color-name
-		(make-rgb-color-1 (float ,r 0f0) (float ,g 0f0) (float ,b 0f0))))
+  `(defparameter ,color-name
+     (make-rgb-color-1 (float ,r 0f0) (float ,g 0f0) (float ,b 0f0))))
 
 ;; The primary colors, constant across all platforms
 (define-primary-color +red+     1 0 0)
@@ -331,7 +331,7 @@ Try closing color-intensive applications such as Netscape, or try~%~
 setting the colormap X resource to yes to get a private colormap,~%~
 then restart your application.")
 
-(eval-when (#-allegro compile load eval)
+(eval-when (#-allegro :compile-toplevel :load-toplevel :execute)
 (define-condition palette-full (error)
   ((palette :initarg :palette :reader palette-full-palette)
    (color :initarg :color :reader palette-full-color))
@@ -562,7 +562,7 @@ then restart your application.")
     (with-slots (design1 design2) design
       (cl:format stream "~A and ~A" design1 design2))))
 
-(defconstant +flipping-ink+ (make-flipping-ink-1 +foreground-ink+ +background-ink+))
+(defparameter +flipping-ink+ (make-flipping-ink-1 +foreground-ink+ +background-ink+))
 
 (defmethod make-flipping-ink (design1 design2)
   (cond ((eq design1 design2)
@@ -712,7 +712,6 @@ then restart your application.")
 ;;; This could be done with methods, but there is very little point to that
 #-(or aclpc acl86win32)
 (defun decode-tile-as-stipple (rectangular-tile)
-  (declare (values array width height))
   (multiple-value-bind (pattern width height)
       (decode-rectangular-tile rectangular-tile)
     (when (typep pattern 'pattern)
@@ -727,7 +726,6 @@ then restart your application.")
 
 #+(or aclpc acl86win32)
 (defun decode-tile-as-stipple (rectangular-tile)
-  (declare (values array width height))
   (multiple-value-bind (pattern width height)
       (decode-rectangular-tile rectangular-tile)
     (declare (ignore width height))

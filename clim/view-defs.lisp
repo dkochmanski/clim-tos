@@ -45,7 +45,6 @@
 
 (defmethod initialize-instance :after ((view actual-gadget-view) 
                                        &rest initargs &key &allow-other-keys)
-  #-(or aclpc Clozure) (declare (non-dynamic-extent initargs))
   (setf (slot-value view 'initargs) initargs))
 
 (defmacro define-gadget-view (name)

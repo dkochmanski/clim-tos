@@ -15,7 +15,7 @@
     #-(and mswindows 64bit) t)
 
 ;; Invite everybody to the party.
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (require :climg)
   ;; [rfe4951]: not needed anymore:
   ;; (require :ffcompat)
@@ -48,7 +48,7 @@
    #:make-windows-font-named		;make a windows font from a name
    ))
  
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (pushnew :aclmerge *features*)
   (pushnew :os-threads *features*))
 

@@ -11,7 +11,7 @@
 
 ;;; Locks 
 #+Allegro
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 ;;;  (require :mdproc)
   (require :process))
 
@@ -231,7 +231,7 @@
     (warn "No implementation of MAKE-PROCESS for this system.")
     ))
 
-(eval-when (compile load eval) (proclaim '(inline processp)))
+(eval-when (:compile-toplevel :load-toplevel :execute) (proclaim '(inline processp)))
 (defun processp (object)
   #+(and MCL CCL-2)  (member object '(:user :event :interrupt))
   #+Lucid      (lcl:processp object)
@@ -265,7 +265,7 @@
 #+(and MCL CCL-2)
 (defvar *current-process* :user)
 
-(eval-when (compile load eval) (proclaim '(inline current-process)))
+(eval-when (:compile-toplevel :load-toplevel :execute) (proclaim '(inline current-process)))
 (defun current-process ()
   #+Lucid        lcl:*current-process*
   #+Allegro      mp:*current-process*
@@ -280,7 +280,7 @@
   #+SBCL         sb-thread:*current-thread*
   )
 
-(eval-when (compile load eval) (proclaim '(inline all-processes)))
+(eval-when (:compile-toplevel :load-toplevel :execute) (proclaim '(inline all-processes)))
 (defun all-processes ()
   #+Lucid        lcl:*all-processes*
   #+Allegro      mp:*all-processes*
@@ -299,7 +299,7 @@
   #-(or Lucid Genera) (all-processes)
   )
   
-(eval-when (compile load eval) (proclaim '(inline process-yield)))
+(eval-when (:compile-toplevel :load-toplevel :execute) (proclaim '(inline process-yield)))
 (defun process-yield ()
   #+Lucid        (lcl:process-allow-schedule)
   #+Allegro      (mp:process-allow-schedule)

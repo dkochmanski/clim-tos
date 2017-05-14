@@ -346,9 +346,9 @@
             (setf (cdr mapping-pair) underlying)
             (push (cons logical underlying) (cdr pair)))))))
 
-(defconstant %%face-code-no-merge (byte 1 28))
-(defconstant %%face-code-class (byte 4 24))
-(defconstant %%face-code-faces (byte 24 0))
+(defparameter %%face-code-no-merge (byte 1 28))
+(defparameter %%face-code-class (byte 4 24))
+(defparameter %%face-code-faces (byte 24 0))
 
 (defun face->face-code (face)
   (when (null face) (return-from face->face-code nil))
@@ -494,7 +494,6 @@
 (defmethod text-size ((medium basic-medium) string
                       &key (text-style (medium-merged-text-style medium))
                            (start 0) end)
-  (declare (values largest-x total-height last-x last-y baseline))
   ;; this shouldn't be necessary because of trampolines directly above
   ;;  31jan97 tjm w/colin
   #+(or aclpc acl86win32)
@@ -815,7 +814,6 @@
 
 #-(or aclpc acl86win32)
 (defun-inline char-character-set-and-index (character)
-  (declare (values character-set index))
   (values #+Allegro
 	  (excl:ics-target-case
            (:-ics *standard-character-set*)
@@ -830,7 +828,6 @@
 #+(or aclpc acl86win32)
 ;;; For now, only standard character set characters are understood...
 (defun-inline char-character-set-and-index (character)
-  (declare (values character-set index))
   (values *standard-character-set* (char-code character)))
 
 

@@ -109,8 +109,7 @@
 (defgeneric display-node (call-node stream))
 (defgeneric node-generate-inferior-objects (call-node subtype))
 (defgeneric node-any-inferior-objects-p (call-node subtype))
-(defgeneric node-arc-drawer (call-node)
-  #+genera (declare (values arc-drawer arc-drawing-options)))
+(defgeneric node-arc-drawer (call-node))
 
 
 (defclass basic-call-node ()
@@ -170,13 +169,13 @@
 
 ;; This is the most basic instantiable sort of call node.
 ;; Commands and translators are written on this, not on BASIC-CALL-NODE.
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defclass call-node (basic-call-node) ())
 )
 
 ;; CALL-SUBNODEs are a stripped-down version of CALL-NODEs, which mostly
 ;; means that most commands and translators don't operate on subnodes.
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defclass call-subnode (basic-call-node) ())
 )
 
@@ -189,7 +188,7 @@
 
 
 ;; Ellipsis nodes
-(eval-when (load compile eval)
+(eval-when (:load-toplevel :compile-toplevel :execute)
 (defclass ellipsis-call-node
 	  (basic-call-node)
   ((replaced-node :reader ellipsis-node-replaced-node :initarg :replaced-node)))
@@ -219,9 +218,7 @@
 (defvar *browser-types* nil)
 
 (defgeneric browser-type-subtypes (type))
-(defgeneric browser-type-information (type subtype)
-  #+genera (declare (values node-maker root-node-maker
-			    graph-type grapher-args presentation-type options)))
+(defgeneric browser-type-information (type subtype))
 
 (defmacro define-browser-type (type presentation-type graph-type options &body subtypes)
   #+genera (declare (zwei:indentation 3 3 4 1))

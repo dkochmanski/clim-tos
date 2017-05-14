@@ -260,7 +260,6 @@ called \cl{sample-output-record} might be defined as follows:
 
 \begin{verbatim}
 (defgeneric output-record-position (record)
-  (declare (values x y)))
 (defgeneric* (setf output-record-position) (x y record))
 
 (defmethod output-record-position ((record sample-output-record))

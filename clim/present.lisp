@@ -15,17 +15,6 @@
                 &allow-other-keys)
   #-acl86win32
   (declare (dynamic-extent present-args))
-  (declare (arglist object &optional (presentation-type (presentation-type-of object))
-                    &rest present-args
-                    &key (stream *standard-output*)
-                         (view (stream-default-view stream))
-                         (modifier nil) (acceptably nil)
-                         (for-context-type presentation-type) (single-box nil)
-                         (allow-sensitive-inferiors *allow-sensitive-inferiors*)
-                         (sensitive *allow-sensitive-inferiors*)
-                         prompt query-identifier
-                         (record-type 'standard-presentation)
-                    &allow-other-keys))
   (multiple-value-bind (expansion expanded)
       (expand-presentation-type-abbreviation presentation-type)
     (when expanded

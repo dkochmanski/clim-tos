@@ -48,7 +48,7 @@
 			       (reverse ,run-time-vals))
 	    ,wrapped-body)))))
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defun decode-once-only-arguments (variables)
   (let ((vars nil)
 	(env nil)
@@ -316,48 +316,6 @@
        (or (char-equal char #\Space)
 	   (eql char #\Tab))))
 
-;;; Make sure we don't get screwed by environments like Coral's that
-;;; have *print-case* set to :downcase by default.
-#+(or (not ansi-90) aclpc)
-(defvar *standard-io-environment-val-cache* nil)
-
-#+(or (not ansi-90) aclpc)
-(defun standard-io-environment-vars-and-vals ()
-  (unless *standard-io-environment-val-cache*
-    (setq *standard-io-environment-val-cache*
-	  (list 10				;*read-base*
-		(copy-readtable nil)		;*readtable*
-		(find-package :user)		;*package*
-		t				;*print-escape*
-		nil				;*print-pretty*
-		nil				;*print-radix*
-		10				;*print-base*
-		nil				;*print-circle*
-		nil				;*print-level*
-		nil				;*print-length*
-		:upcase				;*print-case*
-		t				;*print-gensym*
-		t				;*print-array*
-		nil)))				;*read-suppress*
-  (values
-    '(*read-base* *readtable* *package* *print-escape* *print-pretty*
-      *print-radix* *print-base* *print-circle* *print-level* *print-length*
-      *print-case* *print-gensym* *print-array* *read-suppress*)
-    *standard-io-environment-val-cache*))
-
-(defmacro with-standard-io-environment (&body body)
-  #+(or (not ansi-90) aclpc)
-  `(multiple-value-bind (vars vals)
-       (standard-io-environment-vars-and-vals)
-     (progv vars vals
-       ,@body))
-  #-(or (not ansi-90) aclpc)
-  `(with-standard-io-syntax ,@body))
-
-#+(and (or (not ansi-90) aclpc) (not Clozure) (not Genera))
-(defmacro with-standard-io-syntax (&body body)
-  `(with-standard-io-environment ,@body))
-
 ;; Define this so we don't have to deal with stupid warnings about
 ;; the iteration variable being used, or not used, or what not
 (defmacro repeat (n &body body)
@@ -388,7 +346,7 @@
   (let ((aborted-variable (gensymbol 'aborted-p))
 	(temporary-stream-variable (gensymbol 'stream)))
     (multiple-value-bind (documentation declarations actual-body)
-	(extract-declarations body env)
+	(extract-declarations body env) ;;; FIXME this here breaks file compilation on SBCL; should we compile this macro anyway? -- jacek.zlydach, 2017-05-06
       (declare (ignore documentation))
       `(let (,temporary-stream-variable
 	     (,aborted-variable t))
@@ -404,16 +362,10 @@
 
 (defun follow-synonym-stream (stream)
   #+Genera (si:follow-syn-stream stream)
-  #+(and ansi-90 (not Genera)) (typecase stream
-				 (synonym-stream
-				   (symbol-value (synonym-stream-symbol stream)))
-				 (t stream))
-  #-(or Genera ansi-90) stream)
-
-#-(or Genera ansi-90)
-(eval-when (compile)
-  (warn "You haven't defined ~S for this implementation.  A stub has been provided."
-	'follow-synonym-stream))
+  #-Genera (typecase stream
+             (synonym-stream
+              (symbol-value (synonym-stream-symbol stream)))
+             (t stream)))
 
 ;;; Interning. There are three places where the package matters here:
 ;;; the current package, the package that is current when FORMAT is
@@ -430,7 +382,7 @@
   ;; this argument order is unfortunate.
   (declare (dynamic-extent format-args))
   (intern (let ((pkg *package*))
-	    (with-standard-io-environment
+	    (with-standard-io-syntax
 		(let ((*package* pkg))
 		  (apply #'cl:format () format-string
 			 (mapcar #'(lambda (x)
@@ -447,7 +399,7 @@
 
 (defvar *gensymbol* 0)
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defun gensymbol (&rest parts)
   (declare (dynamic-extent parts))
   (when (null parts) (setf parts '(gensymbol)))
@@ -555,11 +507,11 @@
 	   (when ,condition-value (setf ,@unwind-forms)))))))
 
 #-(and ansi-90 (not allegro) (not Symbolics))
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (proclaim '(declaration non-dynamic-extent)))
 
 #+aclpc
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (proclaim '(declaration non-dynamic-extent ignorable)))
 
 #+(and ansi-90 (not allegro) (not aclpc) (not Symbolics))
@@ -914,7 +866,6 @@
 
 (defun canonicalize-and-match-lambda-lists (canonical-order user-specified
 					    &optional allow-user-keys)
-  (declare (values lambda-list ignores))
   (check-type canonical-order list)
   (check-type user-specified list)
   (let* ((new-lambda-list nil)
@@ -972,7 +923,7 @@
   (let ((function-name
 	  (make-symbol (cl:format nil "~A-~A-~A" symbol indicator 'property))))
     `(progn (defun ,function-name ,lambda-list ,@body)
-	    (eval-when (load eval) (setf (get ',symbol ',indicator) #',function-name)))))
+	    (eval-when (:load-toplevel :execute) (setf (get ',symbol ',indicator) #',function-name)))))
 
 (defmacro do-delimited-substrings (((string &key (start 0) end)
 				    (start-index-var end-index-var &optional char-var))
@@ -1125,12 +1076,6 @@
 					     ,arglist)))))))))
 
 
-#-(or Genera Clozure (and ansi-90 (not (and allegro (not (version>= 4 1))))))
-(defmacro define-compiler-macro (name lambda-list &body body &environment env)
-  env
-  #+Allegro `(excl::defcmacro ,name ,lambda-list ,@body)
-  #-(or Genera allegro) (progn name lambda-list body env nil))	;Suppress compiler warnings.
-
 #+aclpc
 (defmacro define-compiler-macro (name lambda-list &body body &environment env)
   env
@@ -1145,52 +1090,6 @@
   (mapc #'compiler:function-defined (cdr decl)))
 
 
-#-(or Genera ansi-90)
-(defmacro print-unreadable-object ((object stream &key type identity) &body body)
-  `(flet ((print-unreadable-object-body () ,@body))
-     (declare (dynamic-extent #'print-unreadable-object-body))
-     (print-unreadable-object-1 ,object ,stream ,type ,identity
-				#'print-unreadable-object-body
-				',(not (null body)))))
-
-#-(or Genera ansi-90)
-;;; EXTRA-SPACE-REQUIRED is optional because old compiled code didn't always supply it.
-(defun print-unreadable-object-1 (object stream type identity continuation
-					 &optional (extra-space-required t))
-  (write-string "#<" stream)
-  ;; wish TYPE-OF worked in PCL
-  (when type (cl:format stream "~S " (class-name (class-of object))))
-  (funcall continuation)
-  (when identity
-    (when extra-space-required (write-char #\space stream))
-    (#+PCL pcl::printing-random-thing-internal	;; I assume PCL gets this right. -- rsl
-     #-PCL print-unreadable-object-identity
-     object stream))
-  (write-string ">" stream))
-
-#-(or PCL Genera ansi-90)
-(defun print-unreadable-object-identity (object stream)
-  #+Genera (format stream "~O" (sys:%pointer object))
-  #+Allegro (format stream "@~X" (excl::pointer-to-address object))
-  ;; Lucid prints its addresses out in Hex.
-  #+Lucid (format stream "~X" (sys:%pointer object))
-  ;; Probably aren't any #+(and (not Genera) (not allegro) (not PCL) (not ansi-90))
-  ;; implementations (actually, this is false: Lispworks).
-  #-(or Genera allegro Lucid) (declare (ignore object))
-  #-(or Genera allegro Lucid) (cl:format stream "???"))
-
-#-(or Genera ansi-90 Lucid)
-(defvar *print-readably* nil)
-
-#-(or Genera Lucid ansi-90)
-(deftype real (&optional (min '*) (max '*))
-  (labels ((convert (limit floatp)
-	     (typecase limit
-	       (number (if floatp (float limit 0f0) (rational limit)))
-	       (list (map 'list #'convert limit))
-	       (otherwise limit))))
-    `(or (float ,(convert min t) ,(convert max t))
-	 (rational ,(convert min nil) ,(convert max nil)))))
 
 #+Genera-Release-8-1
 (defun realp (x)
@@ -1366,7 +1265,7 @@
 	        (find-class name errorp environment)))
 
 #+(and allegro never-never-and-never)
-(eval-when (compile)
+(eval-when (:compile-toplevel)
   (warn "~S hacked for lack of environment support in 4.1" 'find-class-that-works))
 
 
@@ -1408,7 +1307,6 @@
 ;; The idiom for using this is
 ;; (MULTIPLE-VALUE-SETQ (VECTOR FP) (SIMPLE-VECTOR-PUSH-EXTEND ELEMENT VECTOR FP)).
 (defun simple-vector-push-extend (element vector fill-pointer &optional extension)
-  (declare (values vector fill-pointer))
   (declare (type fixnum fill-pointer)
 	   (type simple-vector vector))
   (let ((length (array-dimension vector 0)))
@@ -1425,7 +1323,6 @@
     (values vector fill-pointer)))
 
 (defun simple-vector-insert-element (element index vector fill-pointer &optional extension)
-  (declare (values vector fill-pointer))
   (declare (type fixnum index fill-pointer)
 	   (type simple-vector vector))
   (let ((length (array-dimension vector 0)))

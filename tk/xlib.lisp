@@ -30,7 +30,7 @@
 (defclass window (drawable)
   ((plist :accessor window-property-list :initform nil)))
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (defconstant *window-set-attributes-bit-mask*
       '(background-pixmap background-pixel border-pixmap border-pixel
 	bit-gravity win-gravity backing-store backing-planes backing-pixel
@@ -46,7 +46,7 @@
 (defun make-xwindowattributes ()
   (clim-utils::allocate-cstruct 'x11::xwindowattributes :initialize t))
 
-(eval-when (compile eval)
+(eval-when (:compile-toplevel :execute)
   (defmacro define-window-reader (name &optional decoder &rest args)
     `(defmethod ,(intern (format nil "~A-~A" 'window name)) ((window window))
        ,(let ((body
@@ -292,7 +292,7 @@
 			      (setq *x-io-error-handler-address*
 				(register-foreign-callable 'x-io-error-handler)))))
 
-(eval-when (load)
+(eval-when (:load-toplevel)
   (setup-error-handlers))
 
 (define-condition x-colormap-full (serious-condition) ())

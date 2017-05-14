@@ -107,7 +107,7 @@
 (defclass sheet-with-resources-mixin ()
   ((foreground :initform nil :accessor pane-foreground)
    (background :initform nil :accessor pane-background)
-   (text-style :initform nil :accessor pane-text-style)
+   (text-style :initform nil :initarg :text-style :accessor pane-text-style)
    (initargs :initform nil :reader sheet-with-resources-initargs)))
   
 (defmethod initialize-instance :after 
@@ -487,7 +487,6 @@
 
 (defoperation text-size medium-protocol
   ((medium medium) string &key text-style start end)
-  (declare (values largest-x total-height last-x last-y baseline))
   (:no-defgeneric t))
 
 

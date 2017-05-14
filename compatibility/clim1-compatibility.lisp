@@ -9,7 +9,7 @@
 
 ;;; Compatibility stubs for CLIM 1.1
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   ;; We use this below to flag the compatibility code...
   (pushnew :CLIM-1-compatibility *features*))
 
@@ -130,7 +130,7 @@
   (transform-position transform x y))
 
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defun probably-stream-or-medium-p (symbol)
   (and (symbolp symbol)
        ;;--- This is really not completely safe
@@ -842,7 +842,6 @@
 		    (insert-default nil) (replace-input t)
 		    (present-p nil) (active-p t))
   (declare (dynamic-extent accept-args))
-  (declare (values object type))
   (declare (ignore prompt-mode display-default query-identifier
 		   activation-gestures additional-activation-gestures
 		   delimiter-gestures additional-delimiter-gestures 
@@ -1183,7 +1182,6 @@
 					  &key event (modifier-state 0)
 					       #+CLIM-1-compatibility
 					       (shift-mask 0 shift-mask-p))
-  (declare (values translator any-match-p))
   #+CLIM-1-compatibility
   (when shift-mask-p
     (setq modifier-state shift-mask))
@@ -1596,7 +1594,6 @@
 			     #+CLIM-1-compatibility default-style
 			     #+CLIM-1-compatibility inter-row-spacing
 			     #+CLIM-1-compatibility inter-column-spacing)
-  (declare (values value chosen-item gesture))
   (declare (ignore associated-window
 		   text-style default-item
 		   label printer presentation-type
@@ -1653,7 +1650,6 @@
 		 #+CLIM-1-compatibility default-style
 		 #+CLIM-1-compatibility inter-row-spacing
 		 #+CLIM-1-compatibility inter-column-spacing)
-  (declare (values value chosen-item gesture))
   (declare (ignore keys))
   #+CLIM-1-compatibility
   (when default-style
@@ -1718,7 +1714,6 @@
 				      #+CLIM-1-compatibility default-style
 				      #+CLIM-1-compatibility inter-row-spacing
 				      #+CLIM-1-compatibility inter-column-spacing)
-  (declare (values value chosen-item gesture))
   #+CLIM-1-compatibility
   (when default-style
     (setq text-style default-style))

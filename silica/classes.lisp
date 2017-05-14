@@ -43,7 +43,7 @@
      (mapping-cache :initform
 		    #+(or aclpc acl86win32) (cons nil nil)
 		    #-(or aclpc acl86win32) (mapping-cache-initform))
-#+(or aclpc acl86win32)
+#+(or aclpc acl86win32 (and))
      (undefined-text-style :initform *undefined-text-style*
                            :accessor port-undefined-text-style)
      ;; When this is true, the text style to device font mapping is done
@@ -74,6 +74,12 @@
 	    v))
    (:-ics (make-hash-table :test #'equal))))
 
+;;; NOTE temporary definition to make examples work; not sure
+;;; what implementation would be right. -- jacek.zlydach, 2017-05-06
+#+ (or sbcl ccl)
+(defun mapping-table-initform ()
+  (make-hash-table :test #'equal))
+
 #+(and Allegro (not (or aclpc acl86win32)))
 (defun mapping-cache-initform ()
   (excl:ics-target-case
@@ -83,6 +89,12 @@
 		(cons nil nil)))
 	    v))
    (:-ics (cons nil nil))))
+
+;;; NOTE temporary definition to make examples work; not sure
+;;; what implementation would be right. -- jacek.zlydach, 2017-05-06
+#+ (or sbcl ccl)
+(defun mapping-cache-initform ()
+  (cons nil nil))
 
 (define-protocol-class sheet ())
 
@@ -147,7 +159,9 @@
                 *keyword-package*))))
 
 ;; A fixnum, incremented only with ATOMIC-INCF
-(defvar *event-timestamp* 0)
+(declaim (type fixnum *event-timestamp*))
+#+sbcl (sb-ext:defglobal *event-timestamp* 0)
+#-sbcl (defvar *event-timestamp* 0)
 
 (define-event-class event ()
   ((timestamp :reader event-timestamp
@@ -244,7 +258,7 @@
 (defconstant +pointer-right-button+  (ash 1 10))
 
 ;; The order of this must match the values above
-(defconstant *pointer-buttons* '#(:left :middle :right))
+(defparameter *pointer-buttons* '#(:left :middle :right))
 
 (deftype button-name () '(member :left :middle :right))
 
@@ -260,7 +274,7 @@
 (defconstant +double-key+  (ash 1 5))
 
 ;; The order of this must match the values above
-(defconstant *modifier-keys* '#(:shift :control :meta :super :hyper :double))
+(defparameter *modifier-keys* '#(:shift :control :meta :super :hyper :double))
 
 (deftype shift-keysym   () '(member :left-shift :right-shift))
 (deftype double-keysym  () '(member :left-double :right-double))

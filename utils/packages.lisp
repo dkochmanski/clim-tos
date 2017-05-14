@@ -34,6 +34,8 @@
  (:import-from :ccl #:atomic-incf #:atomic-decf #:class-prototype
                #:class-direct-superclasses #:class-precedence-list)
 
+ (:import-from :closer-mop :class-prototype)
+
  (:export
    &allow-other-keys
    &aux
@@ -2821,7 +2823,6 @@
     with-stack-copy-of-list
     with-stack-list
     with-stack-list*
-    with-standard-io-environment
     with-warnings-for-definition
     writing-clauses
 
@@ -3006,7 +3007,7 @@
     modifier-key-index-name))
 
 #+(or aclpc acl86win32)
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
  (intern '#:non-dynamic-extent (find-package :clim-utils)))
 
 (defpackage clim-silica
@@ -3032,7 +3033,7 @@
     *ports*
     *standard-character-set*
     *all-character-sets*
-    #+(or aclpc acl86win32) *undefined-text-style*
+    #+(or aclpc acl86win32 (and)) *undefined-text-style*
     +highlighting-line-style+
     activate-gadget-event
     add-sheet-callbacks
@@ -3185,7 +3186,7 @@
     port-set-sheet-grabbed-pointer-cursor
     port-terminated
     port-trace-thing
-    #+(or aclpc acl86win32) port-undefined-text-style
+    #+(or aclpc acl86win32 (and)) port-undefined-text-style
     process-event-locally
     pull-down-menu
     pull-down-menu-button

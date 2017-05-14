@@ -25,20 +25,14 @@
 (defgeneric compose-scaling-with-transformation (transform mx my &optional origin))
 (defgeneric compose-rotation-with-transformation (transform angle &optional origin))
 
-(defgeneric transform-position (transform x y)
-  #-aclpc (declare (values x y)))
-(defgeneric untransform-position (transform x y)
-  #-aclpc (declare (values x y)))
+(defgeneric transform-position (transform x y))
+(defgeneric untransform-position (transform x y))
 
-(defgeneric transform-distance (transform dx dy)
-  #-aclpc (declare (values dx dy)))
-(defgeneric untransform-distance (transform dx dy)
-  #-aclpc (declare (values dx dy)))
+(defgeneric transform-distance (transform dx dy))
+(defgeneric untransform-distance (transform dx dy))
 
-(defgeneric transform-rectangle* (transform x1 y1 x2 y2)
-  #-aclpc (declare (values x1 y1 x2 y2)))
-(defgeneric untransform-rectangle* (transform x1 y1 x2 y2)
-  #-aclpc (declare (values x1 y1 x2 y2)))
+(defgeneric transform-rectangle* (transform x1 y1 x2 y2))
+(defgeneric untransform-rectangle* (transform x1 y1 x2 y2))
 
 
 ;;; Transformations

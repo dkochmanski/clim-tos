@@ -22,7 +22,7 @@
 
 ;; Noise strings and ACCEPT results
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defstruct (noise-string (:constructor make-noise-string-1))
   display-string
   text-style

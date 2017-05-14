@@ -6,18 +6,6 @@
 
 ;;;"Copyright (c) 1991 International Lisp Associates.  All rights reserved."
 
-;;; Useful proclamations, very early on
-
-;; not part of ANSI CL, but they're nice to have around
-#+(or (and MCL CCL-2) allegro Minima Clozure SBCL)
-(eval-when (compile load eval)
-  (proclaim '(declaration values))
-  (proclaim '(declaration arglist)))
-
-#+aclpc
-(eval-when (compile load eval)
-  (proclaim '(declaration arglist)))
-
 ;;; Moved here from DEFUN.  DEFUN now only contains the portable implementation
 ;;; of the DYNAMIC-EXTENT declaration, and so is not loaded into Lisps which 
 ;;; implement that declaration.
@@ -27,7 +15,6 @@
 (defparameter *declarations-may-be-exposed-by-macro-expansion* nil)
 
 (cl:defun extract-declarations (body &optional environment)
-  (declare (values documentation declarations body))
   (let ((declarations nil)
 	(documentation nil))
     (block process-declarations
@@ -88,7 +75,7 @@
 ;;;; don't use define-group, because it does a excl::record-source-file,
 ;;;; which will be also done by defun!  This causes duplicate definition in
 ;;;; file warnings.
-     (eval-when (compile load eval) (proclaim '(inline ,name)))
+     (eval-when (:compile-toplevel :load-toplevel :execute) (proclaim '(inline ,name)))
      (defun ,name ,lambda-list
        ,@body)))
 
@@ -114,7 +101,7 @@
     `(let ((,native-string-var ,string-exp))
        ,@body))
 
-  (eval-when (compile load eval) (export 'with-native-string))
+  (eval-when (:compile-toplevel :load-toplevel :execute) (export 'with-native-string))
 
   (defun mb-to-string (mb-vector)
     (let* ((lgth (length mb-vector))
@@ -122,4 +109,4 @@
       (dotimes (i lgth string)
 	(setf (schar string i) (code-char (aref mb-vector i))))))
 
-  (eval-when (compile load eval) (export 'mb-to-string)))
+  (eval-when (:compile-toplevel :load-toplevel :execute) (export 'mb-to-string)))

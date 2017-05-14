@@ -2708,7 +2708,7 @@ Luke Luck licks the lakes Luke's duck likes."))
   ;; First collect the data files
   ;; DATA is ((short-name long-name results flavors-p)...)
   (let ((data
-          (clim-utils:with-standard-io-environment
+          (with-standard-io-syntax
             (let ((data nil)
                   (*package* (or (find-package :common-lisp-user)
                                  (error "Package COMMON-LISP-USER not found"))))

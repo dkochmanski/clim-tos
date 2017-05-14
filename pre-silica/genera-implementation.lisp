@@ -6,7 +6,7 @@
 "Copyright (c) 1990, 1991, 1992 Symbolics, Inc.  All rights reserved."
 
 ;;; Defined below
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (proclaim '(special *sheet-device*))
   #+IMach (proclaim '(special *small-sheet-device*)))
 
@@ -888,8 +888,6 @@
 
 (defmethod stream-glyph-for-character ((stream sheet-implementation-mixin)
 				       character style &optional our-font)
-  (declare (values index font escapement-x escapement-y origin-x origin-y bb-x bb-y
-		   fixed-width-font-p))
   (with-sheet-stream-glyph-for-character
     (stream-glyph-for-character stream character style our-font)))
 
@@ -1021,7 +1019,6 @@
 
 ;;; Interface to Genera scroll bars.
 (scl:defmethod (:y-scroll-position clim-sheet) ()
-  (declare (values top-displayed height-displayed minimum-y maximum-y))
   (let* ((stream (sheet-for-genera-window scl:self :error-if-no-match nil))
 	 (history (and stream (stream-output-history stream)))
 	 (viewport (and stream (window-viewport stream))))
@@ -1048,7 +1045,6 @@
 (defun calculate-new-viewport-position (stream x-or-y type position
 					&optional (context-nlines 1))
   (declare (ignore context-nlines))
-  (declare (values viewport-left viewport-top))
   (let ((viewport (window-viewport stream)))
     (ecase x-or-y
       (:y

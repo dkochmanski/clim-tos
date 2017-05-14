@@ -50,7 +50,7 @@
      (invoke-with-clipping-region ,stream #'with-clipping-region-body ,region)))
 
 (defmacro with-drawing-options ((medium &rest options) &body body)
-  (declare (arglist (medium
+  #+Genera(declare (arglist (medium
                      &key ink clipping-region transformation
                           line-style line-unit line-thickness line-dashes
                           line-joint-shape line-cap-shape

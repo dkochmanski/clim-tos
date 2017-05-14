@@ -62,6 +62,7 @@
 		 #+Allegro (or (system:getenv "DISPLAY") (short-site-name))
 		 #+Lucid   (or (lcl:environment-variable "DISPLAY") (machine-instance))
                  #+CCL     (or (ccl:getenv "DISPLAY") (machine-instance))
+                 #+sbcl    (or (sb-posix:getenv "DISPLAY") (machine-instance))
                  ))
     (multiple-value-bind (host display-number nscreen)
 	(disassemble-display-spec host (or display-number 0) (or screen 0))
@@ -105,7 +106,6 @@
 					    :background *clx-white-color*))))))))
 
 (defun disassemble-display-spec (display &optional (default-display 0) (default-screen 0))
-  (declare (values host display-number nscreen))
   (let ((host-n (position #\: display)))
     (unless host-n
       (return-from disassemble-display-spec 
@@ -322,7 +322,6 @@
 
 (defmethod port-glyph-for-character ((port clx-port)
 				     character text-style &optional our-font)
-  (declare (values index font escapement-x escapement-y origin-x origin-y bb-x bb-y))
   (multiple-value-bind (character-set index)
       (char-character-set-and-index character)
     (when (eq character-set *standard-character-set*)

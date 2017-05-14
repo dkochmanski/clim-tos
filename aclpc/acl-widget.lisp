@@ -486,7 +486,6 @@
 ;;; Retreive the start and end position of the
 ;;; selection in a mswin-text-edit gadget.
 (defmethod get-selection ((pane mswin-text-edit)) 
-  (declare (values startpos endpos))
   (let ((mirror (sheet-direct-mirror pane)))
     (cond (mirror
            (let ((startptr

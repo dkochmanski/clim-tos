@@ -137,7 +137,6 @@
     (setf display-time value)))
 
 (defmethod pane-needs-redisplay ((pane clim-stream-pane))
-  (declare (values needs-redisplay clear))
   (with-slots (display-time) pane
     (ecase display-time
       ((t)
@@ -379,7 +378,7 @@
   ()
   (:default-initargs :default-view +gadget-dialog-view+))
 
-(eval-when (compile)
+(eval-when (:compile-toplevel)
   ;; defined later in the compilation...
   (declaim (special *default-menu-text-style*))
   )
@@ -454,8 +453,10 @@
                                           :name name
                                           :thickness 1
                                           :contents pane
-                                          :background background)
-                     :background background)))
+                                          ;; :background background
+                                          )
+                     ;; :background background -- NOTE this actually should work!
+                     )))
       (values pane stream))))
 
 (defmacro make-clim-interactor-pane (&rest options)
