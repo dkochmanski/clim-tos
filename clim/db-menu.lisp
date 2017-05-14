@@ -285,6 +285,9 @@
 				      (make-pane 'menu-bar-button-logic
 						 :label name
 						 :next-menu value)
+
+                                      ;; NOTE WORKAROUND this push button is a temporary replacement for the
+                                      ;; error condition below. -- jacek.zlydach 2017-05-04
                                       (make-pane 'push-button
                                                  :label name)
                                       ;(error "not yet implemented")
