@@ -107,7 +107,7 @@
 (defclass sheet-with-resources-mixin ()
   ((foreground :initform nil :accessor pane-foreground)
    (background :initform nil :accessor pane-background)
-   (text-style :initform nil :accessor pane-text-style)
+   (text-style :initform nil :initarg :text-style :accessor pane-text-style)
    (initargs :initform nil :reader sheet-with-resources-initargs)))
   
 (defmethod initialize-instance :after 

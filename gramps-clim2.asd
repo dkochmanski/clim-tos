@@ -99,6 +99,7 @@
 
 ;;; based on `clim-utils'
 (defsystem #:gramps-clim2/utils
+  :depends-on (#:closer-mop)
   :components
   ((:module "utils"
             :components ((:file "packages")
@@ -160,7 +161,10 @@
              ;; 'Physical' gadgets
              (:file "gadgets")
              (:file "db-border")
-             (:file "db-scroll")))))
+             (:file "db-scroll")
+             (:file "db-button")
+             (:file "db-label")
+             (:file "scroll-pane")))))
 
 #+ (or)
 (defsystem #:gramps-clim2/homegrown

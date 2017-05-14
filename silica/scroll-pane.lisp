@@ -239,7 +239,7 @@
         (:horizontal (- right left))
         (:vertical (- bottom top))))))
 
-(defmethod scroll-up-line-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation)
+(defmethod scroll-up-line-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation whatever)
   (with-slots (current-size current-value port) scroll-bar
     (with-slots (viewport contents) scroller-pane
       (let* ((contents-range (contents-range scroller-pane orientation))
@@ -252,7 +252,7 @@
         (scroll-bar-value-changed-callback
           scroll-bar scroller-pane orientation new-value current-size)))))
 
-(defmethod scroll-down-line-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation)
+(defmethod scroll-down-line-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation whatever)
   (with-slots (current-size current-value port) scroll-bar
     (with-slots (viewport contents) scroller-pane
       (let* ((contents-range (contents-range scroller-pane orientation))
@@ -265,7 +265,7 @@
         (scroll-bar-value-changed-callback
           scroll-bar scroller-pane orientation new-value current-size)))))
 
-(defmethod scroll-up-page-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation)
+(defmethod scroll-up-page-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation whatever)
   (with-slots (current-size current-value) scroll-bar
     (with-slots (viewport contents) scroller-pane
       (let* ((contents-range (contents-range scroller-pane orientation))
@@ -279,7 +279,7 @@
         (scroll-bar-value-changed-callback
           scroll-bar scroller-pane orientation new-value current-size)))))
 
-(defmethod scroll-down-page-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation)
+(defmethod scroll-down-page-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation whatever)
   (with-slots (current-size current-value) scroll-bar
     (with-slots (viewport contents) scroller-pane
       (let* ((contents-range (contents-range scroller-pane orientation))
@@ -293,11 +293,11 @@
       (scroll-bar-value-changed-callback
         scroll-bar scroller-pane orientation new-value current-size)))))
 
-(defmethod scroll-to-top-callback ((scroll-bar scroll-bar-pane) client id)
+(defmethod scroll-to-top-callback ((scroll-bar scroll-bar-pane) client id whatever)
   (with-slots (current-size current-value) scroll-bar
     (scroll-bar-value-changed-callback scroll-bar client id 0 current-size)))
 
-(defmethod scroll-to-bottom-callback ((scroll-bar scroll-bar-pane) client id)
+(defmethod scroll-to-bottom-callback ((scroll-bar scroll-bar-pane) client id whatever)
   (with-slots (current-size current-value) scroll-bar
     (scroll-bar-value-changed-callback
       scroll-bar client id 1.0 current-size)))

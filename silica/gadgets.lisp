@@ -478,13 +478,11 @@
 ;;;
 
 (defclass push-button 
-	  (action-gadget labelled-gadget-mixin) 
-    ((show-as-default :initform nil :initarg :show-as-default
-		      :accessor push-button-show-as-default)
-     #+(or aclpc acl86win32)
-     (pattern :initarg :pattern)
-     #+(or aclpc acl86win32)
-     (icon-pattern :initarg :icon-pattern)))
+    (action-gadget labelled-gadget-mixin) 
+  ((show-as-default :initform nil :initarg :show-as-default
+                    :accessor push-button-show-as-default)
+   (pattern :initarg :pattern)
+   (icon-pattern :initarg :icon-pattern)))
 
 
 ;;; Toggle button

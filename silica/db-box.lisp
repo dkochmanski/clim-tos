@@ -21,7 +21,7 @@
 (defmethod initialize-instance :after 
 	   ((pane box-pane) &key contents &allow-other-keys)
   (dolist (child contents)
-    (etypecase child
+    (typecase child                     ;FIXME temporarily changed etypecase to typecase
       (number)
       ((member :fill))
       (pane (sheet-adopt-child pane child))
@@ -59,40 +59,41 @@
 	    (minor-max most-positive-fixnum)
 	    scale)
 	(dolist (entry contents)
-	  (cond ((eq entry :fill) (incf major+ +fill+))
-		((numberp entry) (incf major entry))
-		(t
-		 (if (consp entry)
-		     (psetf entry (second entry) 
-			    scale (let ((n (first entry)))
-				    (if (numberp n) (float n) n)))
-		   (setf scale 1.0))
-		 (let ((space-req (apply #'compose-space entry width-or-height)))
-		   (flet ((scale (x) 
-			    (if (and (numberp scale) (< x +fill+)) (/ x scale) x)))
-		     (declare (dynamic-extent #'scale))
-		     (cond ((eq scale :fill)
-			    (incf major+ +fill+)
-			    (incf major (scale (funcall fn-major space-req)))
-			    (incf major- (scale (funcall fn-major- space-req))))
-			   ((= scale 1.0)
-			    (incf major+ (scale (funcall fn-major+ space-req)))
-			    (incf major (scale (funcall fn-major space-req)))
-			    (incf major- (scale (funcall fn-major- space-req))))
-			   ((> scale 1.0)
-			    (incf major+ scale)
-			    (incf major scale)
-			    (incf major- scale))
-			   (t
-			    ;; It is maxf because we use the scaling
-			    ;; to calculate the desired size of the
-			    ;; overall pane
-			    (maxf major+ (scale (funcall fn-major+ space-req)))
-			    (maxf major (scale (funcall fn-major space-req)))
-			    (maxf major- (scale (funcall fn-major- space-req)))))
-		     (setq minor (max minor (funcall fn-minor space-req))) 
-		     (maxf minor-min (funcall fn-minor- space-req))
-		     (minf minor-max (funcall fn-minor+ space-req)))))))
+          (when entry                   ;<-- added as a null prevention
+           (cond ((eq entry :fill) (incf major+ +fill+))
+                 ((numberp entry) (incf major entry))
+                 (t
+                  (if (consp entry)
+                      (psetf entry (second entry) 
+                             scale (let ((n (first entry)))
+                                     (if (numberp n) (float n) n)))
+                      (setf scale 1.0))
+                  (let ((space-req (apply #'compose-space entry width-or-height)))
+                    (flet ((scale (x) 
+                             (if (and (numberp scale) (< x +fill+)) (/ x scale) x)))
+                      (declare (dynamic-extent #'scale))
+                      (cond ((eq scale :fill)
+                             (incf major+ +fill+)
+                             (incf major (scale (funcall fn-major space-req)))
+                             (incf major- (scale (funcall fn-major- space-req))))
+                            ((= scale 1.0)
+                             (incf major+ (scale (funcall fn-major+ space-req)))
+                             (incf major (scale (funcall fn-major space-req)))
+                             (incf major- (scale (funcall fn-major- space-req))))
+                            ((> scale 1.0)
+                             (incf major+ scale)
+                             (incf major scale)
+                             (incf major- scale))
+                            (t
+                             ;; It is maxf because we use the scaling
+                             ;; to calculate the desired size of the
+                             ;; overall pane
+                             (maxf major+ (scale (funcall fn-major+ space-req)))
+                             (maxf major (scale (funcall fn-major space-req)))
+                             (maxf major- (scale (funcall fn-major- space-req)))))
+                      (setq minor (max minor (funcall fn-minor space-req))) 
+                      (maxf minor-min (funcall fn-minor- space-req))
+                      (minf minor-max (funcall fn-minor+ space-req))))))))
 	;;--- These calcs lead to weirdness when fills are involved.
 	;;--- This looks like a leftover from the time when +/- were relative
 	;;(setq minor- (max 0 (- minor minor-min)))
@@ -173,23 +174,24 @@
 (defmethod allocate-space ((box-pane vbox-pane) width height)
   (with-slots (contents spacing) box-pane
     (let ((space-requirement
-	    (compose-space box-pane :width width :height height)))
+           (compose-space box-pane :width width :height height)))
       (flet ((compose (x)
-	       (cond ((atom x) (compose-space x :width width))
+	       (cond ((null x) :fill)   ;NOTE added as a safeguard for NIL
+                     ((atom x) (compose-space x :width width))
 		     ((eq (car x) :fill) :fill)
 		     (t (car x)))))
 	(declare (dynamic-extent #'compose))
 	(let* ((adjust (* spacing (1- (length (sheet-children box-pane)))))
 	       (sizes 
 		(allocate-space-to-items
-		  (- height adjust)
-		  (space-requirement+* space-requirement :height (- adjust))
-		  contents
-		  #'space-requirement-min-height
-		  #'space-requirement-height
-		  #'space-requirement-max-height
-		  #'compose))
-	      (y 0))
+                 (- height adjust)
+                 (space-requirement+* space-requirement :height (- adjust))
+                 contents
+                 #'space-requirement-min-height
+                 #'space-requirement-height
+                 #'space-requirement-max-height
+                 #'compose))
+               (y 0))
 	  (mapc #'(lambda (sheet size)
 		    (when (or (panep sheet)
 			      (and (consp sheet)

@@ -106,8 +106,8 @@
                                :region (multiple-value-bind (width height)
                                            (bounding-rectangle-size top-pane)
                                          (make-bounding-rectangle 0 0 width height))
-#-(or aclpc acl86win32) :background #-(or aclpc acl86win32) (frame-background frame)
-#-(or aclpc acl86win32) :foreground #-(or aclpc acl86win32) (frame-foreground frame)
+#-(or aclpc acl86win32 (and)) :background #-(or aclpc acl86win32 (and)) (frame-background frame)
+#-(or aclpc acl86win32 (and)) :foreground #-(or aclpc acl86win32 (and)) (frame-foreground frame)
                                :text-style (frame-text-style frame)))))
       (sheet-adopt-child (find-graft :port (port frame)) sheet)
       (setf (frame-top-level-sheet frame) sheet
