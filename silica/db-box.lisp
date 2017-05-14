@@ -21,7 +21,7 @@
 (defmethod initialize-instance :after 
 	   ((pane box-pane) &key contents &allow-other-keys)
   (dolist (child contents)
-    (typecase child                     ;FIXME temporarily changed etypecase to typecase
+    (typecase child                     ;FIXME temporarily changed etypecase to typecase -- jacek.zlydach, 2017-05-14
       (number)
       ((member :fill))
       (pane (sheet-adopt-child pane child))

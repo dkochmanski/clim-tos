@@ -1489,10 +1489,10 @@
       button-press-event)))
 
 (defun find-frame-pane-of-type (frame type)
-  (prog1 (map-over-sheets #'(lambda (sheet)
+  (map-over-sheets #'(lambda (sheet)
                         (when (typep sheet type)
                           (return-from find-frame-pane-of-type sheet)))
-                          (frame-top-level-sheet frame))))
+                          (frame-top-level-sheet frame)))
 
 (defmethod frame-standard-output ((frame standard-application-frame))
   *standard-output*
