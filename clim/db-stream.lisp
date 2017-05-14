@@ -453,8 +453,10 @@
                                           :name name
                                           :thickness 1
                                           :contents pane
-                                          :background background)
-                     :background background)))
+                                          ;; :background background
+                                          )
+                     ;; :background background -- NOTE this actually should work!
+                     )))
       (values pane stream))))
 
 (defmacro make-clim-interactor-pane (&rest options)

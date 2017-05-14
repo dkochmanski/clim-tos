@@ -285,8 +285,10 @@
 				      (make-pane 'menu-bar-button-logic
 						 :label name
 						 :next-menu value)
-				    (error "not yet implemented")
-				    )))
+                                      (make-pane 'push-button
+                                                 :label name)
+                                      ;(error "not yet implemented")
+                                      )))
 			    (make-command-table-menu command-table))))
 	       (make-pane 'hbox-pane :contents buttons 
 			  :min-height 2 :height 2))))

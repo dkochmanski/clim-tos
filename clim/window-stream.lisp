@@ -32,7 +32,7 @@
   nil)
 
 
-#-silica        ;--- no such slots in Silica
+#- (or silica sbcl ccl)                             ;--- no such slots in Silica
 (defmethod print-object ((window window-stream) stream)
   (print-unreadable-object (window stream :type t :identity t)
     (let ((left (safe-slot-value window 'left))
@@ -40,6 +40,11 @@
           (right (safe-slot-value window 'right))
           (bottom (safe-slot-value window 'bottom)))
       (format stream "/x ~D:~D y ~D:~D/" left right top bottom))))
+
+#+ (or silica sbcl ccl)
+(defmethod print-object ((window window-stream) stream)
+  (print-unreadable-object (window stream :type t :identity t)
+    (format stream "a window stream")))
 
 (defmethod window-stream-class-name ((window-stream window-stream))
   (class-name (class-of window-stream)))
