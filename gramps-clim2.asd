@@ -195,5 +195,24 @@
 	     (:file "clx-pixmaps")
 	     (:file "clx-frames")))))
 
+;;; based on `clim-demo' in demo/sysdcl.lisp
 (defsystem #:gramps-clim2/examples
-  :description "Applications bundled in gramps-clim2 repository.")
+  :description "Applications bundled in gramps-clim2 repository."
+  :depends-on (#:gramps-clim2/core)
+
+  :components
+  ((:module "demo"
+            :components
+            ((:file "packages")
+             (:file "demo-driver" :depends-on ("packages"))
+             (:file "listener" :depends-on ("demo-driver"))
+             (:file "graphics-demos" :depends-on ("demo-driver"))
+             (:file "cad-demo" :depends-on ("demo-driver"))
+             (:file "navdata" :depends-on ("packages"))
+             (:file "navfun" :depends-on ("navdata"))
+             (:file "puzzle" :depends-on ("demo-driver"))
+             (:file "address-book" :depends-on ("demo-driver"))
+             (:file "thinkadot" :depends-on ("demo-driver"))
+             (:file "plot" :depends-on ("demo-driver"))
+             (:file "color-editor" :depends-on ("demo-driver"))
+             (:file "graphics-editor" :depends-on ("demo-driver"))))))
