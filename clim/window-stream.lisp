@@ -43,12 +43,12 @@
           (bottom (safe-slot-value window 'bottom)))
       (format stream "/x ~D:~D y ~D:~D/" left right top bottom))))
 
-;;; NOTE FIXME this needs a proper implementation.
-;;; -- jacek.zlydach 2017-05-14
+;;; NOTE there doesn't seem to be anything interesting to show in REPL for this class.
+;;; Therefore, we revert to a default unreadable form.
+;;; -- jacek.zlydach 2017-05-27
 #+ (or silica sbcl ccl)
 (defmethod print-object ((window window-stream) stream)
-  (print-unreadable-object (window stream :type t :identity t)
-    (format stream "a window stream")))
+  (print-unreadable-object (window stream :type t :identity t)))
 
 (defmethod window-stream-class-name ((window-stream window-stream))
   (class-name (class-of window-stream)))
