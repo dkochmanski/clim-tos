@@ -222,8 +222,7 @@
 (defun ltrb-overlaps-ltrb-p (left1 top1 right1 bottom1
                              left2 top2 right2 bottom2)
   (declare (type coordinate left1 top1 right1 bottom1
-                             left2 top2 right2 bottom2)
-           (values valid-p left top right bottom))
+                             left2 top2 right2 bottom2))
   (let ((left (max left1 left2))
         (top (max top1 top2))
         (right (min right1 right2))
@@ -340,8 +339,7 @@
 (defun ltrb-difference (left1 top1 right1 bottom1
                         left2 top2 right2 bottom2)
   (declare (type coordinate left1 top1 right1 bottom1
-                            left2 top2 right2 bottom2)
-           (values rectangles))
+                            left2 top2 right2 bottom2))
   (unless (ltrb-contains-ltrb-p left2 top2 right2 bottom2
                                 left1 top1 right1 bottom1)
     (if (not (ltrb-overlaps-ltrb-p left1 top1 right1 bottom1
