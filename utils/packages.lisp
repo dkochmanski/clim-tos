@@ -31,8 +31,9 @@
  (:import-from :excl #:non-dynamic-extent)
 
  #+Clozure
- (:import-from :ccl #:atomic-incf #:atomic-decf #:class-prototype
-               #:class-direct-superclasses #:class-precedence-list)
+ (:import-from :ccl #:atomic-incf #:atomic-decf
+               ;#:class-direct-superclasses #:class-precedence-list
+               )
 
  (:import-from :closer-mop :class-prototype)
 
