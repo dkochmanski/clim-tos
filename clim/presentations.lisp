@@ -468,6 +468,10 @@
                    presentation (presentation-type presentation)
                    history-window :highlight))))))))
 
+;;; NOTE Commented out the method and replaced with a single slot-value invoking version below.
+;;; The behaviour of the original method is very weird. I suspect threading issues.
+;;; -- jacek.zlydach 2017-06-03
+#+ (or)
 (defun unhighlight-highlighted-presentation (stream &optional (prefer-pointer-window t))
   (let ((history-window (if prefer-pointer-window (find-appropriate-window stream) stream)))
     (when history-window
@@ -476,6 +480,16 @@
         ;; Somehow control passes into it (highlighted-presentation must be not NIL), but during call to
         ;; #'highlight-presentation (and earlier, to #'presentation-type, highlighted-presentation is exactly NIL.
         ;; -- jacek.zlydach 2017-06-03
+        (when highlighted-presentation
+          (highlight-presentation 
+           highlighted-presentation (presentation-type highlighted-presentation)
+           history-window :unhighlight)
+          (setf highlighted-presentation nil))))))
+
+(defun unhighlight-highlighted-presentation (stream &optional (prefer-pointer-window t))
+  (let ((history-window (if prefer-pointer-window (find-appropriate-window stream) stream)))
+    (when history-window
+      (let ((highlighted-presentation (slot-value history-window 'highlighted-presentation)))
         (when highlighted-presentation
           (highlight-presentation 
            highlighted-presentation (presentation-type highlighted-presentation)
