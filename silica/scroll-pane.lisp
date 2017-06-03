@@ -328,7 +328,9 @@
 
 (defmethod scroll-line-to-top-callback ((scroll-bar scroll-bar-pane)
                                         scroller-pane id orientation x y)
-  (with-slots (current-size current-value) scroll-bar
+  ;; (with-slots (current-size current-value) scroll-bar) -- NOTE those slots don't exist. -- jacek.zlydach 2017-06-03
+  (let ((current-size (scroll-bar-size scroll-bar))
+        (current-value (gadget-value scroll-bar)))
     (with-slots (viewport contents) scroller-pane
       ;; --- scroll-bar may not be the right thing if it's not the same
       ;; size as the contents pane - Davo 6/30/92.
@@ -344,23 +346,25 @@
               (unless (zerop contents-range)
                 (let* ((viewport-range (viewport-range scroller-pane orientation))
                        (contents-min
-                         (ecase orientation (:horizontal cleft) (:vertical ctop)))
+                        (ecase orientation (:horizontal cleft) (:vertical ctop)))
                        (viewport-min
-                         (ecase orientation (:horizontal vleft) (:vertical vtop)))
+                        (ecase orientation (:horizontal vleft) (:vertical vtop)))
                        (mouse-offset
-                         (ecase orientation
-                           (:vertical (/ (- y top) (float (- bottom top) 0.0s0)))
-                           (:horizontal (/ (- x left) (float (- right left) 0.0s0)))))
+                        (ecase orientation
+                          (:vertical (/ (- y top) (float (- bottom top) 0.0s0)))
+                          (:horizontal (/ (- x left) (float (- right left) 0.0s0)))))
                        (pos (/ (- (+ viewport-min (* viewport-range mouse-offset))
                                   contents-min)
                                contents-range)))
                   (scroll-bar-value-changed-callback
-                    scroll-bar scroller-pane id
-                    pos current-size))))))))))
+                   scroll-bar scroller-pane id
+                   pos current-size))))))))))
 
 (defmethod scroll-line-to-bottom-callback ((scroll-bar scroll-bar-pane)
                                            scroller-pane id orientation x y)
-  (with-slots (current-size current-value) scroll-bar
+  ;; (with-slots (current-size current-value) scroll-bar) -- NOTE those slots don't exist. -- jacek.zlydach 2017-06-03
+  (let ((current-size (scroll-bar-size scroll-bar))
+        (current-value (gadget-value scroll-bar)))
     (with-slots (viewport contents) scroller-pane
       ;; --- scroll-bar may not be the right thing if its not the same
       ;; size as the contents pane - Davo 6/30/92.
@@ -376,34 +380,36 @@
               (unless (zerop contents-range)
                 (let* ((viewport-range (viewport-range scroller-pane orientation))
                        (contents-min
-                         (ecase orientation (:horizontal cleft) (:vertical ctop)))
+                        (ecase orientation (:horizontal cleft) (:vertical ctop)))
                        (viewport-min
-                         (ecase orientation (:horizontal vleft) (:vertical vtop)))
+                        (ecase orientation (:horizontal vleft) (:vertical vtop)))
                        (mouse-offset
-                         (ecase orientation
-                           (:vertical (/ (- y top) (float (- bottom top) 0.0s0)))
-                           (:horizontal (/ (- x left) (float (- right left) 0.0s0)))))
+                        (ecase orientation
+                          (:vertical (/ (- y top) (float (- bottom top) 0.0s0)))
+                          (:horizontal (/ (- x left) (float (- right left) 0.0s0)))))
                        (pos (/ (- (+ viewport-min (* viewport-range mouse-offset))
                                   viewport-range contents-min)
                                contents-range)))
                   (scroll-bar-value-changed-callback
-                    scroll-bar scroller-pane id (max 0 pos) current-size))))))))))
+                   scroll-bar scroller-pane id (max 0 pos) current-size))))))))))
 
 (defmethod scroll-elevator-callback ((scroll-bar scroll-bar-pane)
                                      scroller-pane id orientation x y)
-  (with-slots (current-size current-value) scroll-bar
+  ;; (with-slots (current-size current-value) scroll-bar) -- NOTE those slots don't exist. -- jacek.zlydach 2017-06-03
+  (let ((current-size (scroll-bar-size scroll-bar))
+        (current-value (gadget-value scroll-bar)))
     (with-slots (viewport contents) scroller-pane
       ;; --- scroll-bar may not be the right thing if its not the same
       ;; size as the contents pane - Davo 6/30/92.
       (with-bounding-rectangle* (left top right bottom)
           (sheet-region scroll-bar)
         (let* ((mouse-offset
-                 (- (ecase orientation
-                      (:vertical (/ (- y top) (float (- bottom top) 0.0s0)))
-                      (:horizontal (/ (- x left) (float (- right left) 0.0s0))))
-                    (/ current-size 2.0s0))))
+                (- (ecase orientation
+                     (:vertical (/ (- y top) (float (- bottom top) 0.0s0)))
+                     (:horizontal (/ (- x left) (float (- right left) 0.0s0))))
+                   (/ current-size 2.0s0))))
           (scroll-bar-value-changed-callback
-            scroll-bar scroller-pane id (min 1.0s0 (max 0.0s0 mouse-offset)) current-size))))))
+           scroll-bar scroller-pane id (min 1.0s0 (max 0.0s0 mouse-offset)) current-size))))))
 
 ;;; Set the indicator to the proper size and location (size and value are between 0 and 1)
 (defmethod change-scroll-bar-values ((scroll-bar scroll-bar-pane)
