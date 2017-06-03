@@ -164,6 +164,7 @@
              (:file "db-scroll")
              (:file "db-button")
              (:file "db-label")
+             (:file "db-slider")
              (:file "scroll-pane")))))
 
 #+ (or)
@@ -212,6 +213,7 @@
              (:file "demo-driver" :depends-on ("packages"))
              (:file "listener" :depends-on ("demo-driver"))
              (:file "graphics-demos" :depends-on ("demo-driver"))
+             (:file "palette" :depends-on ("demo-driver"))
              ;(:file "cad-demo" :depends-on ("demo-driver"))
              ;(:file "navdata" :depends-on ("packages"))
              ;(:file "navfun" :depends-on ("navdata"))
