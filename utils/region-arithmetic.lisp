@@ -234,8 +234,7 @@
 (defun ltrb-union (left1 top1 right1 bottom1
                    left2 top2 right2 bottom2 &optional (banding :x-banding))
   (declare (type coordinate left1 top1 right1 bottom1
-                             left2 top2 right2 bottom2)
-           (values rectangles))
+                             left2 top2 right2 bottom2))
   (cond ((ltrb-contains-ltrb-p left1 top1 right1 bottom1
                                left2 top2 right2 bottom2)
          (list (make-bounding-rectangle-1 left1 top1 right1 bottom1)))
@@ -294,8 +293,7 @@
 (defun ltrb-intersection (left1 top1 right1 bottom1
                           left2 top2 right2 bottom2)
   (declare (type coordinate left1 top1 right1 bottom1
-                            left2 top2 right2 bottom2)
-           (values rectangle))
+                            left2 top2 right2 bottom2))
   (multiple-value-bind (valid-p left top right bottom)
       (ltrb-overlaps-ltrb-p left1 top1 right1 bottom1
                             left2 top2 right2 bottom2)
