@@ -215,7 +215,7 @@
              ;(:file "cad-demo" :depends-on ("demo-driver"))
              ;(:file "navdata" :depends-on ("packages"))
              ;(:file "navfun" :depends-on ("navdata"))
-             ;(:file "puzzle" :depends-on ("demo-driver"))
+             (:file "puzzle" :depends-on ("demo-driver"))
              ;(:file "address-book" :depends-on ("demo-driver"))
              ;(:file "thinkadot" :depends-on ("demo-driver"))
              ;(:file "plot" :depends-on ("demo-driver"))
