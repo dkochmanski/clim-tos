@@ -250,34 +250,44 @@
 ;;; - scroll-to-bottom-callback
 ;;;
 ;;; -- jacek.zlydach 2017-05-14
+;;;
+;;; Also NOTE that the CLIM docs seem to require those methods to have 3 arguments instead.
+;;;
+;;; -- jacek.zlydach 2017-06-03
 (defmethod scroll-up-line-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation whatever)
-  (with-slots (current-size current-value port) scroll-bar
+  ;; (with-slots (current-size current-value port) scroll-bar) -- NOTE those slots don't exist. -- jacek.zlydach 2017-06-03
+  (let ((current-size (scroll-bar-size scroll-bar))
+        (current-value (gadget-value scroll-bar)))
     (with-slots (viewport contents) scroller-pane
       (let* ((contents-range (contents-range scroller-pane orientation))
              (line-value (if (= contents-range 0)
                              0
                              (the single-float
-                               (/ (line-scroll-amount scroller-pane orientation :up)
-                                  (float contents-range  0.0s0)))))
+                                  (/ (line-scroll-amount scroller-pane orientation :up)
+                                     (float contents-range  0.0s0)))))
              (new-value (max 0.0 (- current-value line-value))))        
         (scroll-bar-value-changed-callback
-          scroll-bar scroller-pane orientation new-value current-size)))))
+         scroll-bar scroller-pane orientation new-value current-size)))))
 
 (defmethod scroll-down-line-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation whatever)
-  (with-slots (current-size current-value port) scroll-bar
+  ;; (with-slots (current-size current-value port) scroll-bar) -- NOTE those slots don't exist. -- jacek.zlydach 2017-06-03
+  (let ((current-size (scroll-bar-size scroll-bar))
+        (current-value (gadget-value scroll-bar)))
     (with-slots (viewport contents) scroller-pane
       (let* ((contents-range (contents-range scroller-pane orientation))
              (line-value (if (= contents-range 0)
                              0
                              (the single-float
-                               (/ (line-scroll-amount scroller-pane orientation :down)
-                                  (float contents-range  0.0s0)))))
+                                  (/ (line-scroll-amount scroller-pane orientation :down)
+                                     (float contents-range  0.0s0)))))
              (new-value (+ current-value line-value)))
         (scroll-bar-value-changed-callback
-          scroll-bar scroller-pane orientation new-value current-size)))))
+         scroll-bar scroller-pane orientation new-value current-size)))))
 
 (defmethod scroll-up-page-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation whatever)
-  (with-slots (current-size current-value) scroll-bar
+  ;; (with-slots (current-size current-value) scroll-bar) -- NOTE those slots don't exist. -- jacek.zlydach 2017-06-03
+  (let ((current-size (scroll-bar-size scroll-bar))
+        (current-value (gadget-value scroll-bar)))
     (with-slots (viewport contents) scroller-pane
       (let* ((contents-range (contents-range scroller-pane orientation))
              (viewport-range (bounding-rectangle-max-y viewport))
@@ -285,33 +295,36 @@
         (if (zerop contents-range)
             (setq new-value current-value)
             (let ((page-value (the single-float 
-                                (/ viewport-range (float contents-range 0.0s0)))))
+                                   (/ viewport-range (float contents-range 0.0s0)))))
               (setq new-value (max 0.0 (- current-value page-value)))))
         (scroll-bar-value-changed-callback
-          scroll-bar scroller-pane orientation new-value current-size)))))
+         scroll-bar scroller-pane orientation new-value current-size)))))
 
 (defmethod scroll-down-page-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation whatever)
-  (with-slots (current-size current-value) scroll-bar
+  ;; (with-slots (current-size current-value) scroll-bar) -- NOTE those slots don't exist. -- jacek.zlydach 2017-06-03
+  (let ((current-size (scroll-bar-size scroll-bar))
+        (current-value (gadget-value scroll-bar)))
     (with-slots (viewport contents) scroller-pane
       (let* ((contents-range (contents-range scroller-pane orientation))
              (viewport-range (bounding-rectangle-max-y viewport))
              new-value)
-      (if (zerop contents-range)
-          (setq new-value current-value)
-          (let ((page-value (the single-float 
-                              (/ viewport-range (float contents-range 0.0s0)))))
-            (setq new-value (+ current-value page-value))))
-      (scroll-bar-value-changed-callback
-        scroll-bar scroller-pane orientation new-value current-size)))))
+        (if (zerop contents-range)
+            (setq new-value current-value)
+            (let ((page-value (the single-float 
+                                   (/ viewport-range (float contents-range 0.0s0)))))
+              (setq new-value (+ current-value page-value))))
+        (scroll-bar-value-changed-callback
+         scroll-bar scroller-pane orientation new-value current-size)))))
 
 (defmethod scroll-to-top-callback ((scroll-bar scroll-bar-pane) client id whatever)
-  (with-slots (current-size current-value) scroll-bar
+  ;; (with-slots (current-size current-value) scroll-bar) -- NOTE those slots don't exist. -- jacek.zlydach 2017-06-03
+  (let ((current-size (scroll-bar-size scroll-bar)))
     (scroll-bar-value-changed-callback scroll-bar client id 0 current-size)))
 
 (defmethod scroll-to-bottom-callback ((scroll-bar scroll-bar-pane) client id whatever)
-  (with-slots (current-size current-value) scroll-bar
-    (scroll-bar-value-changed-callback
-      scroll-bar client id 1.0 current-size)))
+  ;; (with-slots (current-size current-value) scroll-bar) -- NOTE those slots don't exist. -- jacek.zlydach 2017-06-03
+  (let ((current-size (scroll-bar-size scroll-bar)))
+    (scroll-bar-value-changed-callback scroll-bar client id 1.0 current-size)))
 
 (defmethod scroll-line-to-top-callback ((scroll-bar scroll-bar-pane)
                                         scroller-pane id orientation x y)
@@ -582,21 +595,21 @@
       (#.+pointer-left-button+
        (ecase (slot-value pane 'end)
          (:greater-than
-           (scroll-down-page-callback scroll-bar client id))
+           (scroll-down-page-callback scroll-bar client id nil)) ;NOTE WORKAROUND added last param = nil -- jacek.zlydach, 2017-06-03
          (:less-than
-           (scroll-down-line-callback scroll-bar client id))))
+           (scroll-down-line-callback scroll-bar client id nil)))) ;NOTE WORKAROUND added last param = nil -- jacek.zlydach, 2017-06-03
       (#.+pointer-middle-button+
        (ecase (slot-value pane 'end)
          (:greater-than
-           (scroll-to-bottom-callback scroll-bar client id))
+           (scroll-to-bottom-callback scroll-bar client id nil)) ;NOTE WORKAROUND added last param = nil -- jacek.zlydach, 2017-06-03
          (:less-than
-           (scroll-to-top-callback scroll-bar client id))))
+           (scroll-to-top-callback scroll-bar client id nil)))) ;NOTE WORKAROUND added last param = nil -- jacek.zlydach, 2017-06-03
       (#.+pointer-right-button+
        (ecase (slot-value pane 'end)
          (:greater-than
-           (scroll-up-page-callback scroll-bar client id))
+           (scroll-up-page-callback scroll-bar client id nil)) ;NOTE WORKAROUND added last param = nil -- jacek.zlydach, 2017-06-03
          (:less-than
-           (scroll-up-line-callback scroll-bar client id)))))))
+           (scroll-up-line-callback scroll-bar client id nil))))))) ;NOTE WORKAROUND added last param = nil -- jacek.zlydach, 2017-06-03
 
 (defmethod handle-event ((pane scroll-bar-shaft-pane) 
                          (event pointer-button-press-event))
