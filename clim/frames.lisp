@@ -1497,14 +1497,9 @@
                           (frame-top-level-sheet frame)))
 
 (defmethod frame-standard-output ((frame standard-application-frame))
-  ;; NOTE WORKAROUND returning `*standard-output*' instead of executing the following block,
-  ;; because the value found by it (during initialization of the demo) causes a "app pane not a stream"
-  ;; error.
-  *standard-output*
-  ;; commented out because it causes frame-not-a-stream error
-  #+nil(if (not (member '*standard-output* (slot-value frame 
+  (if (not (member '*standard-output* (slot-value frame
                                                   'non-frame-stream-names)))
-      (or 
+      (or
        (find-frame-pane-of-type frame 'application-pane)
        (find-frame-pane-of-type frame 'interactor-pane))
       nil))

@@ -1021,15 +1021,16 @@
  ;; Stream Proposal -- Classes and class predicates.
  #-clim-uses-lisp-stream-classes
  (:shadow
-   fundamental-binary-input-stream
-   fundamental-binary-output-stream
-   fundamental-binary-stream
-   fundamental-character-input-stream
-   fundamental-character-output-stream
-   fundamental-character-stream
-   fundamental-input-stream
-   fundamental-output-stream
-   fundamental-stream
+  ;; NOTE disabled shadowing of Grey streams symbols - currently playing with sb-grey on SBCL. -- jacek.zlydach 2017-06-03
+   ;; fundamental-binary-input-stream
+   ;; fundamental-binary-output-stream
+   ;; fundamental-binary-stream
+   ;; fundamental-character-input-stream
+   ;; fundamental-character-output-stream
+   ;; fundamental-character-stream
+   ;; fundamental-input-stream
+   ;; fundamental-output-stream
+   ;; fundamental-stream
    input-stream-p
    open-stream-p
    output-stream-p
