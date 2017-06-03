@@ -472,10 +472,14 @@
   (let ((history-window (if prefer-pointer-window (find-appropriate-window stream) stream)))
     (when history-window
       (with-slots (highlighted-presentation) history-window
+        ;; FIXME this when seems to be magic.
+        ;; Somehow control passes into it (highlighted-presentation must be not NIL), but during call to
+        ;; #'highlight-presentation (and earlier, to #'presentation-type, highlighted-presentation is exactly NIL.
+        ;; -- jacek.zlydach 2017-06-03
         (when highlighted-presentation
           (highlight-presentation 
-            highlighted-presentation (presentation-type highlighted-presentation)
-            history-window :unhighlight)
+           highlighted-presentation (presentation-type highlighted-presentation)
+           history-window :unhighlight)
           (setf highlighted-presentation nil))))))
 
 (defun find-appropriate-window (stream)

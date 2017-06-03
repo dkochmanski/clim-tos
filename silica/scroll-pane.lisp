@@ -595,21 +595,21 @@
       (#.+pointer-left-button+
        (ecase (slot-value pane 'end)
          (:greater-than
-           (scroll-down-page-callback scroll-bar client id nil)) ;NOTE WORKAROUND added last param = nil -- jacek.zlydach, 2017-06-03
+           (scroll-down-page-callback scroll-bar client id 0.0)) ;NOTE WORKAROUND added last param = 0.0 -- jacek.zlydach, 2017-06-03
          (:less-than
-           (scroll-down-line-callback scroll-bar client id nil)))) ;NOTE WORKAROUND added last param = nil -- jacek.zlydach, 2017-06-03
+           (scroll-down-line-callback scroll-bar client id 0.0)))) ;NOTE WORKAROUND added last param = 0.0 -- jacek.zlydach, 2017-06-03
       (#.+pointer-middle-button+
        (ecase (slot-value pane 'end)
          (:greater-than
-           (scroll-to-bottom-callback scroll-bar client id nil)) ;NOTE WORKAROUND added last param = nil -- jacek.zlydach, 2017-06-03
+           (scroll-to-bottom-callback scroll-bar client id 0.0)) ;NOTE WORKAROUND added last param = 0.0 -- jacek.zlydach, 2017-06-03
          (:less-than
-           (scroll-to-top-callback scroll-bar client id nil)))) ;NOTE WORKAROUND added last param = nil -- jacek.zlydach, 2017-06-03
+           (scroll-to-top-callback scroll-bar client id 0.0)))) ;NOTE WORKAROUND added last param = 0.0 -- jacek.zlydach, 2017-06-03
       (#.+pointer-right-button+
        (ecase (slot-value pane 'end)
          (:greater-than
-           (scroll-up-page-callback scroll-bar client id nil)) ;NOTE WORKAROUND added last param = nil -- jacek.zlydach, 2017-06-03
+           (scroll-up-page-callback scroll-bar client id 0.0)) ;NOTE WORKAROUND added last param = 0.0 -- jacek.zlydach, 2017-06-03
          (:less-than
-           (scroll-up-line-callback scroll-bar client id nil))))))) ;NOTE WORKAROUND added last param = nil -- jacek.zlydach, 2017-06-03
+           (scroll-up-line-callback scroll-bar client id 0.0))))))) ;NOTE WORKAROUND added last param = 0.0 -- jacek.zlydach, 2017-06-03
 
 (defmethod handle-event ((pane scroll-bar-shaft-pane) 
                          (event pointer-button-press-event))
