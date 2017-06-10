@@ -220,14 +220,14 @@
 		     line))))))
 
 (defun send-command (stream move)
-  (format excl::*initial-terminal-io* "sent: ~A~%" move)
+  (format *debug-io* "sent: ~A~%" move)
   (write-line move stream)
   (force-output stream))
 
 (defun read-a-line (stream)
   (let ((line (read-line stream)))
     (setq line (delete #\^g line))
-    (format excl::*initial-terminal-io* "received: ~A~%" line)
+    (format *debug-io* "received: ~A~%" line)
     line))
 
 (defun read-chess-move-from-subprocess (stream)

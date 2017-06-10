@@ -17,8 +17,7 @@
   ;; Should we verify that the text is the same?
   ;; It would be good to press the button to make the frame go away.
   ;; frame-exit?
-  (print (list frame (clim-internals::frame-top-level-process frame))
-	 excl:*initial-terminal-io*)
+  (print (list frame (clim-internals::frame-top-level-process frame)) *debug-io*)
   (with-frame-invocation (frame)
     (press-push-button (find-user-interface-components frame '(push-button)))
     (wait-for-frame-to-exit frame)))
