@@ -1448,7 +1448,7 @@ people, shall not perish from the earth.
                      (with-new-output-record (s)
                        (draw-rectangle* s 0 0 width height :filled t :ink color)
                        (draw-text* s text 0 0 :align-x :left :align-y :top)))))
-             #'cl::class-direct-subclasses
+             #'class-direct-subclasses
              :stream stream
              :center-nodes center-nodes
              :merge-duplicates nil)))))))
