@@ -3429,7 +3429,7 @@ Luke Luck licks the lakes Luke's duck likes."))
 	       #'(lambda (&rest args)
 		   (if (boundp ',specn)
 		       (progn
-			 #-aclpc (mp:process-sleep 4) #+aclpc (sleep 4)
+                         (sleep 4)
 			 (throw ',tagn nil))
 		       (apply ,oldn args))))
 	     ,@body)
