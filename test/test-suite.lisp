@@ -3438,8 +3438,8 @@ Luke Luck licks the lakes Luke's duck likes."))
 (define-benchmark (simple-menu-choose :iterations 10) (stream)
   "Pop up a simple menu of colors"
   (without-clim-input
-   (if #-(or aclpc acl86win32) (typep (port stream) 'xm-silica::xt-port)
-       #+(or aclpc acl86win32) nil
+   (if #+(or) (typep (port stream) 'xm-silica::xt-port)
+       #-(or) nil
         (sleep 0.1) ;; Avoid division by zero!
         (menu-choose '(("Red" :value +red+)
                        ("Green" :value +green+)
@@ -3456,8 +3456,8 @@ Luke Luck licks the lakes Luke's duck likes."))
 (define-benchmark (cached-menu-choose :iterations 10) (stream)
   "Pop up a cached menu of colors"
   (without-clim-input
-   (if #-(or aclpc acl86win32) (typep (port stream) 'xm-silica::xt-port)
-       #+(or aclpc acl86win32) nil
+   (if #+(or) (typep (port stream) 'xm-silica::xt-port)
+       #-(or) nil
         (sleep 0.1) ;; Avoid division by zero!
         (menu-choose '(("Red" :value +red+)
                        ("Green" :value +green+)

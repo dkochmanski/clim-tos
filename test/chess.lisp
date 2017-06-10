@@ -143,8 +143,10 @@
   (draw-rectangle* stream 0 0 80 80
 		   :ink (if square +black+ +white+)))
 
-
 (defmethod draw-piece (frame stream which color square)
+  (draw-rectangle* stream 0 0 80 80
+		   :ink (if square +black+ +white+))
+  #+ (or)
   (let* ((key (list which color square))
 	 (ink (second (assoc key (slot-value frame 'bitmaps) :test #'equal))))
     (unless ink

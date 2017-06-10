@@ -96,7 +96,7 @@
 (defun wait-for-clim-input-state (invocation &optional (timeout *default-input-state-timeout*))
   (let ((process (invocation-process invocation)))
     (let ((port (port (invocation-frame invocation))))
-      (when port #-acl86win32 (xm-silica::port-finish-output port)))
+      (when port #+ (or) (xm-silica::port-finish-output port)))
     (mp:process-allow-schedule)
     (flet ((input-state-p (process)
 	     (or (not (mp:process-thread process))
@@ -961,7 +961,7 @@
     (funcall continuation)))
 
 (define-test-step press-push-button (button)
-  #-acl86win32 (xm-silica::queue-active-event nil nil button))
+  #+ (or) (xm-silica::queue-active-event nil nil button))
 
 (defmacro with-waiting ((&key timeout) &body clauses)
   (let ((i 0)
@@ -997,7 +997,7 @@
 (locally (declare (special si::*clos-preload-packages*))
   (setq si::*clos-preload-packages*
     (mapcar #'find-package
-	    '(:clim :clim-utils :clim-internals :silica :tk #-acl86win32 :xm-silica))))
+	    '(:clim :clim-utils :clim-internals :silica :tk))))
 
 ;; This stops warnings happening asynchronously and causing confusion.
 
