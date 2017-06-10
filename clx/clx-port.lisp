@@ -759,3 +759,18 @@
       (do-shift :hyper))
     mask))
 
+
+
+(defmethod clim-internals::port-query-pointer ((port clx-port) sheet)
+  (multiple-value-bind (native-x native-y samep child? mask? root-x root-y root?)
+      (xlib:query-pointer (sheet-mirror sheet))
+    (declare (ignore samep child? mask? root?))
+    (multiple-value-bind (x y)
+        (untransform-position  (sheet-device-transformation sheet) native-x native-y)
+      (values x y native-x native-y root-x root-y))))
+
+(defmethod clim-internals::port-query-pointer ((port clx-port) (sheet graft))
+  (multiple-value-bind (native-x native-y samep child? mask? root-x root-y root?)
+      (xlib:query-pointer (sheet-mirror sheet))
+    (declare (ignore samep child? mask? root?))
+    (values native-x native-y native-x native-y root-x root-y)))
