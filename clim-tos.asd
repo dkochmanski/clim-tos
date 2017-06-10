@@ -117,7 +117,6 @@
                          (:file "protocols")
 
                          ;; Establish a uniform stream model
-                         #+ (or) (:file "trivial-gray-streams")
                          (:file "clim-streams")
                          (:file "cl-streams")
 
