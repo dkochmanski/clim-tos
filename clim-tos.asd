@@ -99,7 +99,7 @@
 
 ;;; based on `clim-utils'
 (defsystem #:clim-tos/utils
-  :depends-on (#:closer-mop)
+  :depends-on (#:closer-mop #:trivial-gray-streams)
   :components
   ((:module "utils"
             :components ((:file "packages")
