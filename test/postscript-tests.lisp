@@ -175,7 +175,7 @@
 (defmethod invoke-with-pipe-to-printer ((type (eql :postscript)) continuation)
   (with-open-stream 
       (printer-stream
-       (excl:run-shell-command (format nil "lpr -P~A" *allegro-printer*)
+       (asdf:run-shell-command (format nil "lpr -P~A" *allegro-printer*)
 			       :input :stream :wait
 			       nil))
     (funcall continuation printer-stream)))

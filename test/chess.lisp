@@ -187,7 +187,7 @@
 
 (defun create-chess-subprocess ()
   (multiple-value-bind (stream something pid)
-      (excl::run-shell-command
+      (asdf:run-shell-command
 	"~/3rd/gnuchess/gnuchessr"
 	:wait nil
 	:error-output :output

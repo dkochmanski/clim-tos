@@ -10,7 +10,7 @@
 (defmethod invoke-with-pipe-to-printer ((type (eql :hpgl)) continuation)
   (with-open-stream 
       (printer-stream
-       (excl:run-shell-command (format nil "/usr/tech/cer/3rd/hpgl2ps-v2/hpgl2ps | lpr -P~A" *allegro-printer*)
+       (asdf:run-shell-command (format nil "/usr/tech/cer/3rd/hpgl2ps-v2/hpgl2ps | lpr -P~A" *allegro-printer*)
 			       :input :stream :wait
 			       nil))
     (funcall continuation printer-stream)))
