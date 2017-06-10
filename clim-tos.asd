@@ -202,7 +202,8 @@
 ;;; based on `clim-test' in test/sysdcl.lisp
 (defsystem #:clim-tos/tests
   :description "CLIM tests (framework and definitions)."
-  :depends-on (#:clim-tos/core)
+  :depends-on (#:clim-tos/core
+               #:clim-tos/examples)
   :serial t
   :components
   ((:module "test"
@@ -218,7 +219,6 @@
 (defsystem #:clim-tos/examples
   :description "Applications bundled in clim-tos repository."
   :depends-on (#:clim-tos/core
-               #:clim-tos/tests
                #:bordeaux-threads)
 
   :components
