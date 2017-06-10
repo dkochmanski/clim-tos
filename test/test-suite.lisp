@@ -1443,14 +1443,12 @@ people, shall not perish from the earth.
              ;; dependee-mixin no longer exported -- smh 18may93
              (mapcar #'find-class '(number))
              #'(lambda (o s)
-                 (let ((text (format nil "~A" (#-aclpc excl::class-name
-                                               #+aclpc cl:class-name o))))
+                 (let ((text (format nil "~A" (class-name o))))
                    (multiple-value-bind (width height) (text-size s text)
                      (with-new-output-record (s)
                        (draw-rectangle* s 0 0 width height :filled t :ink color)
                        (draw-text* s text 0 0 :align-x :left :align-y :top)))))
-             #-aclpc #'clos:class-direct-subclasses
-             #+aclpc #'cl::class-direct-subclasses
+             #'cl::class-direct-subclasses
              :stream stream
              :center-nodes center-nodes
              :merge-duplicates nil)))))))
