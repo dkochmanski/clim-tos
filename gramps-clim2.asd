@@ -1,15 +1,15 @@
 
 (in-package #:asdf-user)
 
-(defsystem #:gramps-clim2
+(defsystem #:clim-tos
   :description "CLIM 2 implementation released by Franz Inc."
   :license "BSD-4-Clause"
-  :depends-on (#:gramps-clim2/core))
+  :depends-on (#:clim-tos/core))
 
 ;;; based on `clim-standalone' in sys/sysdcl.lisp
-(defsystem #:gramps-clim2/core
+(defsystem #:clim-tos/core
   :description "Core functionality (doesn't contain backends)."
-  :depends-on (#:gramps-clim2/silica)
+  :depends-on (#:clim-tos/silica)
   :components ((:module "clim"
                         :components
                         (;; Basic tools
@@ -98,7 +98,7 @@
                          (:file "stream-trampolines")))))
 
 ;;; based on `clim-utils'
-(defsystem #:gramps-clim2/utils
+(defsystem #:clim-tos/utils
   :depends-on (#:closer-mop)
   :components
   ((:module "utils"
@@ -131,8 +131,8 @@
                          (:file "designs")))))
 
 ;;; based on `clim-silica'
-(defsystem #:gramps-clim2/silica
-  :depends-on (#:gramps-clim2/utils
+(defsystem #:clim-tos/silica
+  :depends-on (#:clim-tos/utils
                #:closer-mop)
   :components
   ((:module "silica"
@@ -168,8 +168,8 @@
              (:file "scroll-pane")))))
 
 #+ (or)
-(defsystem #:gramps-clim2/homegrown
-  :depends-on (#:gramps-clim2/silica)
+(defsystem #:clim-tos/homegrown
+  :depends-on (#:clim-tos/silica)
   :components
   ((:module "homegrown"
   	    :components
@@ -183,13 +183,13 @@
   	     (:file "db-text")
   	     (:file "last")))))
 
-(defsystem #:gramps-clim2/postscript
+(defsystem #:clim-tos/postscript
   :description "Draw-only backend as defined in the specification.")
 
 ;;; based on `clx-clim' in clx/sysdcl.lisp
-(defsystem #:gramps-clim2/clx-backend
+(defsystem #:clim-tos/clx-backend
   :description "Reference backend for X-Window system."
-  :depends-on (#:clx #:gramps-clim2/core)
+  :depends-on (#:clx #:clim-tos/core)
   :components
   ((:module "clx"
 	    :components
@@ -201,9 +201,9 @@
 	     (:file "clx-frames")))))
 
 ;;; based on `clim-demo' in demo/sysdcl.lisp
-(defsystem #:gramps-clim2/examples
-  :description "Applications bundled in gramps-clim2 repository."
-  :depends-on (#:gramps-clim2/core
+(defsystem #:clim-tos/examples
+  :description "Applications bundled in clim-tos repository."
+  :depends-on (#:clim-tos/core
                #:bordeaux-threads)
 
   :components
