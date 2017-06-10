@@ -200,10 +200,26 @@
 	     (:file "clx-pixmaps")
 	     (:file "clx-frames")))))
 
+;;; based on `clim-test' in test/sysdcl.lisp
+(defsystem #:clim-tos/tests
+  :description "CLIM tests (framework and definitions)."
+  :depends-on (#:clim-tos/core)
+  :serial t
+  :components
+  ((:module "test"
+            :components
+            ((:file "test-suite")
+             (:file "test")
+             (:file "test-buttons")
+             (:file "test-sliders")
+             (:file "simple-test")
+             (:file "postscript-tests")))))
+
 ;;; based on `clim-demo' in demo/sysdcl.lisp
 (defsystem #:clim-tos/examples
   :description "Applications bundled in clim-tos repository."
   :depends-on (#:clim-tos/core
+               #:clim-tos/tests
                #:bordeaux-threads)
 
   :components
