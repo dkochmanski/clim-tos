@@ -92,6 +92,9 @@
 
 ;;; Translation between CLIM and CLX graphics model
 
+(defun nyi ()
+  (error "This CLX CLIM operation is NYI (Not Yet Implemented)."))
+
 (defun clim-internals::make-stipple-array (height width bytes)
   (make-array (list height width) :element-type '(unsigned-byte 1)
               :initial-contents bytes))
