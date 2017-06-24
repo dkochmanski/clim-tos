@@ -1443,14 +1443,12 @@ people, shall not perish from the earth.
              ;; dependee-mixin no longer exported -- smh 18may93
              (mapcar #'find-class '(number))
              #'(lambda (o s)
-                 (let ((text (format nil "~A" (#-aclpc excl::class-name
-                                               #+aclpc cl:class-name o))))
+                 (let ((text (format nil "~A" (class-name o))))
                    (multiple-value-bind (width height) (text-size s text)
                      (with-new-output-record (s)
                        (draw-rectangle* s 0 0 width height :filled t :ink color)
                        (draw-text* s text 0 0 :align-x :left :align-y :top)))))
-             #-aclpc #'clos:class-direct-subclasses
-             #+aclpc #'cl::class-direct-subclasses
+             #'class-direct-subclasses
              :stream stream
              :center-nodes center-nodes
              :merge-duplicates nil)))))))
@@ -3431,7 +3429,7 @@ Luke Luck licks the lakes Luke's duck likes."))
 	       #'(lambda (&rest args)
 		   (if (boundp ',specn)
 		       (progn
-			 #-aclpc (mp:process-sleep 4) #+aclpc (sleep 4)
+                         (sleep 4)
 			 (throw ',tagn nil))
 		       (apply ,oldn args))))
 	     ,@body)
@@ -3440,8 +3438,8 @@ Luke Luck licks the lakes Luke's duck likes."))
 (define-benchmark (simple-menu-choose :iterations 10) (stream)
   "Pop up a simple menu of colors"
   (without-clim-input
-   (if #-(or aclpc acl86win32) (typep (port stream) 'xm-silica::xt-port)
-       #+(or aclpc acl86win32) nil
+   (if #+(or) (typep (port stream) 'xm-silica::xt-port)
+       #-(or) nil
         (sleep 0.1) ;; Avoid division by zero!
         (menu-choose '(("Red" :value +red+)
                        ("Green" :value +green+)
@@ -3458,8 +3456,8 @@ Luke Luck licks the lakes Luke's duck likes."))
 (define-benchmark (cached-menu-choose :iterations 10) (stream)
   "Pop up a cached menu of colors"
   (without-clim-input
-   (if #-(or aclpc acl86win32) (typep (port stream) 'xm-silica::xt-port)
-       #+(or aclpc acl86win32) nil
+   (if #+(or) (typep (port stream) 'xm-silica::xt-port)
+       #-(or) nil
         (sleep 0.1) ;; Avoid division by zero!
         (menu-choose '(("Red" :value +red+)
                        ("Green" :value +green+)

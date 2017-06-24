@@ -99,7 +99,7 @@
 
 ;;; based on `clim-utils'
 (defsystem #:clim-tos/utils
-  :depends-on (#:closer-mop)
+  :depends-on (#:closer-mop #:trivial-gray-streams)
   :components
   ((:module "utils"
             :components ((:file "packages")
@@ -117,7 +117,6 @@
                          (:file "protocols")
 
                          ;; Establish a uniform stream model
-                         #+ (or) (:file "trivial-gray-streams")
                          (:file "clim-streams")
                          (:file "cl-streams")
 
@@ -199,6 +198,22 @@
 	     (:file "clx-medium")
 	     (:file "clx-pixmaps")
 	     (:file "clx-frames")))))
+
+;;; based on `clim-test' in test/sysdcl.lisp
+(defsystem #:clim-tos/tests
+  :description "CLIM tests (framework and definitions)."
+  :depends-on (#:clim-tos/core
+               #:clim-tos/examples)
+  :serial t
+  :components
+  ((:module "test"
+            :components
+            ((:file "test-suite")
+             (:file "test")
+             (:file "test-buttons")
+             (:file "test-sliders")
+             (:file "simple-test")
+             (:file "postscript-tests")))))
 
 ;;; based on `clim-demo' in demo/sysdcl.lisp
 (defsystem #:clim-tos/examples

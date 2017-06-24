@@ -303,6 +303,7 @@
 
 ;; japanese-graphics-editor
 
+#+allegro
 (excl:ics-target-case
 (:+ics
 
