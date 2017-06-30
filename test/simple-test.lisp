@@ -4,8 +4,8 @@
 ;; See the file LICENSE for the full license governing this code.
 ;;
 
-#-acl86win32
-(defpackage :clim-user (:use :clim-silica))
+;; #-acl86win32
+;; (defpackage :clim-user (:use :clim-silica))
 
 (in-package :clim-user)
 
