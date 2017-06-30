@@ -3562,10 +3562,7 @@ Luke Luck licks the lakes Luke's duck likes."))
                             :line-cap-shape :round)))))))))
 
 
-(define-application-frame clim-tests ()
-    ((history-class :initarg :history-class
-                    :initform 'standard-sequence-output-history
-                    :reader clim-tests-history-class))
+(define-application-frame clim-tests () ()
   (:command-table (clim-tests
                    :inherit-from (graphics
                                   output-recording
@@ -3589,11 +3586,11 @@ Luke Luck licks the lakes Luke's duck likes."))
 		 :scroll-bars :vertical
                  :height '(2 :line) :max-height '(2 :line)
                  :output-record
-                 (make-instance (clim-tests-history-class *application-frame*)))
+                 (make-instance 'standard-sequence-output-history))
    (display-pane :application
 		 :text-style '(:serif :roman :normal)
                  :output-record
-                 (make-instance (clim-tests-history-class *application-frame*))))
+                 (make-instance 'standard-sequence-output-history)))
   (:layouts
     (:default
       (vertically () caption-pane display-pane)))
