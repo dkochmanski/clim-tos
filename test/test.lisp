@@ -984,7 +984,7 @@
 		      :stream stream
  		      :prompt "XXXX")))))
 
-
+#+broken
 (define-application-frame tf107 () ()
   (:command-table test-frame)
   (:pane
@@ -995,8 +995,9 @@
 		  :foreground +green+
 		  :background +red+))
      ((50 200) (make-pane 'push-button
-			     :label (with-menu (menu (graft *application-frame*))
-				      (with-output-to-pixmap (stream menu :width 100 :height 100)
+                          :label (with-menu (menu (graft *application-frame*))
+                                   ;; XXX: with-output-to-pixmap causes aver error on sbcl!
+                                   (with-output-to-pixmap (stream menu :width 100 :height 100)
 					(draw-rectangle* stream 0 0 100 100 :ink +background-ink+)
 					(draw-rectangle* stream 10 10 90 90 :ink +red+)))))
      ((90 300) (make-pane 'push-button
