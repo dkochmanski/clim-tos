@@ -845,7 +845,7 @@ The text-field must have the focus before you can call this function."))
 ;; simplified so that it repaints the viewport over the entire region
 ;; taking advantage of the fact that the repainting of overlapping
 ;; children happens after
-#++really-ignore
+#+ignore
 (defmethod repaint-sheet ((sheet viewport) region)
   (let ((region (region-intersection (sheet-region sheet) region)))
     (dolist (child (sheet-children sheet))
