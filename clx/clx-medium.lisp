@@ -418,7 +418,8 @@
 					   ((<= depth 4) 'xlib::pixarray-4-element-type)
 					   ((<= depth 8) 'xlib::pixarray-8-element-type)
 					   ((<= depth 16) 'xlib::pixarray-16-element-type)
-					   ((<= depth 24) 'xlib::pixarray-24-element-type)
+                                           ;; hack: CLX chokes on patterns with 24-bit depth
+					   #+(or) ((<= depth 24) 'xlib::pixarray-24-element-type)
 					   (t 'xlib::pixarray-32-element-type)))))
 		(declare (simple-vector design-pixels))
 		;; Cache the decoded designs from the pattern
