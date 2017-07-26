@@ -376,12 +376,10 @@
 (defmethod (setf gadget-value) :around
 	   (value (gadget scroll-bar) &key invoke-callback)
   (declare (ignore invoke-callback))
-  (assert (and (<= (+ value (scroll-bar-size gadget))
-                 (gadget-max-value gadget))
-            (>= value (gadget-min-value gadget)))
-    (value)
-    "Scroll bar value ~A out of range" value)
-  (call-next-method value gadget))
+  (call-next-method
+   (alexandria:clamp value (gadget-min-value gadget)
+                     (- (gadget-max-value gadget) (scroll-bar-size gadget)))
+                    gadget))
 
 (defmethod (setf line-increment) :around (value (object scroll-bar))
   (assert (and (> value (gadget-min-value object))
