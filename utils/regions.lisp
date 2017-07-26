@@ -136,6 +136,8 @@
 
 (defvar +nowhere+ (make-instance 'nowhere))
 
+(defmethod bounding-rectangle* ((region (eql +nowhere+)))
+  (values 0 0 0 0))
 
 ;;; Everywhere
 
