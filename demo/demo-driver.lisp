@@ -111,5 +111,7 @@
 (defun start-demo (&key (port (find-port)) (background t) force)
   (let ((demo-frame (make-instance 'demo :name "Demo Driver" :class 'demo-driver
                                    :initargs '(:left 0 :top 0))))
-    (run-demo demo-frame :port port :background background :force force)))
+    (values
+     demo-frame
+     (run-demo demo-frame :port port :background background :force force))))
 
