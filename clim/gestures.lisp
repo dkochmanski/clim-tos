@@ -146,10 +146,11 @@
                (setq port (port (event-sheet event))))
   (let ((button (pointer-event-button event))
         (modifier-state (event-modifier-state event)))
-    (declare (type fixnum button modifier-state))
-    (button-and-modifier-state-matches-gesture-name-p
-     (- (integer-length button) #.(integer-length +pointer-left-button+))
-     modifier-state gesture-name)))
+    (declare (type fixnum modifier-state))
+    ;; XXX: inv: see clx-mirror.lisp for scroll workaround
+    (when button (button-and-modifier-state-matches-gesture-name-p
+                  (- (integer-length button) #.(integer-length +pointer-left-button+))
+                  modifier-state gesture-name))))
 
 ;; GESTURE-NAME either names a gesture, or is a canonicalized gesture spec
 (defun keyboard-event-matches-gesture-name-p (event gesture-name &optional port)

@@ -198,7 +198,12 @@
   `(case ,x-code
      (1 +pointer-left-button+)
      (2 +pointer-middle-button+)
-     (3 +pointer-right-button+)))
+     (3 +pointer-right-button+)
+;;; NOTE WORKAROUND: we ignore mouse scrolling for now (we should use
+;;; ecase here) -- jd 2017-07-26
+     ;; (4 +pointer-scroll-up+)
+     ;; (5 +pointer-scroll-down+)
+     ))
 
 (defmethod process-next-event ((port clx-port)
 			       &key (timeout nil) (wait-function nil)
