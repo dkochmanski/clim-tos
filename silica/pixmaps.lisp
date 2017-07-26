@@ -37,34 +37,32 @@
 (defmethod copy-area ((medium basic-medium) from-x from-y width height to-x to-y
                       &optional (function boole-1))
   (medium-copy-area medium from-x from-y width height
-                    medium to-x to-y
-                    function))
+                    medium to-x to-y))
 
 ;;--- Need encapsulating stream method, too
 (defmethod copy-area ((sheet basic-sheet) from-x from-y width height to-x to-y
                       &optional (function boole-1))
   (with-sheet-medium (medium sheet)
     (medium-copy-area medium from-x from-y width height
-                      medium to-x to-y
-                      function)))
+                      medium to-x to-y)))
 
 (defmethod copy-from-pixmap (pixmap pixmap-x pixmap-y width height
                              (medium basic-medium) medium-x medium-y &optional (function boole-1))
   (medium-copy-area pixmap pixmap-x pixmap-y width height
-                    medium medium-x medium-y function))
+                    medium medium-x medium-y))
 
 (defmethod copy-from-pixmap (pixmap pixmap-x pixmap-y width height
                              (sheet basic-sheet) medium-x medium-y &optional (function boole-1))
   (with-sheet-medium (medium sheet)
     (medium-copy-area pixmap pixmap-x pixmap-y width height
-                      medium medium-x medium-y function)))
+                      medium medium-x medium-y)))
 
 (defmethod copy-to-pixmap ((medium basic-medium) medium-x medium-y width height
                        &optional pixmap (pixmap-x 0) (pixmap-y 0) (function boole-1))
   (unless pixmap
     (setf pixmap (allocate-pixmap medium width height)))
   (medium-copy-area medium medium-x medium-y width height
-                    pixmap pixmap-x pixmap-y function)
+                    pixmap pixmap-x pixmap-y)
   pixmap)
 
 (defmethod copy-to-pixmap ((sheet basic-sheet) medium-x medium-y width height
@@ -73,7 +71,7 @@
     (unless pixmap
       (setf pixmap (allocate-pixmap medium width height)))
     (medium-copy-area medium medium-x medium-y width height
-                      pixmap pixmap-x pixmap-y function)
+                      pixmap pixmap-x pixmap-y)
     pixmap))
 
 
