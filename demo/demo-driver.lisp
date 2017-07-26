@@ -108,18 +108,8 @@
           (bt:make-thread #'do-it :name (demo-name demo)))
         (do-it))))
 	
-(defvar *demo-frame* nil)
-
-(defun start-demo (&key (port (find-port)) 
-			(background #+aclpc nil #-aclpc t) 
-			force)
-  (unless *demo-frame*
-    (setq *demo-frame* 
-      (make-instance 'demo
-	:name "Demo Driver" :class 'demo-driver
-	:initargs '(:left 0 :top 0))))
-  (run-demo *demo-frame* :port port :background background :force force)
-  #+(and os-threads microsoft)
-  (setq *demo-frame* nil)
-  )
+(defun start-demo (&key (port (find-port)) (background t) force)
+  (let ((demo-frame (make-instance 'demo :name "Demo Driver" :class 'demo-driver
+                                   :initargs '(:left 0 :top 0))))
+    (run-demo demo-frame :port port :background background :force force)))
 
