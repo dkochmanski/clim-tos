@@ -89,14 +89,14 @@
 
 (defun handler-invocation-debugger-hook (invocation condition)
   (declare (ignore invocation))
-  (format excl:*initial-terminal-io* "The following error occurred: ~A~%" condition))
+  (format *debug-io* "The following error occurred: ~A~%" condition))
 
 (defvar *default-input-state-timeout* 300)
 
 (defun wait-for-clim-input-state (invocation &optional (timeout *default-input-state-timeout*))
   (let ((process (invocation-process invocation)))
     (let ((port (port (invocation-frame invocation))))
-      (when port #-acl86win32 (xm-silica::port-finish-output port)))
+      (when port #+ (or) (xm-silica::port-finish-output port)))
     (mp:process-allow-schedule)
     (flet ((input-state-p (process)
 	     (or (not (mp:process-thread process))
@@ -478,7 +478,7 @@
 	  (when presentations (return nil))
 	  (sleep 1)))
       #+ignore
-      (format excl:*initial-terminal-io* "~d presentations~%" (length presentations))
+      (format *debug-io* "~d presentations~%" (length presentations))
       (unless presentations
 	(error 'cannot-find-presentation-error :format-control
 	       "Did not find presentations to click on!"))
@@ -489,7 +489,7 @@
 	      (record left top right bottom) (nth i presentations)
 	    (declare (ignore right bottom))
 	    #+ignore
-	    (format excl:*initial-terminal-io*
+	    (format *debug-io*
 		    "selecting ~d of ~d = ~s @ ~d,~d~%"
 		    i len record left top)
 	    ;;-- Exit event problem
@@ -961,7 +961,7 @@
     (funcall continuation)))
 
 (define-test-step press-push-button (button)
-  #-acl86win32 (xm-silica::queue-active-event nil nil button))
+  #+ (or) (xm-silica::queue-active-event nil nil button))
 
 (defmacro with-waiting ((&key timeout) &body clauses)
   (let ((i 0)
@@ -997,7 +997,7 @@
 (locally (declare (special si::*clos-preload-packages*))
   (setq si::*clos-preload-packages*
     (mapcar #'find-package
-	    '(:clim :clim-utils :clim-internals :silica :tk #-acl86win32 :xm-silica))))
+	    '(:clim :clim-utils :clim-internals :silica :tk))))
 
 ;; This stops warnings happening asynchronously and causing confusion.
 

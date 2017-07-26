@@ -1,15 +1,15 @@
 
 (in-package #:asdf-user)
 
-(defsystem #:gramps-clim2
+(defsystem #:clim-tos
   :description "CLIM 2 implementation released by Franz Inc."
   :license "BSD-4-Clause"
-  :depends-on (#:gramps-clim2/core))
+  :depends-on (#:clim-tos/core))
 
 ;;; based on `clim-standalone' in sys/sysdcl.lisp
-(defsystem #:gramps-clim2/core
+(defsystem #:clim-tos/core
   :description "Core functionality (doesn't contain backends)."
-  :depends-on (#:gramps-clim2/silica)
+  :depends-on (#:clim-tos/silica)
   :components ((:module "clim"
                         :components
                         (;; Basic tools
@@ -98,8 +98,8 @@
                          (:file "stream-trampolines")))))
 
 ;;; based on `clim-utils'
-(defsystem #:gramps-clim2/utils
-  :depends-on (#:closer-mop)
+(defsystem #:clim-tos/utils
+  :depends-on (#:closer-mop #:trivial-gray-streams)
   :components
   ((:module "utils"
             :components ((:file "packages")
@@ -117,7 +117,6 @@
                          (:file "protocols")
 
                          ;; Establish a uniform stream model
-                         #+ (or) (:file "trivial-gray-streams")
                          (:file "clim-streams")
                          (:file "cl-streams")
 
@@ -131,8 +130,8 @@
                          (:file "designs")))))
 
 ;;; based on `clim-silica'
-(defsystem #:gramps-clim2/silica
-  :depends-on (#:gramps-clim2/utils
+(defsystem #:clim-tos/silica
+  :depends-on (#:clim-tos/utils
                #:closer-mop)
   :components
   ((:module "silica"
@@ -164,11 +163,12 @@
              (:file "db-scroll")
              (:file "db-button")
              (:file "db-label")
+             (:file "db-slider")
              (:file "scroll-pane")))))
 
 #+ (or)
-(defsystem #:gramps-clim2/homegrown
-  :depends-on (#:gramps-clim2/silica)
+(defsystem #:clim-tos/homegrown
+  :depends-on (#:clim-tos/silica)
   :components
   ((:module "homegrown"
   	    :components
@@ -182,13 +182,13 @@
   	     (:file "db-text")
   	     (:file "last")))))
 
-(defsystem #:gramps-clim2/postscript
+(defsystem #:clim-tos/postscript
   :description "Draw-only backend as defined in the specification.")
 
 ;;; based on `clx-clim' in clx/sysdcl.lisp
-(defsystem #:gramps-clim2/clx-backend
+(defsystem #:clim-tos/clx-backend
   :description "Reference backend for X-Window system."
-  :depends-on (#:clx #:gramps-clim2/core)
+  :depends-on (#:clx #:clim-tos/core)
   :components
   ((:module "clx"
 	    :components
@@ -199,10 +199,26 @@
 	     (:file "clx-pixmaps")
 	     (:file "clx-frames")))))
 
+;;; based on `clim-test' in test/sysdcl.lisp
+(defsystem #:clim-tos/tests
+  :description "CLIM tests (framework and definitions)."
+  :depends-on (#:clim-tos/core
+               #:clim-tos/examples)
+  :serial t
+  :components
+  ((:module "test"
+            :components
+            ((:file "test-suite")
+             (:file "test")
+             (:file "test-buttons")
+             (:file "test-sliders")
+             (:file "simple-test")
+             (:file "postscript-tests")))))
+
 ;;; based on `clim-demo' in demo/sysdcl.lisp
-(defsystem #:gramps-clim2/examples
-  :description "Applications bundled in gramps-clim2 repository."
-  :depends-on (#:gramps-clim2/core
+(defsystem #:clim-tos/examples
+  :description "Applications bundled in clim-tos repository."
+  :depends-on (#:clim-tos/core
                #:bordeaux-threads)
 
   :components
@@ -212,12 +228,13 @@
              (:file "demo-driver" :depends-on ("packages"))
              (:file "listener" :depends-on ("demo-driver"))
              (:file "graphics-demos" :depends-on ("demo-driver"))
+             (:file "palette" :depends-on ("demo-driver"))
              ;(:file "cad-demo" :depends-on ("demo-driver"))
              ;(:file "navdata" :depends-on ("packages"))
              ;(:file "navfun" :depends-on ("navdata"))
-             ;(:file "puzzle" :depends-on ("demo-driver"))
-             ;(:file "address-book" :depends-on ("demo-driver"))
-             ;(:file "thinkadot" :depends-on ("demo-driver"))
+             (:file "puzzle" :depends-on ("demo-driver"))
+             (:file "address-book" :depends-on ("demo-driver"))
+             (:file "thinkadot" :depends-on ("demo-driver"))
              ;(:file "plot" :depends-on ("demo-driver"))
              ;(:file "color-editor" :depends-on ("demo-driver"))
              ;(:file "graphics-editor" :depends-on ("demo-driver"))

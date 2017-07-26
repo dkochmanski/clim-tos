@@ -143,8 +143,10 @@
   (draw-rectangle* stream 0 0 80 80
 		   :ink (if square +black+ +white+)))
 
-
 (defmethod draw-piece (frame stream which color square)
+  (draw-rectangle* stream 0 0 80 80
+		   :ink (if square +black+ +white+))
+  #+ (or)
   (let* ((key (list which color square))
 	 (ink (second (assoc key (slot-value frame 'bitmaps) :test #'equal))))
     (unless ink
@@ -187,7 +189,7 @@
 
 (defun create-chess-subprocess ()
   (multiple-value-bind (stream something pid)
-      (excl::run-shell-command
+      (asdf:run-shell-command
 	"~/3rd/gnuchess/gnuchessr"
 	:wait nil
 	:error-output :output
@@ -220,14 +222,14 @@
 		     line))))))
 
 (defun send-command (stream move)
-  (format excl::*initial-terminal-io* "sent: ~A~%" move)
+  (format *debug-io* "sent: ~A~%" move)
   (write-line move stream)
   (force-output stream))
 
 (defun read-a-line (stream)
   (let ((line (read-line stream)))
     (setq line (delete #\^g line))
-    (format excl::*initial-terminal-io* "received: ~A~%" line)
+    (format *debug-io* "received: ~A~%" line)
     line))
 
 (defun read-chess-move-from-subprocess (stream)

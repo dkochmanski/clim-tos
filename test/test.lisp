@@ -334,24 +334,22 @@
 (defun text-field-changed (tf value)
   (format t "~&Text field ~A changed to ~S" tf value))
 
-(defclass insect () ())
+;; (define-test-frame-command (com-make-insect :name t :menu t)
+;;     ()
+;;   (let ((i (make-instance 'insect)))
+;;     (with-output-as-presentation (t i (presentation-type-of i))
+;;       (print i))
+;;     (terpri)))
 
-(define-test-frame-command (com-make-insect :name t :menu t)
-    ()
-  (let ((i (make-instance 'insect)))
-    (with-output-as-presentation (t i (presentation-type-of i))
-      (print i))
-    (terpri)))
+;; (define-test-frame-command (com-describe-insect :name t :menu t)
+;;     ((bug 'insect
+;; 	  :gesture (nil :menu t)
+;; 	  :prompt "Select an insect"))
+;;   (describe bug))
 
-(define-test-frame-command (com-describe-insect :name t :menu t)
-    ((bug 'insect
-	  :gesture (nil :menu t)
-	  :prompt "Select an insect"))
-  (describe bug))
-
-(define-test-frame-command (com-disable-insect :name t :menu t) ()
-  (setf (command-enabled 'com-describe-insect *application-frame*)
-	(not (command-enabled 'com-describe-insect *application-frame*))))
+;; (define-test-frame-command (com-disable-insect :name t :menu t) ()
+;;   (setf (command-enabled 'com-describe-insect *application-frame*)
+;; 	(not (command-enabled 'com-describe-insect *application-frame*))))
 
 (clim:define-application-frame tf100 () ()
   (:command-table test-frame)
@@ -719,8 +717,8 @@
 		(terpri stream)
 		(setq d (accept 'integer :stream stream :prompt "d" :default d))
 		(terpri stream))
-	    (abort)
-	    (frame-exit)))))))
+	    (abort () nil)
+	    (frame-exit () nil)))))))
 
 (define-application-frame tf101 () ()
   (:command-table test-frame)
@@ -986,7 +984,7 @@
 		      :stream stream
  		      :prompt "XXXX")))))
 
-
+#+broken
 (define-application-frame tf107 () ()
   (:command-table test-frame)
   (:pane
@@ -997,8 +995,9 @@
 		  :foreground +green+
 		  :background +red+))
      ((50 200) (make-pane 'push-button
-			     :label (with-menu (menu (graft *application-frame*))
-				      (with-output-to-pixmap (stream menu :width 100 :height 100)
+                          :label (with-menu (menu (graft *application-frame*))
+                                   ;; XXX: with-output-to-pixmap causes aver error on sbcl!
+                                   (with-output-to-pixmap (stream menu :width 100 :height 100)
 					(draw-rectangle* stream 0 0 100 100 :ink +background-ink+)
 					(draw-rectangle* stream 10 10 90 90 :ink +red+)))))
      ((90 300) (make-pane 'push-button

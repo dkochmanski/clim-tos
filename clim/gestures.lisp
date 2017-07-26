@@ -138,6 +138,8 @@
     (keyboard-event                        ;--- KEY-PRESS-EVENT?
       (keyboard-event-matches-gesture-name-p event gesture-name port))))
 
+;;; NOTE seems to break with a NIL somewhere if mouse scroll wheel is used.
+;;; -- jacek.zlydach 2017-06-03
 (defun button-press-event-matches-gesture-name-p (event gesture-name &optional port)
   #---ignore (declare (ignore port))
   #+++ignore (unless port
@@ -146,8 +148,8 @@
         (modifier-state (event-modifier-state event)))
     (declare (type fixnum button modifier-state))
     (button-and-modifier-state-matches-gesture-name-p
-      (- (integer-length button) #.(integer-length +pointer-left-button+))
-      modifier-state gesture-name)))
+     (- (integer-length button) #.(integer-length +pointer-left-button+))
+     modifier-state gesture-name)))
 
 ;; GESTURE-NAME either names a gesture, or is a canonicalized gesture spec
 (defun keyboard-event-matches-gesture-name-p (event gesture-name &optional port)

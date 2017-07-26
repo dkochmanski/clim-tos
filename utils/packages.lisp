@@ -13,13 +13,7 @@
   #+allegro (:implementation-packages :clim-lisp :clim-utils)
   ;; 28Jan97 added allegro package for aclpc since mop stuff was moved
   ;; there in 3.0.1 -tjm
-  (:use common-lisp
-        #+allegro clos
-	#+(and allegro (version>= 9 0)) excl
-        #+(or (and MCL CCL-2) Clozure) gray
-        #+SBCL sb-gray
-;	#-(and allegro (version>= 9 0)) stream
-	#+aclpc allegro)
+  (:use common-lisp trivial-gray-streams)
 
  ;; Import these symbols so that we can define methods for them.
  (:shadow pathname truename)
@@ -31,8 +25,9 @@
  (:import-from :excl #:non-dynamic-extent)
 
  #+Clozure
- (:import-from :ccl #:atomic-incf #:atomic-decf #:class-prototype
-               #:class-direct-superclasses #:class-precedence-list)
+ (:import-from :ccl #:atomic-incf #:atomic-decf
+               ;#:class-direct-superclasses #:class-precedence-list
+               )
 
  (:import-from :closer-mop :class-prototype)
 
@@ -1019,23 +1014,12 @@
    zerop)
 
  ;; Stream Proposal -- Classes and class predicates.
- #-clim-uses-lisp-stream-classes
  (:shadow
-   fundamental-binary-input-stream
-   fundamental-binary-output-stream
-   fundamental-binary-stream
-   fundamental-character-input-stream
-   fundamental-character-output-stream
-   fundamental-character-stream
-   fundamental-input-stream
-   fundamental-output-stream
-   fundamental-stream
    input-stream-p
    open-stream-p
    output-stream-p
    streamp)
 
- #-(or clim-uses-lisp-stream-functions Lucid)
  (:shadow
    clear-input
    clear-output

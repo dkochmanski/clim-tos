@@ -273,6 +273,9 @@
 
 
 
+#|
+NOTE commented out to let sb-gray handle this for now. -- jacek.zlydach 2017-06-03
+
 (defclass FUNDAMENTAL-STREAM (#+ccl-2 stream) ())
 
 (defmethod STREAMP ((stream fundamental-stream)) t)
@@ -314,3 +317,5 @@
 (defclass FUNDAMENTAL-BINARY-OUTPUT-STREAM
 	  (fundamental-output-stream fundamental-binary-stream)
      ())
+
+|#

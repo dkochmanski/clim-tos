@@ -105,8 +105,8 @@
 ;; removed out hard-wired white background hack for nt (cim 10/9/96)
 
 (defclass sheet-with-resources-mixin ()
-  ((foreground :initform nil :accessor pane-foreground)
-   (background :initform nil :accessor pane-background)
+  ((foreground :initform nil :initarg :foreground :accessor pane-foreground)
+   (background :initform nil :initarg :background :accessor pane-background)
    (text-style :initform nil :initarg :text-style :accessor pane-text-style)
    (initargs :initform nil :reader sheet-with-resources-initargs)))
   

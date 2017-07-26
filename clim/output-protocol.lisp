@@ -1061,8 +1061,7 @@
                                        string start end
                                        cursor-x cursor-y height baseline style max-x)
   ;; Continuation is a function which takes L T R B Baseline
-  (declare (dynamic-extent continuation)
-           (values new-cursor-x new-cursor-y new-height new-baseline))
+  (declare (dynamic-extent continuation))
   (unless start (setq start 0))
   (unless end (setq end (length string)))
   (let ((vsp (stream-vertical-spacing stream))

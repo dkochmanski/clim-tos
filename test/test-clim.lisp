@@ -313,7 +313,7 @@
     (let ((fm (find-frame-manager)))
       (with-frame-manager (fm)
 	(let ((*default-server-path*
-	       `(,(if (excl::featurep :clim-motif)
+	       `(,(if (uiop:featurep :clim-motif)
 		      :motif :openlook)
 		    :display "mysparc10:0")))
 	  (assert (eq fm (find-frame-manager))))))))
