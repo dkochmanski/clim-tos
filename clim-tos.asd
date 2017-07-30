@@ -132,7 +132,8 @@
 ;;; based on `clim-silica'
 (defsystem #:clim-tos/silica
   :depends-on (#:clim-tos/utils
-               #:closer-mop)
+               #:closer-mop
+               #:alexandria)
   :components
   ((:module "silica"
             :components
