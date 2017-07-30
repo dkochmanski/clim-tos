@@ -8,9 +8,9 @@
 ;;; Portions copyright (c) 1988, 1989, 1990 International Lisp Associates."
 
 (defpackage clim-demo
-  (:use clim-lisp clim)
+  (:use :clim-lisp :clim)
 
-  (:shadowing-import-from clim-utils
+  (:shadowing-import-from :clim-utils
     defun
     flet labels
     defgeneric defmethod

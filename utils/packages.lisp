@@ -29,7 +29,11 @@
                ;#:class-direct-superclasses #:class-precedence-list
                )
 
- (:import-from :closer-mop :class-prototype)
+ (:import-from :closer-mop
+               :class-prototype
+               :class-precedence-list
+               :class-direct-superclasses
+               :class-direct-subclasses)
 
  (:export
    &allow-other-keys
