@@ -239,22 +239,9 @@
         (:horizontal (- right left))
         (:vertical (- bottom top))))))
 
-;;; NOTE WORKAROUND
-;;; The following methods requires 4 parameters. Added `workaround' parameter for that,
-;;; but the methods should be further reviewed for correctness.
-;;; - scroll-up-line-callback
-;;; - scroll-down-line-callback
-;;; - scroll-up-page-callback
-;;; - scroll-down-page-callback
-;;; - scroll-to-top-callback
-;;; - scroll-to-bottom-callback
-;;;
-;;; -- jacek.zlydach 2017-05-14
-;;;
-;;; Also NOTE that the CLIM docs seem to require those methods to have 3 arguments instead.
-;;;
-;;; -- jacek.zlydach 2017-06-03
-(defmethod scroll-up-line-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation whatever)
+;;; FIXME scroller-pane, orientation don't match expected: client, gadget-id -- jacek.zlydach 2017-07-30
+(defmethod scroll-up-line-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation &optional value)
+  (declare (ignore value))
   ;; (with-slots (current-size current-value port) scroll-bar) -- NOTE those slots don't exist. -- jacek.zlydach 2017-06-03
   (let ((current-size (scroll-bar-size scroll-bar))
         (current-value (gadget-value scroll-bar)))
@@ -269,7 +256,9 @@
         (scroll-bar-value-changed-callback
          scroll-bar scroller-pane orientation new-value current-size)))))
 
-(defmethod scroll-down-line-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation whatever)
+;;; FIXME scroller-pane, orientation don't match expected: client, gadget-id -- jacek.zlydach 2017-07-30
+(defmethod scroll-down-line-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation &optional value)
+  (declare (ignore value))
   ;; (with-slots (current-size current-value port) scroll-bar) -- NOTE those slots don't exist. -- jacek.zlydach 2017-06-03
   (let ((current-size (scroll-bar-size scroll-bar))
         (current-value (gadget-value scroll-bar)))
@@ -284,7 +273,9 @@
         (scroll-bar-value-changed-callback
          scroll-bar scroller-pane orientation new-value current-size)))))
 
-(defmethod scroll-up-page-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation whatever)
+;;; FIXME scroller-pane, orientation don't match expected: client, gadget-id -- jacek.zlydach 2017-07-30
+(defmethod scroll-up-page-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation &optional value)
+  (declare (ignore value))
   ;; (with-slots (current-size current-value) scroll-bar) -- NOTE those slots don't exist. -- jacek.zlydach 2017-06-03
   (let ((current-size (scroll-bar-size scroll-bar))
         (current-value (gadget-value scroll-bar)))
@@ -300,7 +291,9 @@
         (scroll-bar-value-changed-callback
          scroll-bar scroller-pane orientation new-value current-size)))))
 
-(defmethod scroll-down-page-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation whatever)
+;;; FIXME scroller-pane, orientation don't match expected: client, gadget-id -- jacek.zlydach 2017-07-30
+(defmethod scroll-down-page-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation &optional value)
+  (declare (ignore value))
   ;; (with-slots (current-size current-value) scroll-bar) -- NOTE those slots don't exist. -- jacek.zlydach 2017-06-03
   (let ((current-size (scroll-bar-size scroll-bar))
         (current-value (gadget-value scroll-bar)))
@@ -316,12 +309,16 @@
         (scroll-bar-value-changed-callback
          scroll-bar scroller-pane orientation new-value current-size)))))
 
-(defmethod scroll-to-top-callback ((scroll-bar scroll-bar-pane) client id whatever)
+;;; FIXME scroller-pane, orientation don't match expected: client, gadget-id -- jacek.zlydach 2017-07-30
+(defmethod scroll-to-top-callback ((scroll-bar scroll-bar-pane) client id &optional value)
+  (declare (ignore value))
   ;; (with-slots (current-size current-value) scroll-bar) -- NOTE those slots don't exist. -- jacek.zlydach 2017-06-03
   (let ((current-size (scroll-bar-size scroll-bar)))
     (scroll-bar-value-changed-callback scroll-bar client id 0 current-size)))
 
-(defmethod scroll-to-bottom-callback ((scroll-bar scroll-bar-pane) client id whatever)
+;;; FIXME scroller-pane, orientation don't match expected: client, gadget-id -- jacek.zlydach 2017-07-30
+(defmethod scroll-to-bottom-callback ((scroll-bar scroll-bar-pane) client id &optional value)
+  (declare (ignore value))
   ;; (with-slots (current-size current-value) scroll-bar) -- NOTE those slots don't exist. -- jacek.zlydach 2017-06-03
   (let ((current-size (scroll-bar-size scroll-bar)))
     (scroll-bar-value-changed-callback scroll-bar client id 1.0 current-size)))
@@ -601,21 +598,21 @@
       (#.+pointer-left-button+
        (ecase (slot-value pane 'end)
          (:greater-than
-           (scroll-down-page-callback scroll-bar client id 0.0)) ;NOTE WORKAROUND added last param = 0.0 -- jacek.zlydach, 2017-06-03
+           (scroll-down-page-callback scroll-bar client id))
          (:less-than
-           (scroll-down-line-callback scroll-bar client id 0.0)))) ;NOTE WORKAROUND added last param = 0.0 -- jacek.zlydach, 2017-06-03
+           (scroll-down-line-callback scroll-bar client id))))
       (#.+pointer-middle-button+
        (ecase (slot-value pane 'end)
          (:greater-than
-           (scroll-to-bottom-callback scroll-bar client id 0.0)) ;NOTE WORKAROUND added last param = 0.0 -- jacek.zlydach, 2017-06-03
+           (scroll-to-bottom-callback scroll-bar client id))
          (:less-than
-           (scroll-to-top-callback scroll-bar client id 0.0)))) ;NOTE WORKAROUND added last param = 0.0 -- jacek.zlydach, 2017-06-03
+           (scroll-to-top-callback scroll-bar client id))))
       (#.+pointer-right-button+
        (ecase (slot-value pane 'end)
          (:greater-than
-           (scroll-up-page-callback scroll-bar client id 0.0)) ;NOTE WORKAROUND added last param = 0.0 -- jacek.zlydach, 2017-06-03
+           (scroll-up-page-callback scroll-bar client id))
          (:less-than
-           (scroll-up-line-callback scroll-bar client id 0.0))))))) ;NOTE WORKAROUND added last param = 0.0 -- jacek.zlydach, 2017-06-03
+           (scroll-up-line-callback scroll-bar client id)))))))
 
 (defmethod handle-event ((pane scroll-bar-shaft-pane) 
                          (event pointer-button-press-event))

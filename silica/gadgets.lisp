@@ -67,6 +67,33 @@
 (defmethod note-gadget-deactivated ((client t) (gadget basic-gadget))
   nil)
 
+
+
+;;; defgenerics for callbacks.
+;;; Added by jacek.zlydach on 2017-07-30.
+;;; NOTE: There's some discrepancy between the code here and CLIM spec - the latter
+;;; defines following callbacks as 3-argument generic functions. To resolve it,
+;;; the fourth argument, used by this implementation, has been marked optional.
+
+(defgeneric scroll-to-bottom-callback (pane client id &optional value)
+  (:documentation "Invoked when appropriate hotspot of a scroll bar is clicked on."))
+
+(defgeneric scroll-to-top-callback (pane client id &optional value)
+  (:documentation "Invoked when appropriate hotspot of a scroll bar is clicked on."))
+
+(defgeneric scroll-up-line-callback (pane client id &optional value)
+  (:documentation "Invoked when appropriate hotspot of a scroll bar is clicked on."))
+
+(defgeneric scroll-down-line-callback (pane client id &optional value)
+  (:documentation "Invoked when appropriate hotspot of a scroll bar is clicked on."))
+
+(defgeneric scroll-up-page-callback (pane client id &optional value)
+  (:documentation "Invoked when appropriate hotspot of a scroll bar is clicked on."))
+
+(defgeneric scroll-down-page-callback (pane client id &optional value)
+  (:documentation "Invoked when appropriate hotspot of a scroll bar is clicked on."))
+
+
 
 ;;; Value Gadgets
 
@@ -399,32 +426,32 @@
 
 ;;; Here are the callbacks that were once called out in the CLIM spec:
 
-(defmethod scroll-to-bottom-callback ((pane scroll-bar) client id value)
+(defmethod scroll-to-bottom-callback ((pane scroll-bar) client id &optional value) ;TODO some sane default value? -- jacek.zlydach 2017-07-30
   (value-changed-callback pane client id value)
   (let ((callback (scroll-bar-scroll-to-bottom-callback pane)))
     (when callback (funcall callback pane))))
 
-(defmethod scroll-to-top-callback ((pane scroll-bar) client id value)
+(defmethod scroll-to-top-callback ((pane scroll-bar) client id &optional value) ;TODO some sane default value? -- jacek.zlydach 2017-07-30
   (value-changed-callback pane client id value)
   (let ((callback (scroll-bar-scroll-to-top-callback pane)))
     (when callback (funcall callback pane))))
 
-(defmethod scroll-up-line-callback ((pane scroll-bar) client id value)
+(defmethod scroll-up-line-callback ((pane scroll-bar) client id &optional value) ;TODO some sane default value? -- jacek.zlydach 2017-07-30
   (value-changed-callback pane client id value)
   (let ((callback (scroll-bar-scroll-up-line-callback pane)))
     (when callback (funcall callback pane))))
 
-(defmethod scroll-down-line-callback ((pane scroll-bar) client id value)
+(defmethod scroll-down-line-callback ((pane scroll-bar) client id &optional value) ;TODO some sane default value? -- jacek.zlydach 2017-07-30
   (value-changed-callback pane client id value)
   (let ((callback (scroll-bar-scroll-down-line-callback pane)))
     (when callback (funcall callback pane))))
 
-(defmethod scroll-up-page-callback ((pane scroll-bar) client id value)
+(defmethod scroll-up-page-callback ((pane scroll-bar) client id &optional value) ;TODO some sane default value? -- jacek.zlydach 2017-07-30
   (value-changed-callback pane client id value)
   (let ((callback (scroll-bar-scroll-up-page-callback pane)))
     (when callback (funcall callback pane))))
 
-(defmethod scroll-down-page-callback ((pane scroll-bar) client id value)
+(defmethod scroll-down-page-callback ((pane scroll-bar) client id &optional value) ;TODO some sane default value? -- jacek.zlydach 2017-07-30
   (value-changed-callback pane client id value)
   (let ((callback (scroll-bar-scroll-down-page-callback pane)))
     (when callback (funcall callback pane))))
