@@ -112,6 +112,7 @@
 (defmethod sheet-device-region ((sheet sheet-transformation-mixin))
   (let ((region (sheet-cached-device-region sheet)))
     ;; We decache the device region by setting this slot to NIL...
+    ;; What the hell... now we have to track how this NIL is slipping through to CLX-CLIM::COMPUTE-GCONTEXT-CLIP-MASK (CLX-CLIM::CLX-MEDIUM) -- jacek.zlydach 2017-07-31
     (cond ((or (eq region +nowhere+)		    ;it can happen
 	       (and region (slot-value region 'left)))
 	   region)

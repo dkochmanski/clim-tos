@@ -323,7 +323,7 @@
     (when region
       (if (eq region +nowhere+)                        ;it can happen...
           (setf (sheet-cached-device-region sheet) nil)
-          (setf (slot-value (sheet-cached-device-region sheet) 'left) nil)))))
+          (setf (slot-value (sheet-cached-device-region sheet) 'left) nil))))) ;FIXME UGLY HACK? -- jacek.zlydach 2017-07-31
 
 (defmethod invalidate-cached-regions :after ((sheet sheet-parent-mixin))
   ;;--- In theory if this sheet has a mirror we don't need to do any more
@@ -343,7 +343,7 @@
     (when region
       (if (eq region +nowhere+)                        ;it can happen...
           (setf (sheet-cached-device-region sheet) nil)
-          (setf (slot-value (sheet-cached-device-region sheet) 'left) nil))))
+          (setf (slot-value (sheet-cached-device-region sheet) 'left) nil)))) ;FIXME UGLY HACK? -- jacek.zlydach 2017-07-31
   (setf (sheet-cached-device-transformation sheet) nil))
 
 (defmethod invalidate-cached-transformations :after ((sheet sheet-parent-mixin))
