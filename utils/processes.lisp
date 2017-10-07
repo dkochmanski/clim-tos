@@ -219,8 +219,9 @@
      (process-yield)))
 
 (defun process-wait-with-timeout (reason timeout predicate)
-  (bt:with-timeout (timeout)
-    (process-wait reason predicate)))
+  (if (numberp timeout)
+      (bt:with-timeout (timeout) (process-wait reason predicate))
+      (process-wait reason predicate)))
 
 (defun process-interrupt (process function)
   (declare #+CCL-2 (ignore process))
