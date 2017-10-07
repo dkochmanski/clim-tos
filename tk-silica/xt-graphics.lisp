@@ -1029,9 +1029,9 @@
 	     (y (pop positions)))
 	(push `(valid-point-p ,x ,y) forms)))
     `(unless (and ,@forms)
-       (if* *discard-illegal-graphics*
-	  then (return-from ,function-name)
-	  else (error "Coordinate(s) out of (signed-byte 16) range")))))
+       (if *discard-illegal-graphics*
+           (return-from ,function-name)
+           (error "Coordinate(s) out of (signed-byte 16) range")))))
 
 (defmacro with-single-floats (variable-bindings &body body)
   (flet ((binding-var (x) (if (atom x) x (car x)))
