@@ -95,9 +95,8 @@
       (let* ((*lisp-listener-io* window)
              (*standard-input* *lisp-listener-io*)
              (*standard-output* *lisp-listener-io*)
-             #+(or Minima allegro) (*error-output* *lisp-listener-io*)
+             #+allegro (*error-output* *lisp-listener-io*)
              (*query-io* *lisp-listener-io*)
-             #+Minima (*debug-io* *lisp-listener-io*)
              (*package* *package*)
              (*listener-depth* (1+ *listener-depth*))
              (*** nil) (** nil) (* nil)
@@ -218,7 +217,6 @@
 (defun listener-debugger-hook (condition hook)
   (declare (ignore hook))
   (let* ((*application-frame* *lisp-listener-frame*)
-         #+Minima (*debug-io* (frame-query-io *application-frame*))
          (*error-output* (frame-standard-output *application-frame*))
          (*debugger-condition* condition)
          (*debugger-restarts* (compute-restarts)))
@@ -557,8 +555,6 @@
     (object)
   (list `(,object)))
 
-                                        ;#-Minima
-
 (define-lisp-listener-command (com-demonstrate-clim :name "Demonstrate CLIM") ()
   (start-demo :port (port *application-frame*)))
 
@@ -591,7 +587,6 @@
 (define-presentation-method presentation-typep (object (type printer))
   (symbolp object))
 
-#-Minima
 (define-lisp-listener-command (com-hardcopy-file :name t)
     ((file 'pathname
            :provide-default t :prompt "file"
@@ -621,23 +616,19 @@
 (define-lisp-listener-command (com-show-some-commands :name t) ()
   (let ((ptype `(command :command-table user-command-table)))
     (formatting-table ()
-      #-Minima
       (formatting-row ()
         (formatting-cell ()
           (present `(com-show-file ,(merge-pathnames "foo" (user-homedir-pathname)))
                    ptype)))
-      #-Minima
       (formatting-row ()
         (formatting-cell ()
           (present `(com-show-directory ,(merge-pathnames "*" (user-homedir-pathname)))
                    ptype)))
-      #-Minima
       (formatting-row ()
         (formatting-cell ()
           (present `(com-copy-file ,(merge-pathnames "source" (user-homedir-pathname))
                                    ,(merge-pathnames "dest" (user-homedir-pathname)))
                    ptype)))
-      #-Minima
       (formatting-row ()
         (formatting-cell ()
           (present `(com-hardcopy-file ,(merge-pathnames "quux" (user-homedir-pathname))
