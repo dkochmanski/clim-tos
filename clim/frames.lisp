@@ -968,7 +968,8 @@
                 (when interactor
                   (terpri *standard-input*))
                 ;; Need this check in case the user aborted out of a command menu
-                (when command
+                (unless (member command '(nil :timeout))
+                  (log:info "executing command ~s" command)
                   (execute-frame-command frame command)))))))))
 
 (defmethod force-refresh-avv-streams (frame)
@@ -1278,12 +1279,7 @@
      (re-enable-menu-items ,frame)))
 
 (defmethod execute-frame-command ((frame standard-application-frame) command)
-  ;; NOTE WORKAROUND added a when clause because demo sometimes passes :timeout
-  ;; as `command', which is obviously not a list. -- jacek.zlydach, 2017-05-14
-  ;; NOTE getting :timeout here is an error, since commands are supposed to be of form
-  ;; (command-name . [command-args]) -- jacek.zlydach, 2017-06-24
-  (when (listp command)
-    (apply (command-name command) (command-arguments command)))
+  (apply (command-name command) (command-arguments command))
   #+ignore ;; from jeff on 4/8/99
   (with-menu-disabled frame
     (apply (command-name command) (command-arguments command))))
