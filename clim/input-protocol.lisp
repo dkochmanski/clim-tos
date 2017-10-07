@@ -513,7 +513,6 @@
 ;;; However, it does not want to flush any pending action elements that
 ;;; might precede the character, 'cause LISTEN should have no side effects.
 (defmethod stream-listen ((stream input-protocol-mixin))
-  #-silica (stream-event-handler stream :timeout 0)        ;Process pending keyboard input events
   (let ((input-buffer (stream-input-buffer stream)))
     (when (queue-empty-p input-buffer)
       (return-from stream-listen nil))
@@ -608,7 +607,7 @@
                           (> (get-internal-real-time) end-time))
                  (setq flag :timeout))
                flag))
-	#+os-threads (declare (dynamic-extent #'waiter))
+        (declare (dynamic-extent #'waiter))
         (port-event-wait (port stream) #'waiter 
           :wait-reason "Clim Input"
           :timeout timeout)
