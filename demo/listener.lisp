@@ -637,6 +637,4 @@
         (formatting-cell ()
           (present '(com-quit) ptype))))))
 
-
-
 (define-demo "Lisp Listener" lisp-listener :width 600 :height 500)
