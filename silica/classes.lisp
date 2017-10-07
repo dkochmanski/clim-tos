@@ -248,7 +248,7 @@
 #+(or aclpc acl86win32)
 (define-event-class window-change-event (pointer-button-event) ;was window-event
   ((mswin-control :reader event-mswin-control :initarg :mswin-control)))
-#+(or aclpc acl86win32)
+
 (define-event-class window-close-event (window-event) ())
 
 ;;; Values used in event objects

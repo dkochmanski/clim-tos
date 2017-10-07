@@ -3241,6 +3241,7 @@
     viewport-contents-extent
     viewport-region-changed
     window-shift-visible-region
+    window-close-event
     with-medium-clipping-region
     with-menu-as-popup
     with-mouse-grabbed-in-window

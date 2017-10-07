@@ -381,10 +381,12 @@
 		     (let* ((sheet (mirror->sheet port event-window))
 			    (frame (pane-frame sheet)))
 		       (if frame
-			   (disown-frame (frame-manager frame) frame)
+                           (queue-event sheet
+                                        (allocate-event 'clim-silica:window-close-event
+                                                        :mirrored-sheet sheet))
 			   (format *error-output*
-			       "CLX delete window message for non-frame sheet ~S"
-			     sheet))))
+                                   "CLX delete window message for non-frame sheet ~S"
+                                   sheet))))
 		   (t (format *error-output*
 			  "Unknown CLX ~S client message data ~S"
 			':wm_protocols atom))))))

@@ -18,6 +18,10 @@
   (repaint-sheet sheet (window-event-region event))
   (deallocate-event event))
 
+(defmethod handle-event (sheet (event window-close-event))
+  (frame-exit (pane-frame sheet))
+  (deallocate-event event))
+
 (defmethod handle-event (sheet event)
   (declare (ignore sheet event))
   #+++ignore (warn "Ignoring event ~S on sheet ~S" sheet event)
