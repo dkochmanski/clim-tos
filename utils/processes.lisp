@@ -7,114 +7,25 @@
 ;;;"Copyright (c) 1990, 1991, 1992 Symbolics, Inc.  All rights reserved.
 ;;; Portions copyright (c) 1988, 1989, 1990 International Lisp Associates.
 ;;; Portions copyright (c) 1992, 1993 Franz, Inc."
+;;; Copyright (c) 2017 Daniel Kochmański
 
+(defvar *multiprocessing-p* bt:*supports-threads-p*)
 
-;;; Locks 
-#+Allegro
-(eval-when (:compile-toplevel :load-toplevel :execute)
-;;;  (require :mdproc)
-  (require :process))
+;;; Locks
 
-(defvar *multiprocessing-p* 
-  #+(or Allegro Genera Lucid Lispworks Minima Clozure SBCL) t
-  #-(or Allegro Genera Lucid LispWorks Minima Clozure SBCL) nil
-    )
-
-;;; This is to keep it quiet: On ACL it's safe to declare the
-;;; predicate & args dynamic-extent on platforms with native threads
-;;; *only*, which at present (6.0beta) is Windows platforms.
-;;;
-;;; the real definition of process-wait is in
-;;; clim2:;aclpc;acl-clim.lisp.  That definition is almost certainly
-;;; bogus because it misunderstands the whole way multithreading
-;;; works: the definition above should be used instead.  But the
-;;; Windows event-loop depends on this misunderstanding, and I don't
-;;; want to change that.
-;;;
-#+(and allegro mswindows)
-(excl:defun-proto process-wait (wait-reason predicate &rest args)
-  (declare (dynamic-extent predicate args)))
-  
-;;-- I dont think we need this
-;#+Allegro
-;(unless (excl::scheduler-running-p)
-;  (mp:start-scheduler))
-
-(defmacro with-lock-held ((place &optional state) &body forms)
-  #+(or allegro Xerox Genera (and MCL CCL-2) Minima Clozure SBCL)
-  (declare (ignore state #+(and MCL CCL-2) place))
-  #+Allegro      `(mp:with-process-lock (,place) ,@forms)
-  #+Lucid        `(lcl:with-process-lock (,place ,@(if state (cons state nil)))
-                   ,@forms)
-  #+LispWorks    `(mp::with-lock (,place) ,@forms)
-  #+Xerox        `(il:with.monitor ,place ,@forms)
-  #+Cloe-Runtime `(progn ,@forms)
-  #+aclpc        `(progn ,@forms)
-  #+Genera       `(process:with-lock (,place) ,@forms)
-  #+Minima       `(minima:with-lock (,place) ,@forms)
-  #+(and MCL CCL-2) `(progn ,@forms)
-  #+Clozure      `(ccl:with-lock-grabbed (,place) ,@forms)
-  #+SBCL         `(sb-thread:with-mutex (,place :wait-p t) ,@forms)
-  )
+(defmacro with-lock-held ((place &optional state) &body body)
+  (declare (ignore state))
+  `(bt:with-lock-held (,place) ,@body))
 
 (defun make-lock (&optional (lock-name "a CLIM lock"))
-  #-(or Allegro Genera Minima Clozure SBCL) (declare (ignore lock-name))
-  #+Allegro          (mp::make-process-lock :name lock-name)
-  #+LispWorks        (mp::make-lock)
-  #+Lucid            nil
-  #+(and MCL CCL-2)  nil
-  #+Xerox          (il:create.monitorlock)
-  #+Cloe-Runtime   nil
-  #+aclpc          nil
-  #+Genera         (process:make-lock lock-name)
-  #+Minima         (minima:make-lock lock-name)
-  #+Clozure        (ccl:make-lock lock-name)
-  #+SBCL           (sb-thread:make-mutex :name lock-name)
-  )
+  (bt:make-lock lock-name))
 
-;;; A lock that CAN be relocked by the same process.
-#-(or Genera Minima)
-(defmacro with-simple-recursive-lock ((lock &optional (state "Unlock")) &body forms)
-  `(flet ((foo () ,@forms))
-     (declare (dynamic-extent #'foo))
-     (invoke-with-simple-recursive-lock ,lock ,state #'foo)))
-
-#-(or Genera Minima)
-(defun invoke-with-simple-recursive-lock (place state continuation)
-  (let ((store-value (current-process))
-        (place-value (first place)))
-    (if (and place-value (eql place-value store-value))
-        (funcall continuation)
-        (progn
-          (unless (null place-value)
-            (flet ((waiter ()
-                     (null (first place))))
-              #-allegro (declare (dynamic-extent #'waiter))
-              (process-wait state #'waiter)))
-          (unwind-protect
-              (progn (rplaca place store-value)
-                     (funcall continuation))
-            (rplaca place nil))))))
-
-(defmacro with-recursive-lock-held ((place &optional state) &body forms)
-  #+(or Xerox Genera (and MCL CCL-2) Minima Clozure)
-  (declare (ignore state #+(and MCL CCL-2) place))
-  #+Genera  `(process:with-lock (,place) ,@forms)
-  #+Minima  `(minima:with-lock (,place) ,@forms)
-  #+(and MCL CCL-2)  `(progn ,@forms)
-  #+Clozure `(ccl:with-lock-grabbed (,place) ,@forms)
-  #-(or Genera Minima (and MCL CCL-2) Clozure)
-  `(with-simple-recursive-lock (,place ,state) ,@forms)
-  )
+(defmacro with-recursive-lock-held ((place &optional state) &body body)
+  (declare (ignore state))
+  `(bt:with-recursive-lock-held (,place) ,@body))
 
 (defun make-recursive-lock (&optional (lock-name "a recursive CLIM lock"))
-  #-(or Genera Minima) (declare (ignore lock-name))
-  #+(and MCL CCL-2) nil
-  #+Genera (process:make-lock lock-name :recursive T)
-  #+Minima (minima:make-lock lock-name :recursive T)
-  #+Clozure (ccl::make-recursive-lock)
-  #-(or Genera Minima Clozure) (cons nil nil)
-  )
+  (bt:make-recursive-lock lock-name))
 
 
 ;;; Atomic operations
@@ -133,8 +44,7 @@
   #+Minima     `(minima:with-no-other-processes ,@forms)
   #+(and MCL CCL-2)  `(ccl:without-interrupts ,@forms)
   #+Clozure    `(ccl:without-interrupts ,@forms)
-  #+SBCL       `(sb-sys:without-interrupts ,@forms)
-   )
+  #+SBCL       `(sb-sys:without-interrupts ,@forms))
 
 ;; Atomically increments a fixnum value
 #+Genera
@@ -301,64 +211,16 @@
   
 (eval-when (:compile-toplevel :load-toplevel :execute) (proclaim '(inline process-yield)))
 (defun process-yield ()
-  #+Lucid        (lcl:process-allow-schedule)
-  #+Allegro      (mp:process-allow-schedule)
-  #+LispWorks    (mp::process-allow-scheduling)
-  #+Xerox        (il:block)
-  #+Genera       (scl:process-allow-schedule)
-  #+Minima       (sleep 1/10)
-  #+(and MCL CCL-2)  (ccl:event-dispatch)
-  #+Cloe-Runtime nil
-  #+aclpc        nil
-  #+Clozure      (ccl::yield)
-  #+SBCL         (sb-thread:thread-yield)
-  )
+  (bt:thread-yield))
 
-#-mswindows
-(defun process-wait (wait-reason predicate)
-  (declare #+SBCL (ignore wait-reason)
-           #+(or Genera Minima) (dynamic-extent predicate)
-           )
-  "Cause the current process to go to sleep until the predicate returns TRUE."
-  #+Lucid      (lcl:process-wait wait-reason predicate)
-  #+Allegro    (mp:process-wait wait-reason predicate)
-  #+LispWorks  (mp:process-wait wait-reason predicate)
-  #+Xerox             (let ((il:*who-line-state* wait-reason))
-                        (loop
-                          (il:block)
-                          (when (and (funcall predicate))
-                            (return))))
-  #+(and MCL CCL-2)  (ccl::process-wait wait-reason predicate)
-  #+Cloe-Runtime nil
-  #+aclpc        nil
-  #+Genera     (scl:process-wait wait-reason predicate)
-  #+Minima     (minima:process-wait wait-reason predicate)
-  #+Clozure    (ccl:process-wait wait-reason predicate)
-  #+SBCL       (sb-ext:wait-for predicate)
-  #-(or Lucid Allegro LispWorks Xerox (and MCL CCL-2) Cloe-Runtime aclpc Genera Minima Clozure SBCL)
-  (warn "No implementation of PROCESS-WAIT for this system.")
-  )
+(defun process-wait (reason predicate)
+  (declare (ignore reason))
+  (loop (when (funcall predicate) (return))
+     (process-yield)))
 
-(defun process-wait-with-timeout (wait-reason timeout predicate)
-  (declare #+SBCL (ignore wait-reason)
-           #+(or Genera Minima) (dynamic-extent predicate)
-           )
-  "Cause the current process to go to sleep until the predicate returns TRUE or
-   timeout seconds have gone by." 
-  (when (null timeout)
-    ;; ensure genera semantics, timeout = NIL means indefinite timeout
-    (return-from process-wait-with-timeout
-      (process-wait wait-reason predicate)))
-  #+Allegro    (mp:process-wait-with-timeout wait-reason timeout predicate)
-  #+LispWorks  (mp:process-wait-with-timeout wait-reason timeout predicate)
-  #+Lucid             (lcl:process-wait-with-timeout wait-reason timeout predicate)
-  #+Genera     (sys:process-wait-with-timeout wait-reason (* timeout 60.) predicate)
-  #+(and MCL CCL-2)  (ccl::process-wait-with-timeout wait-reason timeout predicate)
-  #+Clozure    (ccl:process-wait-with-timeout wait-reason timeout predicate)
-  #+SBCL       (sb-ext:wait-for predicate :timeout timeout)
-  #-(or Allegro LispWorks Lucid Genera (and MCL CCL-2) Clozure SBCL)
-  (warn "No implementation of PROCESS-WAIT-WITH-TIMEOUT for this system.")
-  )
+(defun process-wait-with-timeout (reason timeout predicate)
+  (bt:with-timeout (timeout)
+    (process-wait reason predicate)))
 
 (defun process-interrupt (process function)
   (declare #+CCL-2 (ignore process))
