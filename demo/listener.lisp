@@ -640,10 +640,3 @@
 
 
 (define-demo "Lisp Listener" lisp-listener :width 600 :height 500)
-
-;;; NOTE WORKAROUND deleted the \210 literal character, because it broke the SBCL reader for me. -- jacek.zlydach, 2017-05-14
-#+Genera
-(define-genera-application lisp-listener
-                           :pretty-name "CLIM Lisp Listener"
-                           :select-key #\ [FIXME insert character 210]
-                           :width +fill+ :height +fill+)
