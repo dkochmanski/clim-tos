@@ -172,34 +172,33 @@
                       :stream stream
                       :prompt nil :prompt-mode :raw
                       :additional-activation-gestures '(#+Genera #\End)))))
-      (when (eq type :keystroke)
-        (let ((command (lookup-keystroke-command-item command-or-form command-table
-                                                      :numeric-argument numeric-arg)))
-          (unless (clim-internals::keyboard-event-p command)
-            (when (partial-command-p command)
-              (setq command (funcall *partial-command-parser*
-                                     command command-table stream nil
-                                     :for-accelerator t)))
-            (setq command-or-form command
-                  type 'command))))
       (cond ((eq type ':keystroke)
+             (let ((command (lookup-keystroke-command-item command-or-form command-table
+                                                           :numeric-argument numeric-arg)))
+               (unless (clim-internals::keyboard-event-p command)
+                 (when (partial-command-p command)
+                   (setq command (funcall *partial-command-parser*
+                                          command command-table stream nil
+                                          :for-accelerator t)))
+                 (setq command-or-form command
+                       type 'command)))
              (beep))
             ((eq (presentation-type-name type) 'command)
              (terpri)
              (let ((*debugger-hook*
-                     (unless *use-native-debugger*
-                       (and (zerop listener-depth) #'listener-debugger-hook))))
+                    (unless *use-native-debugger*
+                      (and (zerop listener-depth) #'listener-debugger-hook))))
                (apply (command-name command-or-form)
                       (command-arguments command-or-form)))
              (terpri))
             (t
              (terpri)
              (let ((values
-                     (multiple-value-list
-                      (let ((*debugger-hook*
-                              (unless *use-native-debugger*
-                                (and (zerop listener-depth) #'listener-debugger-hook))))
-                        (eval command-or-form)))))
+                    (multiple-value-list
+                     (let ((*debugger-hook*
+                            (unless *use-native-debugger*
+                              (and (zerop listener-depth) #'listener-debugger-hook))))
+                       (eval command-or-form)))))
                (fresh-line)
                (dolist (value values)
                  (present value 'expression :single-box :highlighting)
