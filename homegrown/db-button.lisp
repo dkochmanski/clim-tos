@@ -587,7 +587,7 @@ toggle button base. This way they can share the draw code.
 	      do (loop for y from 0 to (1- original-height)
 		       do (setf (aref intermediate-array y x) (aref original-array y x))))
 	(loop for x from (1- new-width) downto (- new-width center-x)
-	      for old-x from (1- original-width) by -1
+	      for old-x from (1- original-width) downto (- original-width center-x)
 	      do (loop for y from 0 to (1- original-height)
 		       do (setf (aref intermediate-array y x) (aref original-array y old-x))))
 	(loop for x from (1+ center-x) to (- new-width center-x 1)
@@ -599,7 +599,7 @@ toggle button base. This way they can share the draw code.
 	      do (loop for x from 0 to (1- new-width)
 		       do (setf (aref final-array y x) (aref intermediate-array y x))))
 	(loop for y from (1- new-height) downto (- new-height center-y)
-	      for old-y from (1- original-height) by -1
+	      for old-y from (1- original-height) downto (- original-height center-y)
 	      do (loop for x from 0 to (1- new-width)
 		       do (setf (aref final-array y x) (aref intermediate-array old-y x))))
 	(loop for y from (1+ center-y) to (- new-height center-y 1)
