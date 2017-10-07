@@ -378,16 +378,14 @@
 	       (let ((atom (xlib:atom-name display (aref data 0))))
 		 (case atom
 		   (:wm_delete_window
-		     (let* ((sheet (mirror->sheet port event-window))
-			    (frame (pane-frame sheet)))
-		       (if frame
-                           (queue-event sheet
-                                        (allocate-event 'clim-silica:window-close-event
-                                                        :mirrored-sheet sheet))
-			   (format *error-output*
-                                   "CLX delete window message for non-frame sheet ~S"
-                                   sheet))))
+                    (let ((sheet (mirror->sheet port event-window)))
+                      (if (pane-frame sheet)
+                          (queue-event sheet
+                                       (allocate-event 'clim-silica:window-close-event
+                                                       :mirrored-sheet sheet))
+                          (format *error-output*
+                                  "CLX delete window message for non-frame sheet ~S"
+                                  sheet))))
 		   (t (format *error-output*
-			  "Unknown CLX ~S client message data ~S"
-			':wm_protocols atom))))))
-	   t))))))
+                              "Unknown CLX ~S client message data ~S"
+                              :wm_protocols atom))))))))))))
