@@ -6,6 +6,13 @@
   :license "BSD-4-Clause"
   :depends-on (#:clim-tos/core))
 
+(defsystem #:clim-tos/all
+  :description "All default packages for demo."
+  :depends-on (#:clim-tos
+               #:clim-tos/clx-backend
+               #:clim-tos/examples
+               #:clim-tos/homegrown))
+
 ;;; based on `clim-standalone' in sys/sysdcl.lisp
 (defsystem #:clim-tos/core
   :description "Core functionality (doesn't contain backends)."
@@ -169,13 +176,11 @@
              (:file "db-slider")
              (:file "scroll-pane")))))
 
-#+ (or)
 (defsystem #:clim-tos/homegrown
   :depends-on (#:clim-tos/silica)
   :components
   ((:module "homegrown"
   	    :components
-	    ;; not fully compatible with silica (???)
   	    ((:file "scroll-pane")
   	     (:file "db-button")
   	     (:file "db-label")
