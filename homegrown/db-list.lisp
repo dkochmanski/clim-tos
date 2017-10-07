@@ -12,8 +12,7 @@
 (defclass simple-toggle-button-pane (toggle-button button-pane-mixin)
     ()
   (:default-initargs :label nil 
-		     :text-style *default-button-label-text-style*
-		     :show-as-default nil))
+		     :text-style *default-button-label-text-style*))
 
 (defparameter *check-mark-pattern*
 	      (make-pattern #2a((0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1)

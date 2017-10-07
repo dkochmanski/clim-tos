@@ -188,7 +188,6 @@ toggle button base. This way they can share the draw code.
      (internal-label-offset :initform 0))
   (:default-initargs :label nil
 		     :text-style *default-button-label-text-style*
-		     :show-as-default nil
 		     :external-label nil
 		     :depth 2
 		     :pattern *square-button-pattern*

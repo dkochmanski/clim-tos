@@ -220,7 +220,9 @@
 	(:horizontal (- right left))
 	(:vertical (- bottom top))))))
 
-(defmethod scroll-up-line-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation)
+(defmethod scroll-up-line-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation
+                                    &optional value)
+  (declare (ignore value))
   (with-slots (current-size current-value port) scroll-bar
     (with-slots (viewport contents) scroller-pane
       (let* ((contents-range (contents-range scroller-pane orientation))
@@ -233,7 +235,9 @@
 	(scroll-bar-value-changed-callback
 	  scroll-bar scroller-pane orientation new-value current-size)))))
 
-(defmethod scroll-down-line-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation)
+(defmethod scroll-down-line-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation
+                                      &optional value)
+  (declare (ignore value))
   (with-slots (current-size current-value port) scroll-bar
     (with-slots (viewport contents) scroller-pane
       (let* ((contents-range (contents-range scroller-pane orientation))
@@ -246,7 +250,9 @@
 	(scroll-bar-value-changed-callback
 	  scroll-bar scroller-pane orientation new-value current-size)))))
 
-(defmethod scroll-up-page-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation)
+(defmethod scroll-up-page-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation
+                                    &optional value)
+  (declare (ignore value))
   (with-slots (current-size current-value) scroll-bar
     (with-slots (viewport contents) scroller-pane
       (let* ((contents-range (contents-range scroller-pane orientation))
@@ -260,7 +266,9 @@
 	(scroll-bar-value-changed-callback
 	  scroll-bar scroller-pane orientation new-value current-size)))))
 
-(defmethod scroll-down-page-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation)
+(defmethod scroll-down-page-callback ((scroll-bar scroll-bar-pane) scroller-pane orientation
+                                      &optional value)
+  (declare (ignore value))
   (with-slots (current-size current-value) scroll-bar
     (with-slots (viewport contents) scroller-pane
       (let* ((contents-range (contents-range scroller-pane orientation))
@@ -274,11 +282,15 @@
       (scroll-bar-value-changed-callback
 	scroll-bar scroller-pane orientation new-value current-size)))))
 
-(defmethod scroll-to-top-callback ((scroll-bar scroll-bar-pane) client id)
+(defmethod scroll-to-top-callback ((scroll-bar scroll-bar-pane) client id
+                                   &optional vlaue)
+  (declare (ignore value))
   (with-slots (current-size current-value) scroll-bar
     (scroll-bar-value-changed-callback scroll-bar client id 0 current-size)))
 
-(defmethod scroll-to-bottom-callback ((scroll-bar scroll-bar-pane) client id)
+(defmethod scroll-to-bottom-callback ((scroll-bar scroll-bar-pane) client id
+                                      &optional value)
+  (declare (ignore value))
   (with-slots (current-size current-value) scroll-bar
     (scroll-bar-value-changed-callback
       scroll-bar client id 1.0 current-size)))
@@ -367,7 +379,7 @@
 				     &key slider-size value line-increment)
   (declare (ignore line-increment))
   (setf (gadget-value scroll-bar :invoke-callback nil) value)
-  (setf (scroll-bar-current-size scroll-bar) slider-size)
+  (setf (scroll-bar-size scroll-bar) slider-size)
   (let* ((scroller (gadget-client scroll-bar))
 	 (contents (pane-contents scroller)))
     ;;--- Hmm, if two "linked" panes have callbacks that cause the other
@@ -489,7 +501,7 @@
 	 (scroll-value (gadget-value scroll-bar))
 	 (min-value (gadget-min-value scroll-bar))
 	 (max-value (gadget-max-value scroll-bar))
-	 (gadget-size (or (scroll-bar-current-size scroll-bar) 0))
+	 (gadget-size (or (scroll-bar-size scroll-bar) 0))
 	 (gadget-range (abs (- max-value min-value)))
 	 (identity (sheet-pointer-cursor pane)))
     (flet ((draw-car (medium left top right bottom which)
