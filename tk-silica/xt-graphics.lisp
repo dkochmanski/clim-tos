@@ -967,48 +967,45 @@
     (let ((outcode1 0) (outcode2 0))
       (declare (type (unsigned-byte 4) outcode1 outcode2))
       (loop
-	(setq outcode1 (outcodes x1 y1)
-	      outcode2 (outcodes x2 y2))
-	#+ignore
-	(format excl:*initial-terminal-io* "oc1 = ~d, oc2 = ~d~%" outcode1 outcode2)
-	(if (rejectp outcode1 outcode2)
-	    ;; This means that both Ys or both Xs are out of the window
-	    ;; which means that there is nothing to draw
-	    (return-from clipper nil))
-	(if* (acceptp outcode1 outcode2)
-	   then (return)
-	   else ;; If P1 is inside window, exchange P1 and P2 to guarantee
-		;; that P1 is outside window.
-		(if (zerop outcode1)
-		    (psetq x1 x2
-			   y1 y2
-			   x2 x1
-			   y2 y1
-			   outcode1 outcode2
-			   outcode2 outcode1))
-		;; Now perform a subdivision; move P1 to the intersection point.
-		;; Use the formulas y=y1+slope*(x-x1), x=x1+(1/slope)*(y-y1).
-		(if* (logbitp 3 outcode1)
-		   then ;; Divide line at top of window.
-			(setq x1 (round (+ x1 (* (- x2 x1)
-						 (/ (- ymax y1) (- y2 y1))))))
-			(setq y1 ymax)
-		 elseif (logbitp 2 outcode1)
-		   then ;; Divide line at bottom of window.
-			(setq x1 (round (+ x1 (* (- x2 x1)
-						 (/ (- ymin y1) (- y2 y1))))))
-			(setq y1 ymin)
-		 elseif (logbitp 1 outcode1)
-		   then ;; Divide line at right of window.
-			(setq x1 xmax)
-			(setq y1 (round (+ y1 (* (- y2 y1)
-						 (/ (- xmax x1) (- x2 x1))))))
-		 elseif (logbitp 0 outcode1)
-		   then ;; Divide line at left of window.
-			(setq x1 xmin)
-			(setq y1 (round (+ y1 (* (- y2 y1)
-						 (/ (- xmin x1) (- x2 x1)))))))
-		))))
+         (setq outcode1 (outcodes x1 y1)
+               outcode2 (outcodes x2 y2))
+         (if (rejectp outcode1 outcode2)
+             ;; This means that both Ys or both Xs are out of the window
+             ;; which means that there is nothing to draw
+             (return-from clipper nil))
+         (if* (acceptp outcode1 outcode2)
+            then (return)
+            else ;; If P1 is inside window, exchange P1 and P2 to guarantee
+                 ;; that P1 is outside window.
+                 (if (zerop outcode1)
+                     (psetq x1 x2
+                            y1 y2
+                            x2 x1
+                            y2 y1
+                            outcode1 outcode2
+                            outcode2 outcode1))
+                 ;; Now perform a subdivision; move P1 to the intersection point.
+                 ;; Use the formulas y=y1+slope*(x-x1), x=x1+(1/slope)*(y-y1).
+                 (if* (logbitp 3 outcode1)
+                    then ;; Divide line at top of window.
+                         (setq x1 (round (+ x1 (* (- x2 x1)
+                                                  (/ (- ymax y1) (- y2 y1))))))
+                         (setq y1 ymax)
+                  elseif (logbitp 2 outcode1)
+                    then ;; Divide line at bottom of window.
+                         (setq x1 (round (+ x1 (* (- x2 x1)
+                                                  (/ (- ymin y1) (- y2 y1))))))
+                         (setq y1 ymin)
+                  elseif (logbitp 1 outcode1)
+                    then ;; Divide line at right of window.
+                         (setq x1 xmax)
+                         (setq y1 (round (+ y1 (* (- y2 y1)
+                                                  (/ (- xmax x1) (- x2 x1))))))
+                  elseif (logbitp 0 outcode1)
+                    then ;; Divide line at left of window.
+                         (setq x1 xmin)
+                         (setq y1 (round (+ y1 (* (- y2 y1)
+                                                  (/ (- xmin x1) (- x2 x1)))))))))))
   (values x1 y1 x2 y2))
 
 (defmacro clip-invalidate-line (x1 y1 x2 y2)
