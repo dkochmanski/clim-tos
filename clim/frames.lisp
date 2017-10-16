@@ -969,7 +969,6 @@
                   (terpri *standard-input*))
                 ;; Need this check in case the user aborted out of a command menu
                 (unless (member command '(nil :timeout))
-                  (log:info "executing command ~s" command)
                   (execute-frame-command frame command)))))))))
 
 (defmethod force-refresh-avv-streams (frame)
