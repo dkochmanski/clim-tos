@@ -463,8 +463,10 @@
                                       (not (window-visibility menu)))
                              (return-from menu-choose-from-drawer nil))
                            ;; Take care of highlighting
-                           (highlight-presentation-of-context-type menu)))
-                  (declare (dynamic-extent #'input-wait-test #'input-wait-handler))
+                           (highlight-presentation-of-context-type menu))
+                         (wait-for-window-exposed (menu)
+                           (process-wait nil (lambda () (window-visibility menu)))))
+                  (declare (dynamic-extent #'input-wait-test #'input-wait-handler #'wait-for-window-exposed))
                   ;; Await exposure before going any further, since X can get
                   ;; to the call to READ-GESTURE before the menu is visible.
                   (when *abort-menus-when-buried*
