@@ -43,7 +43,8 @@
 (define-presentation-type puzzle-cell ()
   :inherit-from '(integer 1 15))
 
-(define-presentation-method highlight-presentation ((type puzzle-cell) record stream state)
+;;; NOTE disabled because it breaks displaying a list of demos due to "unknown type specifier" condition. -- jacek.zlydach 2017-10-28
+#+ignore(define-presentation-method highlight-presentation ((type puzzle-cell) record stream state)
   state
   (multiple-value-bind (xoff yoff)
       (convert-from-relative-to-absolute-coordinates 

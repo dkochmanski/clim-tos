@@ -862,7 +862,7 @@
                           #+Clozure (cl:structure-class 'defstruct)
                           )
                         name)))
-             (let (#+(or Genera Cloe-Runtime (and MCL CCL-2))
+             (let (#+(or Genera Cloe-Runtime (and MCL CCL-2) sbcl)
                    (class-name `(presentation-type ,name))
                    )
                (setq class
@@ -886,10 +886,8 @@
                #+(and MCL CCL-2) (setf (slot-value class 'ccl::slots) (cons nil (vector)))
                ;; If the class name couldn't be set while making the class, set it now
 
-               ;; FIXME not sure what to do with this, commenting out for now. -- jacek.zlydach, 2017-05-06
-               ;; #-(or Genera Cloe-Runtime Lucid aclpc (and MCL CCL-2) Clozure)
-               ;; (setf (class-name class) class-name)
-               ))
+               #-(or Genera Cloe-Runtime Lucid aclpc (and MCL CCL-2) Clozure)
+               (setf (class-name class) class-name)))
             ((not (or (equal (closer-mop:class-direct-superclasses class) direct-superclasses)
                       ;; The above equal would suffice if it were not for the fact that when
                       ;; a CLOS class in the compile-file environment has a superclass in the
@@ -1568,7 +1566,7 @@
 #+CLIM-extends-CLOS
 (defvar *presentation-method-argument-class*)
 
-#+CLIM-extends-CLOS
+#+(and Genera CLIM-extends-CLOS)
 (defmethod clos-internals::compute-effective-method-1 :around
            ((generic-function presentation-generic-function)
             methods argument-function)
@@ -1614,13 +1612,9 @@
     (:generic-function generic-function)
   (setq after (reverse after))
   (labels ((method-class (method)
-             (let ((class (first (#-Clozure clos:method-specializers
-                                  #+Clozure ccl:method-specializers
-                                  method))))
+             (let ((class (first (closer-mop:method-specializers method))))
                (if (consp class) (second class) class))))
-    (let* ((generic-function-name (#-Clozure clos:generic-function-name
-                                   #+Clozure ccl:generic-function-name
-                                   generic-function))
+    (let* ((generic-function-name (closer-mop:generic-function-name generic-function))
            (generic-lambda-list (block nil
                                   (maphash #'(lambda (key value)
                                                (declare (ignore key))
@@ -1634,7 +1628,7 @@
            (class *presentation-method-argument-class*))
       (multiple-value-bind (bindings alist)
           (generate-type-massagers class superclasses parameters options nil)
-        (labels ((call-method (method &optional (next-methods nil next-methods-p))
+        (labels ((magic-call-method (method &optional (next-methods nil next-methods-p))
                    (setq next-methods                ;massage call-next-method args also
                          (mapcar #'(lambda (method)
                                      (if (atom method)
@@ -1657,16 +1651,16 @@
                                            `(:next-methods ,next-methods)))
                          `(call-method ,method ,@(when next-methods-p
                                                    `(,next-methods))))))
-                 (call-methods (methods)
-                   (mapcar #'call-method methods)))
+                 (magic-call-methods (methods)
+                   (mapcar #'magic-call-method methods)))
           (let ((form (if (or before after (rest primary))
                           `(multiple-value-prog1
-                             (progn ,@(call-methods before)
-                                    ,(call-method (first primary) (rest primary)))
-                             ,@(call-methods (reverse after)))
-                          (call-method (first primary) ()))))
+                             (progn ,@(magic-call-methods before)
+                                    ,(magic-call-method (first primary) (rest primary)))
+                             ,@(magic-call-methods (reverse after)))
+                          (magic-call-method (first primary) ()))))
             (when around
-              (setq form (call-method (first around)
+              (setq form (magic-call-method (first around)
                                       `(,@(rest around)
                                         (make-method ,form)))))
             (if bindings

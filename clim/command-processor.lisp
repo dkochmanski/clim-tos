@@ -688,33 +688,37 @@
         (start-position (and (input-editing-stream-p stream)
                              (stream-scan-pointer stream)))
         (replace-input-p nil))
+    ;;NOTE workaround for the define-presentation-method implementation doing code-walking
+    ;;in search for variables in presentation types' parameters and options. -- jacek.zlydach 2017-10-28
+    auto-activate
     (multiple-value-bind (object type)
         (with-input-context (command-type) (command command-presentation-type nil options)
-             (with-input-context (form-type) (form form-presentation-type nil options)
-                  (let ((gesture (read-gesture :stream stream :peek-p t)))
-                    (cond ((and (characterp gesture)
-                                (find gesture *command-dispatchers* :test #'char-equal))
-                           (read-gesture :stream stream)        ;get out the colon
-                           (apply #'accept command-type
-                                  :stream stream :prompt nil :view view
-                                  :history type args))
-                          (t (apply #'accept form-type
-                                    :stream stream :prompt nil :view view
-                                    :history type args))))
-                (t (when (getf options :echo t)
-                     (setq replace-input-p t))
-                   (values form form-presentation-type)))
-           (t (when (getf options :echo t)
-                (setq replace-input-p t))
-              (when (partial-command-p command)
-                (setq command (funcall *partial-command-parser*
-                                       command command-table stream start-position)))
-              (when replace-input-p
-                (unless (stream-rescanning-p stream)
-                  (replace-input stream (string (first *command-dispatchers*))
-                                 :buffer-start start-position)
-                  (incf start-position)))
-              (values command command-presentation-type)))
+            (with-input-context (form-type) (form form-presentation-type nil options)
+                (let ((gesture (read-gesture :stream stream :peek-p t)))
+                  (cond ((and (characterp gesture)
+                              (find gesture *command-dispatchers* :test #'char-equal))
+                         (read-gesture :stream stream) ;get out the colon
+                         (apply #'accept command-type
+                                :stream stream :prompt nil :view view
+                                :history type args))
+                        (t
+                         (apply #'accept form-type ;might this be missing?
+                                :stream stream :prompt nil :view view
+                                :history type args))))
+              (t (when (getf options :echo t)
+                   (setq replace-input-p t))
+                 (values form form-presentation-type)))
+          (t (when (getf options :echo t)
+               (setq replace-input-p t))
+             (when (partial-command-p command)
+               (setq command (funcall *partial-command-parser*
+                                      command command-table stream start-position)))
+             (when replace-input-p
+               (unless (stream-rescanning-p stream)
+                 (replace-input stream (string (first *command-dispatchers*))
+                                :buffer-start start-position)
+                 (incf start-position)))
+             (values command command-presentation-type)))
       (when replace-input-p
         (presentation-replace-input stream object type view
                                     :buffer-start start-position))
