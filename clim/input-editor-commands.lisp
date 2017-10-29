@@ -1335,6 +1335,14 @@ This may confused the input editor" gestures))
   (:ie-scroll-left            :page-up :control)
   (:ie-scroll-right            :page-down :control))
 
+#+ (or Clozure sbcl)
+(define-input-editor-gestures
+  (:ie-rubout-character     :backspace)
+  (:ie-rubout-word	    :backspace :meta)
+  (:ie-rubout-sexp	    :backspace :control :meta)
+  (:ie-delete-character            :rubout)
+  (:ie-delete-word            :rubout :meta))
+
 (defmacro assign-input-editor-key-bindings (&body functions-and-gestures)
   (let ((forms nil))
     (loop
