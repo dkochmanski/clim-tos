@@ -301,7 +301,7 @@
   t)
 
 #+ (or sbcl ccl)
-(defmethod closer-mop:validate-superclass
+(defmethod c2mop:validate-superclass
            ((class presentation-type-class) (meta standard-class))
   t)
 
@@ -469,7 +469,7 @@
 ;;; COMPILE-TIME-CLASSes, while the right place to hang all this information,
 ;;; unfortunately do NOT have CLASS-PRECEDENCE-LISTS, or any information of
 ;;; value other than name.
-#+(and MCL CCL-2)
+#+ccl
 (defmethod acceptable-presentation-type-class ((class ccl::compile-time-class))
   nil)
 

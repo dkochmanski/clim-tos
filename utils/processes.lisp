@@ -219,7 +219,8 @@
      (process-yield)))
 
 (defun process-wait-with-timeout (reason timeout predicate)
-  (if (numberp timeout)
+  (if (and (numberp timeout)
+           (not (zerop timeout)))
       (bt:with-timeout (timeout) (process-wait reason predicate))
       (process-wait reason predicate)))
 
