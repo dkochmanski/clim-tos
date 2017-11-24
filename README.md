@@ -18,7 +18,7 @@ To manage dependencies `clim-tos` uses ASDF system definitions and
 Quicklisp. To use the software clone its source code to
 `~/quicklisp/local-projects` and call:
 
-    (ql:quickload '(clim-tos clim-tos/clx-backend clim-tos/examples))
+    (ql:quickload 'clim-tos/all)
     (clim-demo:start-demo)
 
 Development status
