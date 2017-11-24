@@ -178,7 +178,7 @@ rotation and scaling."
 	    (with-scaling (stream i)
 	      (draw-polygon* stream (aref *polygons* number-of-sides) :filled t
 			     :ink (if (oddp i) +background-ink+ +foreground-ink+))))
-	  (demo-sleep stream 2))))))
+	  (demo-sleep stream 0.1))))))
 
 (defparameter *random-ink-list*
   (list +red+ +green+ +blue+
@@ -221,7 +221,7 @@ to the window in which it is displayed."
 	;; draw finish
 	(draw-circle* stream 330 280 5)
   
-	(demo-sleep stream 3)
+	(demo-sleep stream 0.3)
 
 	;; draw a solution path
 	(draw-polygon* stream '(30 60 570  60 570 460 130 460 130 140 490 140

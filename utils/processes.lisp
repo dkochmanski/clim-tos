@@ -216,9 +216,13 @@
 (defun process-wait (reason predicate)
   (declare (ignore reason))
   (loop (when (funcall predicate) (return))
+     (sleep 0.1)
      (process-yield)))
 
 (defun process-wait-with-timeout (reason timeout predicate)
+  (declare (ignorable timeout))
+  (process-wait reason predicate)
+  #+ (or) ;; timeout is verified with a predicate (see above) o_O
   (if (and (numberp timeout)
            (not (zerop timeout)))
       (bt:with-timeout (timeout) (process-wait reason predicate))
