@@ -511,7 +511,7 @@
         (flet ((reset-sr (sheet)
                  (when (panep sheet)
                    (change-space-requirements-to-default sheet))))
-          (declare (dynamic-extent #'adjust-layout))
+          (declare (dynamic-extent #'adjust-layout-requirements))
           (map-over-sheets #'reset-sr (frame-panes frame))
           (dolist (pane-and-sr layout-space-requirements)
             (let ((name (car pane-and-sr)))
