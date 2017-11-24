@@ -29,6 +29,8 @@
          (error "Invalid pane specification: ~S"
                 (list* name code rest)))))
 
+(defgeneric find-pane-class-constructor (type &rest options &key &allow-other-keys))
+
 (defmethod find-pane-class-constructor ((type t) &rest options)
   (declare (dynamic-extent options))
   (error "Unknown pane type ~S with options ~S" type options))
