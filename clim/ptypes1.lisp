@@ -358,7 +358,7 @@
 ;;; This hash table is keyed by the presentation type name and yields the class.
 (defvar *presentation-type-class-table* (make-hash-table))
 
-#+(or (and MCL CCL-2) aclpc Clozure)
+#+(or (and MCL CCL-2) aclpc Clozure sbcl)
 (defvar *presentation-class-type-table* (make-hash-table))
 
 #+aclpc
@@ -403,8 +403,9 @@
 ;;; This is essentially the inverse of find-presentation-type-class
 (defmethod class-presentation-type-name ((class presentation-type-class) &optional environment)
   #-(or aclpc) (declare (ignore environment))
-  #-(or aclpc Clozure) (second (class-name class))
+  #-(or aclpc Clozure sbcl) (second (class-name class))
   #+Clozure (class-name class)
+  #+sbcl (class-name class)
   #+aclpc (gethash class *presentation-class-name-table*)
 )
 
@@ -797,6 +798,9 @@
         #+Clozure 
         (cl:structure-class
          (setq direct-supertypes 'cl:structure-object))
+        #+sbcl
+        (cl:structure-class
+         (setq direct-supertypes 'cl:structure-object)) 
         (t
           (setq direct-supertypes 'standard-object)))))
   (with-warnings-for-definition name define-presentation-type
@@ -813,7 +817,7 @@
            (old-direct-superclasses (if class
                                         (closer-mop:class-direct-superclasses class)
                                         direct-superclasses))
-           #+(or (and MCL CCL-2) aclpc Clozure)
+           #+(or (and MCL CCL-2) aclpc Clozure sbcl)
            (registered-class-name
              (let ((keyword-package (find-package :keyword))
                    (*package* (find-package :cl)))
@@ -860,11 +864,11 @@
                           #+aclpc (cl:structure-class 'defstruct)
                           #+allegro (structure-class 'defstruct)
                           #+Clozure (cl:structure-class 'defstruct)
+                          #+sbcl (cl:structure-class 'defstruct)
                           )
                         name)))
-             (let (#+(or Genera Cloe-Runtime (and MCL CCL-2) sbcl)
-                   (class-name `(presentation-type ,name))
-                   )
+             (let (#+(or Genera Cloe-Runtime (and MCL CCL-2))
+                   (class-name `(presentation-type ,name)))
                (setq class
                      #-Lucid
                      (make-instance 'presentation-type-class
@@ -872,9 +876,9 @@
                         ;; Symbolics CLOS, that is
                         #+(or Genera Cloe-Runtime) 'clos-internals::name
                         #+(or Genera Cloe-Runtime) class-name
-                        #+(or aclpc (and MCL CCL-2) Clozure) :name
+                        #+(or aclpc (and MCL CCL-2) Clozure sbcl) :name
                         #+(and MCL CCL-2) class-name
-                        #+(or aclpc Clozure) registered-class-name
+                        #+(or aclpc Clozure sbcl) registered-class-name
                         #-(or PCL aclpc (and MCL CCL-2) allegro Clozure sbcl ccl) :slots
                         #+(or PCL aclpc (and MCL CCL-2) allegro Clozure sbcl ccl) :direct-slots
                         nil)
@@ -886,7 +890,7 @@
                #+(and MCL CCL-2) (setf (slot-value class 'ccl::slots) (cons nil (vector)))
                ;; If the class name couldn't be set while making the class, set it now
 
-               #-(or Genera Cloe-Runtime Lucid aclpc (and MCL CCL-2) Clozure)
+               #-(or Genera Cloe-Runtime Lucid aclpc (and MCL CCL-2) Clozure sbcl)
                (setf (class-name class) class-name)))
             ((not (or (equal (closer-mop:class-direct-superclasses class) direct-superclasses)
                       ;; The above equal would suffice if it were not for the fact that when
@@ -895,7 +899,7 @@
                       ;; of using the run-time class
                       (every #'(lambda (class type)
                                  (eq (class-proper-name class environment) type))
-                             (closer-mop:class-direct-superclasses class) supertypes-list)
+                             (c2mop:class-direct-superclasses class) supertypes-list)
                       (presentation-type-class-p class)))
              ;; Inheritance must be consistent between CLOS and CLIM classes,
              ;; but only when CLOS and CLIM use the same class object.
@@ -914,7 +918,7 @@
       ;; presentation class on this "registered" name instead of on the
       ;; official class name.  The following line hooks up the class and the
       ;; registered name at load time.  -- rsl & York, 4 June 1991
-      #+(or (and MCL CCL-2) aclpc Clozure)
+      #+(or (and MCL CCL-2) aclpc Clozure sbcl)
       (setf (gethash class *presentation-class-type-table*)
             registered-class-name
             ;;--- Should the following be done at compile time?  It's unclear.
