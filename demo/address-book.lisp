@@ -64,6 +64,8 @@
 
 (define-presentation-type address ())
 
+;; XXX: segmentation fault when `define-presentation-method' is used
+#+ (or)
 (define-presentation-method present (object (type address) stream view &key)
   (declare (ignore view))
   (write-string (address-name object) stream))
@@ -135,7 +137,10 @@
     ;; PRESENT invokes the :PRINTER for the ADDRESS presentation-type, defined above.
     ;; It also makes each address printed out mouse-sensitive.
     (updating-output (stream :unique-id address)
-      (present address 'address :stream stream)
+      (with-output-as-presentation (stream address 'address)
+        (write-string (address-name address) stream))
+      ;; XXX: segmentation fault when `define-presentation-method' is used
+      #+ (or) (present address 'address :stream stream)
       (terpri stream))))
 
 (define-address-book-command (com-quit-address-book :menu "Quit")
