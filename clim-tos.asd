@@ -181,7 +181,7 @@
   :components
   ((:module "homegrown"
   	    :components
-  	    ((:file "scroll-pane")
+  	    (;(:file "scroll-pane")
   	     (:file "db-button")
   	     (:file "db-label")
   	     (:file "db-slider")
