@@ -275,35 +275,9 @@
 ;;; JonL says that the latest CLOS spec says that you aren't allowed to mix
 ;;; objects of different metaclasses unless there is a VALIDATE-SUPERTYPE
 ;;; method that says that you can.
-#+Lucid
-(defmethod clos-system::validate-superclass
-           ((class presentation-type-class) (meta standard-class))
-  t)
 
-#+Symbolics
-(defmethod clos-internals::validate-superclass
-           ((class presentation-type-class) (meta standard-class))
-  t)
-
-#+aclpc
-(defmethod acl:validate-superclass ;; mop moved to acl package
-           ((class presentation-type-class) (meta standard-class))
-  t)
-
-#+acl86win32
-(defmethod clos:validate-superclass
-           ((class presentation-type-class) (meta standard-class))
-  t)
-
-#+Clozure
-(defmethod ccl:validate-superclass
-           ((class presentation-type-class) (meta standard-class))
-  t)
-
-#+ (or sbcl ccl)
 (defmethod c2mop:validate-superclass
-           ((class presentation-type-class) (meta standard-class))
-  t)
+    ((class presentation-type-class) (meta standard-class)) t)
 
 ;;;#+(or aclpc acl86win32)
 ;;;(eval-when (:compile-toplevel :load-toplevel :execute)
@@ -789,18 +763,9 @@
         #+allegro
         (structure-class
           (setq direct-supertypes 'common-lisp:structure-object))
-        #+(and MCL CCL-2)
-        (structure-class
-          (setq direct-supertypes 'structure-object))
-        #+aclpc
+        #+(or aclpc ccl sbcl)
         (cl:structure-class
           (setq direct-supertypes 'cl:structure-object))
-        #+Clozure 
-        (cl:structure-class
-         (setq direct-supertypes 'cl:structure-object))
-        #+sbcl
-        (cl:structure-class
-         (setq direct-supertypes 'cl:structure-object)) 
         (t
           (setq direct-supertypes 'standard-object)))))
   (with-warnings-for-definition name define-presentation-type
@@ -817,7 +782,7 @@
            (old-direct-superclasses (if class
                                         (closer-mop:class-direct-superclasses class)
                                         direct-superclasses))
-           #+(or (and MCL CCL-2) aclpc Clozure sbcl)
+           #+(or aclpc ccl sbcl)
            (registered-class-name
              (let ((keyword-package (find-package :keyword))
                    (*package* (find-package :cl)))
@@ -858,14 +823,8 @@
                         (typecase superclass
                           (closer-mop:funcallable-standard-class 'defgeneric)
                           (standard-class 'defclass)
-                          #+Symbolics                ;Symbolics CLOS, that is
-                          (clos:structure-class 'defstruct)
-                          #+(and MCL CCL-2) (structure-class 'defstruct)
-                          #+aclpc (cl:structure-class 'defstruct)
-                          #+allegro (structure-class 'defstruct)
-                          #+Clozure (cl:structure-class 'defstruct)
-                          #+sbcl (cl:structure-class 'defstruct)
-                          )
+                          #+(or aclpc ccl sbcl) (cl:structure-class 'defstruct)
+                          #+allegro (structure-class 'defstruct))
                         name)))
              (let (#+(or Genera Cloe-Runtime (and MCL CCL-2))
                    (class-name `(presentation-type ,name)))
@@ -876,21 +835,17 @@
                         ;; Symbolics CLOS, that is
                         #+(or Genera Cloe-Runtime) 'clos-internals::name
                         #+(or Genera Cloe-Runtime) class-name
-                        #+(or aclpc (and MCL CCL-2) Clozure sbcl) :name
-                        #+(and MCL CCL-2) class-name
-                        #+(or aclpc Clozure sbcl) registered-class-name
-                        #-(or PCL aclpc (and MCL CCL-2) allegro Clozure sbcl ccl) :slots
-                        #+(or PCL aclpc (and MCL CCL-2) allegro Clozure sbcl ccl) :direct-slots
-                        nil)
-                     #+Lucid (make-instance 'presentation-type-class
-                                     :direct-superclasses direct-superclasses
-                                     :name class-name))
+                        #+(or aclpc ccl sbcl) :name
+                        #+(or aclpc ccl sbcl) registered-class-name
+                        #-(or PCL aclpc allegro sbcl ccl) :slots
+                        #+(or PCL aclpc allegro sbcl ccl) :direct-slots
+                        nil))
                ;; Workaround for apparent MCL bug that otherwise causes
                ;; very bad things to happen
                #+(and MCL CCL-2) (setf (slot-value class 'ccl::slots) (cons nil (vector)))
                ;; If the class name couldn't be set while making the class, set it now
 
-               #-(or Genera Cloe-Runtime Lucid aclpc (and MCL CCL-2) Clozure sbcl)
+               #-(or Genera aclpc ccl sbcl)
                (setf (class-name class) class-name)))
             ((not (or (equal (closer-mop:class-direct-superclasses class) direct-superclasses)
                       ;; The above equal would suffice if it were not for the fact that when
@@ -918,7 +873,7 @@
       ;; presentation class on this "registered" name instead of on the
       ;; official class name.  The following line hooks up the class and the
       ;; registered name at load time.  -- rsl & York, 4 June 1991
-      #+(or (and MCL CCL-2) aclpc Clozure sbcl)
+      #+(or aclpc ccl sbcl)
       (setf (gethash class *presentation-class-type-table*)
             registered-class-name
             ;;--- Should the following be done at compile time?  It's unclear.
@@ -1032,16 +987,11 @@
      &optional environment)
   (let ((superclasses
          ;;#-(or allegro aclpc) (cdr (closer-mop:class-precedence-list class)) ;; FIXME dropping?
-         #+ (or sbcl ccl)
+         #+ (or aclpc ccl sbcl)
          (progn
-           (unless (closer-mop:class-finalized-p class)
+           (unless (c2mop:class-finalized-p class)
              (closer-mop:finalize-inheritance class))
-           (cdr (closer-mop:class-precedence-list class)))
-         #+aclpc
-         (progn
-           (unless (acl:class-finalized-p class)
-             (acl:finalize-inheritance class))
-           (cdr (class-precedence-list class)))
+           (cdr (c2mop:class-precedence-list class)))
          #+allegro ;; Work around bug in CLOS compilation environments...
          (multiple-value-bind (no-errorp result)
              (excl:errorset (progn
@@ -1394,16 +1344,11 @@
     (name class parameters-var options-var &optional environment)
   (let ((superclasses
          ;;#-(or allegro aclpc) (cdr (closer-mop:class-precedence-list class)) ;; FIXME dropping?
-         #+ (or sbcl ccl)
+         #+ (or aclpc ccl sbcl)
          (progn
-           (unless (closer-mop:class-finalized-p class)
-             (closer-mop:finalize-inheritance class))
-           (cdr (closer-mop:class-precedence-list class)))
-         #+aclpc
-          (progn
-            (unless (acl:class-finalized-p class)
-              (acl:finalize-inheritance class))
-            (cdr (class-precedence-list class)))
+           (unless (c2mop:class-finalized-p class)
+             (c2mop:finalize-inheritance class))
+           (cdr (c2mop:class-precedence-list class)))
          #+allegro ;; Work around bug in CLOS compilation environments...
          (multiple-value-bind (no-errorp result)
              (excl:errorset (progn
