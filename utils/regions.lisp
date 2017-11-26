@@ -857,8 +857,8 @@
 ;;; Geometry utilities
 
 (defconstant pi-single-float (coerce pi 'single-float))
-(defconstant  2pi (coerce (* pi-single-float 2) 'single-float))
-(defconstant pi/2 (coerce (/ pi-single-float 2) 'single-float))
+(defconstant  2pi (* pi 2))
+(defconstant pi/2 (/ pi 2))
 
 (defun radians->degrees (radians)
   (* radians (/ 360 2pi)))
