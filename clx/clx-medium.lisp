@@ -441,6 +441,7 @@
 			      (svref design-pixels (aref array y x))))))
 		(let ((gc (xlib:create-gcontext :drawable drawable)))
 		  (xlib:copy-gcontext foreground-gcontext gc)
+		  (setf (xlib:gcontext-clip-mask gc) :none)
 		  (setf (xlib:gcontext-fill-style gc) :tiled)
 		  (setf (xlib:gcontext-tile gc)
 			(let ((image
