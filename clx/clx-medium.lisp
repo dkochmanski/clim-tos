@@ -856,6 +856,7 @@
       (convert-to-device-coordinates transform left top right bottom)
       (when (< right left) (rotatef right left))
       (when (< bottom top) (rotatef bottom top))
+      (setf (xlib:gcontext-clip-mask background-gcontext) :none)
       (xlib:draw-rectangle drawable background-gcontext 
 			   left top (- right left) (- bottom top) t))))
 
