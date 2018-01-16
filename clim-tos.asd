@@ -247,3 +247,9 @@
              ;(:file "color-editor" :depends-on ("demo-driver"))
              ;(:file "graphics-editor" :depends-on ("demo-driver"))
              ))))
+
+(defmethod perform :after ((op load-op) (c (eql (find-system :clim-tos))))
+  (pushnew :clim *features*)
+  (pushnew :clim-2 *features*)
+  (pushnew :clim-2.1 *features*)
+  (pushnew :silica *features*))
