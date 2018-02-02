@@ -1505,7 +1505,7 @@
         (rescan-if-necessary stream))
       (multiple-value-bind (expression index)
           (handler-case
-              (read-from-string string)
+              (read-from-string (evacuate-temporary-string string))
             (error ()
               (simple-parse-error "The input ~S is not a complete Lisp expression."
                                   (evacuate-temporary-string string))))
