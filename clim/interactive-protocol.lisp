@@ -1081,7 +1081,7 @@
       (with-input-editor-typeout (stream :erase t)
         (format stream "~A~%Please edit your input." anerror))))
   (remove-activation-gesture stream)
-  ;; Wait until the user forces a rescan by typing an input editing command
+  (queue-rescan stream)
   (loop (read-gesture :stream stream)))
 
 (defmethod frame-manager-display-help
