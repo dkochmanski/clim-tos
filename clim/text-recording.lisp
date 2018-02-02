@@ -148,7 +148,7 @@
   (declare (type coordinate x-offset y-offset))
   #-aclpc (declare (ignore region))
   (let* ((medium (sheet-medium stream))
-         (string (slot-value record 'string))
+         (string (evacuate-temporary-string (slot-value record 'string)))
          (start 0)
          (end (length string))
          (text-style (slot-value record 'initial-text-style))
